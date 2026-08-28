@@ -61,3 +61,33 @@ def test_chat_failure_restores_history_at_memory_limit(monkeypatch):
         joi.chat('This request fails')
 
     assert joi.memory.snapshot() == history_before_request
+
+
+def test_enabled_voice_uses_configured_kokoro_router(monkeypatch, tmp_path):
+    settings = _settings()
+    settings.voice_enabled = True
+    settings.kokoro_python = 'kokoro-python'
+    settings.kokoro_model_path = 'model.onnx'
+    settings.kokoro_voices_path = 'voices.bin'
+    settings.tts_voice = 'af_heart'
+    settings.tts_language = 'en-us'
+    settings.tts_output_path = str(tmp_path / 'reply.wav')
+    settings.tts_timeout_seconds = 30
+    voice = Mock()
+    voice_router = Mock(return_value=voice)
+    monkeypatch.setattr(orchestrator_module, 'KokoroVoiceRouter', voice_router)
+
+    joi = JoiOrchestrator(settings, 'system', Mock())
+    result = joi.speak('Hello')
+
+    voice_router.assert_called_once_with(
+        python_executable='kokoro-python',
+        model_path='model.onnx',
+        voices_path='voices.bin',
+        voice='af_heart',
+        language='en-us',
+        output_path=str(tmp_path / 'reply.wav'),
+        timeout_seconds=30,
+    )
+    voice.speak.assert_called_once_with('Hello')
+    assert result == voice.speak.return_value

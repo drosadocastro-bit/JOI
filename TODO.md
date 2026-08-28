@@ -22,23 +22,31 @@
 
 **Gate:** stable local text conversation and clean failure/recovery.
 
-## Phase 2 — Local Voice: Qwen3-TTS
+## Phase 2 — Local Voice
 - [x] Verify `qwen/qwen3-1.7b` role (LM Studio identifies it as a text LLM)
 - [x] Audio device enumeration
 - [x] Explicit PCM WAV capture/playback adapters
 - [x] Select `Qwen/Qwen3-TTS-12Hz-0.6B-CustomVoice` for benchmarking
-- [ ] Validate selected TTS model on CPU
+- [x] Validate selected TTS model on CPU (fails interactive latency/capability gate)
 - [x] Isolated Qwen3-TTS environment
 - [x] Benchmark 0.6B first
 - [x] English sample
-- [ ] Spanish sample
-- [ ] Punctuation test
-- [ ] Long-text/chunking test
-- [ ] Style/emotion instructions
-- [ ] Measure first-audio latency
+- [x] Spanish sample
+- [x] Punctuation test
+- [x] Long-text/chunking test
+- [ ] Human listening review for generated samples
+- [ ] Style/emotion instructions (unsupported by selected 0.6B checkpoint)
+- [ ] Measure first-audio latency (no true streaming API)
 - [x] Measure RAM/VRAM
-- [ ] 20-generation soak test
-- [ ] Integrate only after benchmark passes
+- [x] 20-generation soak test
+- [ ] Integrate selected model (blocked: interactive gate failed)
+- [x] Evaluate Kokoro-82M ONNX as an alternative
+- [x] Kokoro English, Spanish, punctuation, long-text, streaming, and soak tests
+- [x] Kokoro technical interactive-performance gate
+- [x] Human listening review: English approved; Spanish accepted provisionally
+- [x] Select Kokoro for local TTS
+- [x] Integrate Kokoro with provisional `af_heart` voice
+- [ ] Evaluate a native Spanish female replacement voice
 
 ## Phase 3 — Online Voice: ElevenLabs
 - [ ] `.env` API credentials

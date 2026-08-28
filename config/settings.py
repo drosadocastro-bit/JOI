@@ -34,6 +34,13 @@ class Settings:
     log_level: str
     log_file: str
     voice_enabled: bool
+    kokoro_python: str
+    kokoro_model_path: str
+    kokoro_voices_path: str
+    tts_voice: str
+    tts_language: str
+    tts_output_path: str
+    tts_timeout_seconds: int
     vision_enabled: bool
     cloud_enabled: bool
     memory_mode: str
@@ -42,6 +49,7 @@ class Settings:
     def load(cls):
         root = Path(__file__).resolve().parents[1]
         _load_dotenv(root / '.env')
+        runtime_root = root.parents[1]
         return cls(
             app_name=os.getenv('JOI_APP_NAME', 'JOI 2.0'),
             lmstudio_base_url=os.getenv('LMSTUDIO_BASE_URL', 'http://127.0.0.1:1234/v1').rstrip('/'),
@@ -50,6 +58,25 @@ class Settings:
             log_level=os.getenv('LOG_LEVEL', 'INFO').upper(),
             log_file=os.getenv('LOG_FILE', str(root / 'data' / 'logs' / 'joi.log')),
             voice_enabled=os.getenv('VOICE_ENABLED', 'false').lower() == 'true',
+            kokoro_python=os.getenv(
+                'KOKORO_PYTHON',
+                str(runtime_root / '.venv-kokoro' / 'Scripts' / 'python.exe'),
+            ),
+            kokoro_model_path=os.getenv(
+                'KOKORO_MODEL_PATH',
+                str(runtime_root / 'models' / 'kokoro' / 'kokoro-v1.0.onnx'),
+            ),
+            kokoro_voices_path=os.getenv(
+                'KOKORO_VOICES_PATH',
+                str(runtime_root / 'models' / 'kokoro' / 'voices-v1.0.bin'),
+            ),
+            tts_voice=os.getenv('TTS_VOICE', 'af_heart'),
+            tts_language=os.getenv('TTS_LANGUAGE', 'en-us'),
+            tts_output_path=os.getenv(
+                'TTS_OUTPUT_PATH',
+                str(root / 'data' / 'tts' / 'reply.wav'),
+            ),
+            tts_timeout_seconds=_positive_int_env('TTS_TIMEOUT_SECONDS', 120),
             vision_enabled=os.getenv('VISION_ENABLED', 'false').lower() == 'true',
             cloud_enabled=os.getenv('CLOUD_ENABLED', 'false').lower() == 'true',
             memory_mode=os.getenv('MEMORY_MODE', 'session').lower(),

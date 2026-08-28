@@ -40,6 +40,13 @@ class TerminalInterface:
             if low == '/help':
                 print('Commands: /status  /reset  /help  /exit'); continue
             try:
-                print(f'\nJoi > {self.joi.chat(text)}')
+                reply = self.joi.chat(text)
+                print(f'\nJoi > {reply}')
             except Exception as exc:
                 print(f'\n[JOI ERROR] {exc}')
+                continue
+            if self.joi.state.voice_enabled:
+                try:
+                    self.joi.speak(reply)
+                except Exception as exc:
+                    print(f'\n[VOICE ERROR] {exc}')
