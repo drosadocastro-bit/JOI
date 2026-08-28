@@ -1,5 +1,11 @@
 # JOI
 
+<p align="center">
+	<img src="docs/assets/Joi%20Image%20Aug%2028%2C%202026%2C%2003_12_16%20PM.png" width="520" alt="JOI concept art">
+</p>
+
+<p align="center"><em>Concept art. Some depicted capabilities remain planned.</em></p>
+
 *Local-first hybrid AI companion architecture.*
 
 > Present when offline. Enhanced when connected. Consistent by design.
