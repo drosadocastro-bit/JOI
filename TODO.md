@@ -23,16 +23,20 @@
 **Gate:** stable local text conversation and clean failure/recovery.
 
 ## Phase 2 — Local Voice: Qwen3-TTS
-- [ ] Validate `qwen/qwen3-1.7b` audio capabilities and API contract
-- [ ] Isolated Qwen3-TTS environment
-- [ ] Benchmark 0.6B first
-- [ ] English sample
+- [x] Verify `qwen/qwen3-1.7b` role (LM Studio identifies it as a text LLM)
+- [x] Audio device enumeration
+- [x] Explicit PCM WAV capture/playback adapters
+- [x] Select `Qwen/Qwen3-TTS-12Hz-0.6B-CustomVoice` for benchmarking
+- [ ] Validate selected TTS model on CPU
+- [x] Isolated Qwen3-TTS environment
+- [x] Benchmark 0.6B first
+- [x] English sample
 - [ ] Spanish sample
 - [ ] Punctuation test
 - [ ] Long-text/chunking test
 - [ ] Style/emotion instructions
 - [ ] Measure first-audio latency
-- [ ] Measure RAM/VRAM
+- [x] Measure RAM/VRAM
 - [ ] 20-generation soak test
 - [ ] Integrate only after benchmark passes
 
@@ -68,7 +72,8 @@
 
 ## Phase 7 — Hearing
 - [ ] Push-to-talk first
-- [ ] Local STT
+- [x] Select `Qwen/Qwen3-ASR-0.6B-hf` for benchmarking
+- [ ] Validate selected STT model on CPU
 - [ ] English + Spanish
 - [ ] Visible mic state
 - [ ] Interrupt/cancel

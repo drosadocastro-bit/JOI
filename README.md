@@ -41,8 +41,18 @@ Cloud:       OFF
 The default LM Studio endpoint is `http://127.0.0.1:1234/v1`. Edit
 `LMSTUDIO_BASE_URL` in `.env` if the server address changes.
 
-`qwen/qwen3-1.7b` is reserved for planned local voice work. TTS and STT are not
-active until their audio-specific adapters are implemented and validated.
+LM Studio reports `qwen/qwen3-1.7b` as a text LLM, not a speech model. Dedicated
+speech checkpoints are selected for benchmarking:
+
+- TTS: `Qwen/Qwen3-TTS-12Hz-0.6B-CustomVoice`
+- STT: `Qwen/Qwen3-ASR-0.6B-hf`
+
+They remain disabled until the offline CPU benchmarks pass. See
+`docs/speech-model-selection.md` for the evidence, constraints, and gates.
+
+The audio foundation uses `sounddevice` for explicit device enumeration,
+16-bit PCM WAV capture, and playback. Microphone access remains opt-in and
+disabled by default; no recording starts automatically.
 
 ## Phase 1 acceptance
 

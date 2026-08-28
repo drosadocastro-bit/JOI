@@ -1,3 +1,2 @@
-# Phase 0/1 uses only the Python standard library.
-# Optional for tests:
 pytest>=8.0
+sounddevice>=0.5,<0.6
