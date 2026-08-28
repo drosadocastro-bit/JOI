@@ -14,6 +14,19 @@ def _settings():
         local_model='model',
         request_timeout_seconds=10,
         voice_enabled=False,
+        voice_mode='local',
+        kokoro_python='kokoro-python',
+        kokoro_model_path='model.onnx',
+        kokoro_voices_path='voices.bin',
+        tts_voice='af_heart',
+        tts_language='en-us',
+        tts_output_path='reply.wav',
+        tts_timeout_seconds=30,
+        elevenlabs_api_key='',
+        elevenlabs_voice_id='',
+        elevenlabs_model_id='eleven_multilingual_v2',
+        elevenlabs_base_url='https://api.elevenlabs.io/v1',
+        elevenlabs_timeout_seconds=15,
         vision_enabled=False,
         cloud_enabled=False,
         memory_mode='session',
@@ -91,3 +104,35 @@ def test_enabled_voice_uses_configured_kokoro_router(monkeypatch, tmp_path):
     )
     voice.speak.assert_called_once_with('Hello')
     assert result == voice.speak.return_value
+
+
+def test_hybrid_voice_fallback_preserves_session(monkeypatch, tmp_path):
+    settings = _settings()
+    settings.voice_enabled = True
+    settings.voice_mode = 'hybrid'
+    settings.cloud_enabled = True
+    settings.elevenlabs_api_key = 'local-secret'
+    settings.elevenlabs_voice_id = 'voice-id'
+    settings.tts_output_path = str(tmp_path / 'reply.wav')
+    local_voice = Mock()
+    local_voice.speak.return_value = tmp_path / 'reply.wav'
+    online_voice = Mock()
+    online_voice.speak.side_effect = RuntimeError('provider unavailable')
+    monkeypatch.setattr(orchestrator_module, 'KokoroVoiceRouter', Mock(return_value=local_voice))
+    monkeypatch.setattr(
+        orchestrator_module,
+        'ElevenLabsVoiceProvider',
+        Mock(return_value=online_voice),
+    )
+    logger = Mock()
+    joi = JoiOrchestrator(settings, 'system', logger)
+    joi.memory.add_user('Keep this')
+    joi.memory.add_assistant('I will')
+    memory_before_speech = joi.memory.snapshot()
+
+    result = joi.speak('Hello')
+
+    online_voice.speak.assert_called_once_with('Hello')
+    local_voice.speak.assert_called_once_with('Hello')
+    assert result == tmp_path / 'reply.wav'
+    assert joi.memory.snapshot() == memory_before_speech

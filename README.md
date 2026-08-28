@@ -40,15 +40,17 @@ Implemented:
 - isolated Kokoro-82M ONNX speech worker
 - English voice approved through human listening
 - provisional Spanish speech with a known non-native accent
+- ElevenLabs English voice approved through a live human listening test
+- ElevenLabs Spanish voice approved through a live human listening test
 - personality contract for identity, honesty, rhythm, and bilingual behavior
-- 28 passing tests
+- 41 passing tests
 
 Not implemented yet:
 
 - persistent long-term memory
 - speech recognition or push-to-talk
 - active vision
-- ElevenLabs or cloud reasoning
+- cloud reasoning
 - automatic local/online provider fallback
 - streaming LLM tokens into interruptible speech
 
@@ -114,6 +116,32 @@ at runtime. Non-default layouts can override `KOKORO_PYTHON`,
 A text reply is printed before synthesis starts. Voice failures are logged and
 reported separately without removing the reply or changing conversation
 memory.
+
+## Optional Online Voice
+
+Voice routing is explicit and defaults to `local`, which uses Kokoro without a
+network request. Supported values are `local`, `online`, and `hybrid`.
+
+ElevenLabs requires deliberate cloud opt-in and credentials stored only in the
+local `.env` file:
+
+```dotenv
+VOICE_ENABLED=true
+VOICE_MODE=online
+CLOUD_ENABLED=true
+ELEVENLABS_API_KEY=
+ELEVENLABS_VOICE_ID=
+ELEVENLABS_SPANISH_VOICE_ID=
+```
+
+`online` reports ElevenLabs failures without silently invoking another
+provider. `hybrid` explicitly attempts ElevenLabs and falls back to Kokoro on
+failure while preserving session memory. The backend validates a 24 kHz WAV
+response before playback. Its timeout and failure paths are covered without
+network calls. The configured English voice passed a live human listening test.
+`ELEVENLABS_VOICE_ID` remains the English/default voice; setting
+`TTS_LANGUAGE=es` selects `ELEVENLABS_SPANISH_VOICE_ID` instead. The configured
+Spanish voice also passed a live human listening test.
 
 ## Tests and Acceptance
 
@@ -240,14 +268,14 @@ Cloud           OFF
 JOI remains conversational without connectivity. Voice is an explicit local
 capability, not a requirement for the core to function.
 
-### Online / Hybrid (Planned)
+### Online / Hybrid (Experimental)
 
 ```text
 Local Core      ON
 Local LLM       AVAILABLE
 Kokoro TTS      AVAILABLE
 Cloud LLM       OPTIONAL
-ElevenLabs      OPTIONAL
+ElevenLabs      OPTIONAL / ENGLISH AND SPANISH APPROVED
 Vision          OPTIONAL
 Web capability  OPTIONAL
 ```

@@ -1,11 +1,14 @@
+import io
 import json
+import socket
+import wave
 from types import SimpleNamespace
 from unittest.mock import Mock
 
 import pytest
 
 import voice.voice_router as voice_router_module
-from voice.voice_router import KokoroVoiceRouter
+from voice.voice_router import ElevenLabsVoiceProvider, KokoroVoiceRouter, VoiceRouter
 
 
 def _router(tmp_path):
@@ -67,3 +70,127 @@ def test_speak_reports_worker_failure_without_playback(monkeypatch, tmp_path):
 def test_speak_rejects_empty_text(tmp_path):
     with pytest.raises(ValueError, match='text must not be empty'):
         _router(tmp_path).speak('  ')
+
+
+def test_voice_router_uses_only_local_provider_in_local_mode():
+    local = Mock()
+    online = Mock()
+    router = VoiceRouter(mode='local', local_provider=local, online_provider=online)
+
+    result = router.speak('Hello')
+
+    local.speak.assert_called_once_with('Hello')
+    online.speak.assert_not_called()
+    assert result == local.speak.return_value
+    assert router.active_provider == 'local'
+
+
+def test_voice_router_online_mode_does_not_silently_fallback():
+    local = Mock()
+    online = Mock()
+    online.speak.side_effect = RuntimeError('provider unavailable')
+    router = VoiceRouter(mode='online', local_provider=local, online_provider=online)
+
+    with pytest.raises(RuntimeError, match='provider unavailable'):
+        router.speak('Hello')
+
+    local.speak.assert_not_called()
+
+
+def test_voice_router_hybrid_mode_falls_back_to_local():
+    local = Mock()
+    online = Mock()
+    online.speak.side_effect = RuntimeError('provider unavailable')
+    logger = Mock()
+    router = VoiceRouter(
+        mode='hybrid',
+        local_provider=local,
+        online_provider=online,
+        logger=logger,
+    )
+
+    result = router.speak('Hello')
+
+    online.speak.assert_called_once_with('Hello')
+    local.speak.assert_called_once_with('Hello')
+    logger.warning.assert_called_once()
+    assert result == local.speak.return_value
+    assert router.active_provider == 'local'
+
+
+def _elevenlabs_provider(tmp_path, opener):
+    return ElevenLabsVoiceProvider(
+        api_key='secret-key',
+        voice_id='voice-id',
+        model_id='eleven_multilingual_v2',
+        base_url='https://api.elevenlabs.io/v1',
+        output_path=tmp_path / 'elevenlabs.wav',
+        timeout_seconds=15,
+        opener=opener,
+    )
+
+
+def _wav_bytes():
+    output = io.BytesIO()
+    with wave.open(output, 'wb') as audio:
+        audio.setnchannels(1)
+        audio.setsampwidth(2)
+        audio.setframerate(24000)
+        audio.writeframes(b'\x00\x00' * 240)
+    return output.getvalue()
+
+
+def test_elevenlabs_writes_validated_wav_and_plays_it(monkeypatch, tmp_path):
+    response = Mock()
+    response.__enter__ = Mock(return_value=response)
+    response.__exit__ = Mock(return_value=False)
+    response.headers = {'Content-Type': 'audio/wav'}
+    response.read.return_value = _wav_bytes()
+    opener = Mock(return_value=response)
+    play_wav = Mock()
+    monkeypatch.setattr(voice_router_module, 'play_wav', play_wav)
+    provider = _elevenlabs_provider(tmp_path, opener)
+
+    result = provider.speak('Hello')
+
+    request = opener.call_args.args[0]
+    assert request.full_url.endswith('/text-to-speech/voice-id?output_format=wav_24000')
+    assert json.loads(request.data) == {
+        'text': 'Hello',
+        'model_id': 'eleven_multilingual_v2',
+    }
+    assert opener.call_args.kwargs['timeout'] == 15
+    assert result.read_bytes() == response.read.return_value
+    play_wav.assert_called_once_with(result, device_index=None)
+
+
+def test_elevenlabs_timeout_does_not_play_audio(monkeypatch, tmp_path):
+    play_wav = Mock()
+    monkeypatch.setattr(voice_router_module, 'play_wav', play_wav)
+    provider = _elevenlabs_provider(
+        tmp_path,
+        Mock(side_effect=socket.timeout('timed out')),
+    )
+
+    with pytest.raises(RuntimeError, match='ElevenLabs request failed'):
+        provider.speak('Hello')
+
+    play_wav.assert_not_called()
+    assert not (tmp_path / 'elevenlabs.wav').exists()
+
+
+def test_elevenlabs_rejects_malformed_audio(monkeypatch, tmp_path):
+    response = Mock()
+    response.__enter__ = Mock(return_value=response)
+    response.__exit__ = Mock(return_value=False)
+    response.headers = {'Content-Type': 'application/json'}
+    response.read.return_value = b'{"detail":"not audio"}'
+    play_wav = Mock()
+    monkeypatch.setattr(voice_router_module, 'play_wav', play_wav)
+    provider = _elevenlabs_provider(tmp_path, Mock(return_value=response))
+
+    with pytest.raises(RuntimeError, match='invalid audio response'):
+        provider.speak('Hello')
+
+    play_wav.assert_not_called()
+    assert not (tmp_path / 'elevenlabs.wav').exists()

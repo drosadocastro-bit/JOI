@@ -2,7 +2,7 @@ from brain.local_llm import LocalLMStudioBrain
 from core.router import BrainRouter
 from core.state import JoiState
 from memory.session_memory import SessionMemory
-from voice.voice_router import KokoroVoiceRouter
+from voice.voice_router import ElevenLabsVoiceProvider, KokoroVoiceRouter, VoiceRouter
 
 
 class JoiOrchestrator:
@@ -20,22 +20,45 @@ class JoiOrchestrator:
         self.brain = BrainRouter(local_brain)
         self.voice = None
         if settings.voice_enabled:
-            self.voice = KokoroVoiceRouter(
-                python_executable=settings.kokoro_python,
-                model_path=settings.kokoro_model_path,
-                voices_path=settings.kokoro_voices_path,
-                voice=settings.tts_voice,
-                language=settings.tts_language,
-                output_path=settings.tts_output_path,
-                timeout_seconds=settings.tts_timeout_seconds,
+            if settings.voice_mode in {'online', 'hybrid'} and not settings.cloud_enabled:
+                raise ValueError(f'{settings.voice_mode} voice mode requires cloud opt-in')
+
+            local_provider = None
+            if settings.voice_mode in {'local', 'hybrid'}:
+                local_provider = KokoroVoiceRouter(
+                    python_executable=settings.kokoro_python,
+                    model_path=settings.kokoro_model_path,
+                    voices_path=settings.kokoro_voices_path,
+                    voice=settings.tts_voice,
+                    language=settings.tts_language,
+                    output_path=settings.tts_output_path,
+                    timeout_seconds=settings.tts_timeout_seconds,
+                )
+
+            online_provider = None
+            if settings.voice_mode in {'online', 'hybrid'}:
+                online_provider = ElevenLabsVoiceProvider(
+                    api_key=settings.elevenlabs_api_key,
+                    voice_id=settings.elevenlabs_voice_id,
+                    model_id=settings.elevenlabs_model_id,
+                    base_url=settings.elevenlabs_base_url,
+                    output_path=settings.tts_output_path,
+                    timeout_seconds=settings.elevenlabs_timeout_seconds,
+                )
+
+            self.voice = VoiceRouter(
+                mode=settings.voice_mode,
+                local_provider=local_provider,
+                online_provider=online_provider,
+                logger=logger,
             )
-            self.state.active_voice = 'kokoro'
+            self.state.active_voice = self.voice.active_provider
 
     def status(self):
         return {
             'app_name': self.settings.app_name,
             'brain': self.brain.health(),
-            'voice': 'ON (KOKORO)' if self.state.voice_enabled else 'DISABLED',
+            'voice': f'ON ({self.settings.voice_mode.upper()})' if self.state.voice_enabled else 'DISABLED',
             'vision': 'ON' if self.state.vision_enabled else 'OFF',
             'memory': self.state.memory_mode.upper(),
             'cloud': 'ON' if self.state.cloud_enabled else 'OFF',
@@ -61,7 +84,9 @@ class JoiOrchestrator:
         if self.voice is None:
             return None
         try:
-            return self.voice.speak(text)
+            result = self.voice.speak(text)
+            self.state.active_voice = self.voice.active_provider
+            return result
         except Exception:
             self.logger.exception('Voice synthesis failed')
             raise

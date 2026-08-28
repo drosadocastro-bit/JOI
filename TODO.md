@@ -49,14 +49,16 @@
 - [ ] Evaluate a native Spanish female replacement voice
 
 ## Phase 3 — Online Voice: ElevenLabs
-- [ ] `.env` API credentials
-- [ ] ElevenLabs backend
+- [x] `.env` API credential configuration
+- [x] ElevenLabs backend
 - [ ] Streaming
-- [ ] Timeout/error handling
-- [ ] Voice router
-- [ ] Online -> ElevenLabs
-- [ ] Offline/failure -> Qwen3-TTS
-- [ ] Preserve session during fallback
+- [x] Timeout/error handling
+- [x] Voice router
+- [x] Online -> ElevenLabs
+- [x] Offline/failure -> Kokoro
+- [x] Preserve session during fallback
+- [x] Human-approved ElevenLabs live English voice test
+- [x] Human-approved ElevenLabs live Spanish voice test
 
 ## Phase 4 — State
 - [ ] Explicit MIC/VISION/MEMORY/CLOUD/VOICE state
@@ -145,4 +147,4 @@
 
 ---
 
-**Current rule: do not advance beyond Phase 1 until local text-only JOI is stable.**
+**Current rule: online voice must remain explicit opt-in, with Kokoro as the local default and fallback.**
