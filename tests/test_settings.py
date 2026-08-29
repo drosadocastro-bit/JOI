@@ -105,3 +105,30 @@ def test_settings_requires_spanish_voice_for_spanish_online_mode(monkeypatch):
 
     with pytest.raises(ValueError, match='requires ELEVENLABS_SPANISH_VOICE_ID'):
         Settings.load()
+
+
+@pytest.mark.parametrize(
+    'base_url',
+    [
+        'http://api.elevenlabs.io/v1',
+        'https://example.com/v1',
+        'https://api.elevenlabs.io.example.com/v1',
+    ],
+)
+def test_settings_rejects_untrusted_elevenlabs_base_url(monkeypatch, base_url):
+    monkeypatch.setenv('VOICE_ENABLED', 'true')
+    monkeypatch.setenv('VOICE_MODE', 'online')
+    monkeypatch.setenv('CLOUD_ENABLED', 'true')
+    monkeypatch.setenv('ELEVENLABS_API_KEY', 'local-secret')
+    monkeypatch.setenv('ELEVENLABS_VOICE_ID', 'voice-id')
+    monkeypatch.setenv('ELEVENLABS_BASE_URL', base_url)
+
+    with pytest.raises(ValueError, match='official HTTPS ElevenLabs endpoint'):
+        Settings.load()
+
+
+def test_local_mode_ignores_untrusted_unused_cloud_endpoint(monkeypatch):
+    monkeypatch.setenv('VOICE_MODE', 'local')
+    monkeypatch.setenv('ELEVENLABS_BASE_URL', 'http://example.com/v1')
+
+    assert Settings.load().voice_mode == 'local'

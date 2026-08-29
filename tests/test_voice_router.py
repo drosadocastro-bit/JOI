@@ -8,7 +8,12 @@ from unittest.mock import Mock
 import pytest
 
 import voice.voice_router as voice_router_module
-from voice.voice_router import ElevenLabsVoiceProvider, KokoroVoiceRouter, VoiceRouter
+from voice.voice_router import (
+    ElevenLabsVoiceProvider,
+    KokoroVoiceRouter,
+    NoRedirectHandler,
+    VoiceRouter,
+)
 
 
 def _router(tmp_path):
@@ -194,3 +199,9 @@ def test_elevenlabs_rejects_malformed_audio(monkeypatch, tmp_path):
 
     play_wav.assert_not_called()
     assert not (tmp_path / 'elevenlabs.wav').exists()
+
+
+def test_elevenlabs_redirects_are_refused():
+    handler = NoRedirectHandler()
+
+    assert handler.redirect_request(None, None, 302, 'Found', {}, 'https://example.com') is None

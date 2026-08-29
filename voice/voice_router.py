@@ -11,6 +11,11 @@ from pathlib import Path
 from audio.playback import play_wav
 
 
+class NoRedirectHandler(urllib.request.HTTPRedirectHandler):
+	def redirect_request(self, req, fp, code, msg, headers, newurl):
+		return None
+
+
 class VoiceRouter:
 	def __init__(self, mode, local_provider=None, online_provider=None, logger=None):
 		if mode not in {'local', 'online', 'hybrid'}:
@@ -130,7 +135,7 @@ class ElevenLabsVoiceProvider:
 		self.output_path = Path(output_path)
 		self.timeout_seconds = timeout_seconds
 		self.playback_device_index = playback_device_index
-		self.opener = opener or urllib.request.urlopen
+		self.opener = opener or urllib.request.build_opener(NoRedirectHandler()).open
 
 	def speak(self, text):
 		if not text or not text.strip():

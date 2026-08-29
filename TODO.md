@@ -18,7 +18,8 @@
 - [x] 20+ turn conversation test
 - [x] LM Studio restart/recovery test
 - [x] Timeout/error test
-- [ ] Record RAM/VRAM baseline
+- [x] Record RAM/VRAM baseline
+- [x] Evaluate Qwen3.5-9B Q4_K_M (fails current exact-output and latency gates)
 
 **Gate:** stable local text conversation and clean failure/recovery.
 
@@ -122,6 +123,17 @@
 - [ ] Keep terminal reference UI
 - [ ] Desktop UI after core stability
 - [ ] Show active providers and privacy states
+
+## Future Phase — MCP Server (`2026-07-28`)
+- [ ] Pin an SDK version that explicitly supports protocol revision `2026-07-28`
+- [ ] Implement protocol discovery/negotiation and reject unsupported revisions
+- [ ] Complete a threat model before selecting a transport
+- [ ] Expose read-only resources before adding tools
+- [ ] Require an explicit allowlist and human approval for every tool action
+- [ ] Prevent environment variables, credentials, and private context from exposure
+- [ ] Validate all tool inputs and structured outputs
+- [ ] Add redacted audit logs and adversarial authorization tests
+- [ ] Keep real-world actions non-autonomous
 
 ## Phase 13 — Physical JOI
 - [ ] Tabletop/emanator design

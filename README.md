@@ -43,7 +43,7 @@ Implemented:
 - ElevenLabs English voice approved through a live human listening test
 - ElevenLabs Spanish voice approved through a live human listening test
 - personality contract for identity, honesty, rhythm, and bilingual behavior
-- 41 passing tests
+- 48 passing tests
 
 Not implemented yet:
 
@@ -51,17 +51,17 @@ Not implemented yet:
 - speech recognition or push-to-talk
 - active vision
 - cloud reasoning
-- automatic local/online provider fallback
+- runtime voice-mode switching
 - streaming LLM tokens into interruptible speech
 
 ## Quick Start
 
 JOI currently targets Python 3.13 on Windows with LM Studio running locally.
+Run these commands from the repository root:
 
 ```powershell
-cd D:\JOI\JOI_2_0\JOI_2_0
-py -3.13 -m venv D:\JOI\.venv
-D:\JOI\.venv\Scripts\python.exe -m pip install -r requirements.txt
+py -3.13 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
 Copy-Item .env.example .env
 ```
 
@@ -69,7 +69,7 @@ Load the configured model in LM Studio and start JOI:
 
 ```powershell
 lms load nvidia/nemotron-3-nano --identifier nvidia/nemotron-3-nano -y
-D:\JOI\.venv\Scripts\python.exe app.py
+.\.venv\Scripts\python.exe app.py
 ```
 
 The default LM Studio endpoint is `http://127.0.0.1:1234/v1`. Change
@@ -94,17 +94,21 @@ Kokoro runs in a separate environment so its ONNX dependencies do not alter
 JOI's main runtime:
 
 ```powershell
-py -3.13 -m venv D:\JOI\.venv-kokoro
-D:\JOI\.venv-kokoro\Scripts\python.exe -m pip install kokoro-onnx==0.6.1 soundfile psutil
+py -3.13 -m venv .venv-kokoro
+.\.venv-kokoro\Scripts\python.exe -m pip install kokoro-onnx==0.6.1 soundfile psutil
 ```
 
 Download the official full-precision `kokoro-v1.0.onnx` and
-`voices-v1.0.bin` release assets into `D:\JOI\models\kokoro`, then set:
+`voices-v1.0.bin` release assets into `models\kokoro` under the repository
+root, then set:
 
 ```dotenv
 VOICE_ENABLED=true
 TTS_VOICE=af_heart
 TTS_LANGUAGE=en-us
+KOKORO_PYTHON=.venv-kokoro\Scripts\python.exe
+KOKORO_MODEL_PATH=models\kokoro\kokoro-v1.0.onnx
+KOKORO_VOICES_PATH=models\kokoro\voices-v1.0.bin
 ```
 
 Use `TTS_LANGUAGE=es` for Spanish phonemization. The current `af_heart`
@@ -143,27 +147,46 @@ network calls. The configured English voice passed a live human listening test.
 `TTS_LANGUAGE=es` selects `ELEVENLABS_SPANISH_VOICE_ID` instead. The configured
 Spanish voice also passed a live human listening test.
 
+## API Key Protection
+
+- `.env` and private `.env.*` variants are excluded from Git; only the blank
+	`.env.example` template is tracked.
+- API keys are omitted from `Settings` representations and redacted from file
+	log messages and tracebacks.
+- ElevenLabs credentials may be sent only to the documented HTTPS production
+	and residency hosts under `/v1`.
+- Redirects are refused so the credential-bearing header cannot be forwarded to
+	another host.
+- Local voice mode does not validate or contact the configured cloud endpoint.
+
+The local `.env` file is still plaintext on disk. Use a restricted ElevenLabs
+key, set a conservative service quota, rotate it after suspected exposure, and
+never paste it into source, logs, issues, commits, or chat.
+
 ## Tests and Acceptance
 
 Run the complete test suite:
 
 ```powershell
-D:\JOI\.venv\Scripts\python.exe -m pytest --tb=short -q
+.\.venv\Scripts\python.exe -m pytest --tb=short -q
 ```
 
 Run the Phase 1 conversation soak and restart recovery checks with LM Studio
 available:
 
 ```powershell
-D:\JOI\.venv\Scripts\python.exe phase1_acceptance.py
-D:\JOI\.venv\Scripts\python.exe phase1_recovery.py
+.\.venv\Scripts\python.exe phase1_acceptance.py
+.\.venv\Scripts\python.exe phase1_recovery.py
 ```
+
+The controlled local-brain comparison and current model decision are recorded
+in [docs/local-brain-model-selection.md](docs/local-brain-model-selection.md).
 
 Speech benchmarks use their isolated environments:
 
 ```powershell
-D:\JOI\.venv-tts\Scripts\python.exe qwen_tts_acceptance.py
-D:\JOI\.venv-kokoro\Scripts\python.exe kokoro_tts_benchmark.py
+.\.venv-tts\Scripts\python.exe qwen_tts_acceptance.py
+.\.venv-kokoro\Scripts\python.exe kokoro_tts_benchmark.py
 ```
 
 Kokoro passed the technical interactive gate on the current CPU-only host:

@@ -1,6 +1,16 @@
 from dataclasses import dataclass, field
 from pathlib import Path
 import os
+import urllib.parse
+
+
+ELEVENLABS_HOSTS = {
+    'api.elevenlabs.io',
+    'api.us.elevenlabs.io',
+    'api.eu.residency.elevenlabs.io',
+    'api.in.residency.elevenlabs.io',
+    'api.sg.residency.elevenlabs.io',
+}
 
 
 def _load_dotenv(path: Path) -> None:
@@ -30,6 +40,26 @@ def _choice_env(name: str, default: str, choices: set[str]) -> str:
     if value not in choices:
         options = ', '.join(sorted(choices))
         raise ValueError(f'{name} must be one of: {options}')
+    return value
+
+
+def _elevenlabs_base_url_env(required: bool) -> str:
+    value = os.getenv('ELEVENLABS_BASE_URL', 'https://api.elevenlabs.io/v1').rstrip('/')
+    if not required:
+        return value
+    parsed = urllib.parse.urlsplit(value)
+    trusted = (
+        parsed.scheme == 'https'
+        and parsed.hostname in ELEVENLABS_HOSTS
+        and parsed.port in {None, 443}
+        and parsed.path == '/v1'
+        and not parsed.username
+        and not parsed.password
+        and not parsed.query
+        and not parsed.fragment
+    )
+    if not trusted:
+        raise ValueError('ELEVENLABS_BASE_URL must be an official HTTPS ElevenLabs endpoint')
     return value
 
 
@@ -66,6 +96,7 @@ class Settings:
         runtime_root = root.parents[1]
         voice_enabled = os.getenv('VOICE_ENABLED', 'false').lower() == 'true'
         voice_mode = _choice_env('VOICE_MODE', 'local', {'local', 'online', 'hybrid'})
+        online_voice_enabled = voice_enabled and voice_mode in {'online', 'hybrid'}
         cloud_enabled = os.getenv('CLOUD_ENABLED', 'false').lower() == 'true'
         tts_language = os.getenv('TTS_LANGUAGE', 'en-us').lower()
         elevenlabs_api_key = os.getenv('ELEVENLABS_API_KEY', '')
@@ -75,7 +106,7 @@ class Settings:
         elevenlabs_voice_id = (
             elevenlabs_spanish_voice_id if use_spanish_voice else elevenlabs_default_voice_id
         )
-        if voice_enabled and voice_mode in {'online', 'hybrid'}:
+        if online_voice_enabled:
             if not cloud_enabled:
                 raise ValueError(f'{voice_mode} voice mode requires CLOUD_ENABLED=true')
             if not elevenlabs_api_key:
@@ -118,7 +149,7 @@ class Settings:
             elevenlabs_api_key=elevenlabs_api_key,
             elevenlabs_voice_id=elevenlabs_voice_id,
             elevenlabs_model_id=os.getenv('ELEVENLABS_MODEL_ID', 'eleven_multilingual_v2'),
-            elevenlabs_base_url=os.getenv('ELEVENLABS_BASE_URL', 'https://api.elevenlabs.io/v1').rstrip('/'),
+            elevenlabs_base_url=_elevenlabs_base_url_env(online_voice_enabled),
             elevenlabs_timeout_seconds=_positive_int_env('ELEVENLABS_TIMEOUT_SECONDS', 30),
             vision_enabled=os.getenv('VISION_ENABLED', 'false').lower() == 'true',
             cloud_enabled=cloud_enabled,
