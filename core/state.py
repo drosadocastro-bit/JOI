@@ -4,6 +4,7 @@ from typing import List, Dict
 
 @dataclass
 class JoiState:
+    mic_enabled: bool = False
     voice_enabled: bool = False
     vision_enabled: bool = False
     cloud_enabled: bool = False

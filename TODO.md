@@ -62,8 +62,8 @@
 - [x] Human-approved ElevenLabs live Spanish voice test
 
 ## Phase 4 — State
-- [ ] Explicit MIC/VISION/MEMORY/CLOUD/VOICE state
-- [ ] Runtime state commands
+- [x] Explicit MIC/VISION/MEMORY/CLOUD/VOICE state
+- [x] Runtime state commands
 
 ## Phase 5 — Memory
 - [ ] Write policy

@@ -43,7 +43,7 @@ Implemented:
 - ElevenLabs English voice approved through a live human listening test
 - ElevenLabs Spanish voice approved through a live human listening test
 - personality contract for identity, honesty, rhythm, and bilingual behavior
-- 48 passing tests
+- 55 passing tests
 
 Not implemented yet:
 
@@ -162,6 +162,23 @@ Spanish voice also passed a live human listening test.
 The local `.env` file is still plaintext on disk. Use a restricted ElevenLabs
 key, set a conservative service quota, rotate it after suspected exposure, and
 never paste it into source, logs, issues, commits, or chat.
+
+## Runtime Privacy State
+
+The terminal exposes explicit runtime controls:
+
+```text
+/mic on|off
+/voice on|off
+/vision on|off
+/memory session|off
+/cloud on|off
+```
+
+A capability can be enabled only if it was configured at startup. `MEMORY OFF`
+immediately clears session history and sends subsequent turns without retaining
+them. `CLOUD OFF` forces hybrid voice to its local provider and disables
+online-only voice before another speech request can be sent.
 
 ## Tests and Acceptance
 

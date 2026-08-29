@@ -136,3 +136,77 @@ def test_hybrid_voice_fallback_preserves_session(monkeypatch, tmp_path):
     local_voice.speak.assert_called_once_with('Hello')
     assert result == tmp_path / 'reply.wav'
     assert joi.memory.snapshot() == memory_before_speech
+
+
+def test_memory_off_does_not_retain_chat_exchange(monkeypatch):
+    brain = Mock()
+    brain.chat.return_value = 'Private reply'
+    monkeypatch.setattr(orchestrator_module, 'LocalLMStudioBrain', Mock(return_value=brain))
+    joi = JoiOrchestrator(_settings(), 'system', Mock())
+
+    joi.set_runtime_state('memory', 'off')
+
+    assert joi.chat('Private question') == 'Private reply'
+    assert joi.memory.snapshot() == [{'role': 'system', 'content': 'system'}]
+    brain.chat.assert_called_once_with([
+        {'role': 'system', 'content': 'system'},
+        {'role': 'user', 'content': 'Private question'},
+    ])
+
+
+def test_runtime_state_refuses_unconfigured_capability(monkeypatch):
+    monkeypatch.setattr(orchestrator_module, 'LocalLMStudioBrain', Mock())
+    joi = JoiOrchestrator(_settings(), 'system', Mock())
+
+    with pytest.raises(ValueError, match='MIC is not configured'):
+        joi.set_runtime_state('mic', 'on')
+
+    assert joi.state.mic_enabled is False
+
+
+def test_cloud_off_routes_hybrid_voice_locally(monkeypatch):
+    settings = _settings()
+    settings.voice_enabled = True
+    settings.voice_mode = 'hybrid'
+    settings.cloud_enabled = True
+    settings.elevenlabs_api_key = 'local-secret'
+    settings.elevenlabs_voice_id = 'voice-id'
+    local_voice = Mock()
+    online_voice = Mock()
+    monkeypatch.setattr(orchestrator_module, 'KokoroVoiceRouter', Mock(return_value=local_voice))
+    monkeypatch.setattr(
+        orchestrator_module,
+        'ElevenLabsVoiceProvider',
+        Mock(return_value=online_voice),
+    )
+    joi = JoiOrchestrator(settings, 'system', Mock())
+
+    joi.set_runtime_state('cloud', 'off')
+    joi.speak('Keep this local')
+
+    local_voice.speak.assert_called_once_with('Keep this local')
+    online_voice.speak.assert_not_called()
+    assert joi.status()['cloud'] == 'OFF'
+    assert joi.status()['voice'] == 'ON (LOCAL)'
+
+
+def test_cloud_off_disables_online_only_voice(monkeypatch):
+    settings = _settings()
+    settings.voice_enabled = True
+    settings.voice_mode = 'online'
+    settings.cloud_enabled = True
+    settings.elevenlabs_api_key = 'local-secret'
+    settings.elevenlabs_voice_id = 'voice-id'
+    online_voice = Mock()
+    monkeypatch.setattr(
+        orchestrator_module,
+        'ElevenLabsVoiceProvider',
+        Mock(return_value=online_voice),
+    )
+    joi = JoiOrchestrator(settings, 'system', Mock())
+
+    joi.set_runtime_state('cloud', 'off')
+
+    assert joi.speak('Do not send this') is None
+    online_voice.speak.assert_not_called()
+    assert joi.status()['voice'] == 'DISABLED'

@@ -132,3 +132,10 @@ def test_local_mode_ignores_untrusted_unused_cloud_endpoint(monkeypatch):
     monkeypatch.setenv('ELEVENLABS_BASE_URL', 'http://example.com/v1')
 
     assert Settings.load().voice_mode == 'local'
+
+
+def test_settings_rejects_invalid_memory_mode(monkeypatch):
+    monkeypatch.setenv('MEMORY_MODE', 'persistent')
+
+    with pytest.raises(ValueError, match='MEMORY_MODE must be one of: off, session'):
+        Settings.load()

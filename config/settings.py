@@ -153,5 +153,5 @@ class Settings:
             elevenlabs_timeout_seconds=_positive_int_env('ELEVENLABS_TIMEOUT_SECONDS', 30),
             vision_enabled=os.getenv('VISION_ENABLED', 'false').lower() == 'true',
             cloud_enabled=cloud_enabled,
-            memory_mode=os.getenv('MEMORY_MODE', 'session').lower(),
+            memory_mode=_choice_env('MEMORY_MODE', 'session', {'off', 'session'}),
         )
