@@ -66,12 +66,29 @@
 - [x] Runtime state commands
 
 ## Phase 5 — Memory
-- [ ] Write policy
+- [x] Initial write policy: completed exchanges only, explicit persistent mode
 - [ ] Read policy
 - [ ] Forget/delete policy
-- [ ] Persistent store
+- [x] Feature-flagged persistent episodic store
+- [x] Stable turn/exchange IDs, UTC timestamps, and schema version
+- [x] Atomic user/assistant exchange writes
+- [x] Database-level append-only protection
+- [x] Storage failure degrades without blocking conversation
 - [ ] Memory inspection
-- [ ] Memory OFF mode
+- [x] Memory OFF mode prevents session retention and durable writes
+- [x] Restart and 200-exchange persistent-memory soak
+- [x] Compact Memory in disabled extractive shadow mode
+- [x] Compact source-turn provenance and summarizer metadata
+- [x] Atomic Compact Memory replacement and corruption isolation
+- [x] Background updates with orderly shutdown flush
+- [ ] Evaluate model-backed summarization against extractive baseline
+- [ ] NIC graph integration in write-only mode
+- [ ] Source-linked vector storage
+- [ ] Shadow retrieval and evaluation harness
+- [ ] Confidence-gated memory injection
+- [ ] Salience, reinforcement, and non-destructive decay
+- [ ] Summary-of-summaries after measured drift
+- [ ] Read-only dreaming candidates after retrieval is proven
 
 ## Phase 6 — Vision
 - [ ] ASUS camera enumeration

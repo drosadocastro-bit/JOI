@@ -43,11 +43,13 @@ Implemented:
 - ElevenLabs English voice approved through a live human listening test
 - ElevenLabs Spanish voice approved through a live human listening test
 - personality contract for identity, honesty, rhythm, and bilingual behavior
-- 55 passing tests
+- feature-flagged, append-only episodic conversation storage
+- feature-flagged Compact Memory in extractive shadow mode
+- 87 passing tests
 
 Not implemented yet:
 
-- persistent long-term memory
+- associative long-term memory retrieval
 - speech recognition or push-to-talk
 - active vision
 - cloud reasoning
@@ -179,6 +181,32 @@ A capability can be enabled only if it was configured at startup. `MEMORY OFF`
 immediately clears session history and sends subsequent turns without retaining
 them. `CLOUD OFF` forces hybrid voice to its local provider and disables
 online-only voice before another speech request can be sent.
+
+## Experimental Persistent Memory
+
+Durable episodic writes are disabled by default. To enable them explicitly:
+
+```dotenv
+ENABLE_PERSISTENT_MEMORY=true
+MEMORY_MODE=persistent
+```
+
+Only completed exchanges are appended, and a storage failure cannot block the
+conversation. Persistent records are not retrieved into prompts yet. The local
+SQLite file contains plaintext conversation content and remains excluded from
+Git. See [docs/memory-architecture.md](docs/memory-architecture.md) for the
+authority model, failure behavior, and staged retrieval plan.
+
+Compact Memory can be enabled only with persistent mode:
+
+```dotenv
+ENABLE_COMPACT_MEMORY=true
+COMPACT_MEMORY_MAX_CHARACTERS=2000
+```
+
+The initial summarizer retains bounded source excerpts and provenance in a
+background worker. It does not inject summaries into live prompts. Failed or
+corrupted compact state leaves conversation and episodic storage operational.
 
 ## Tests and Acceptance
 

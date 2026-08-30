@@ -30,6 +30,11 @@ def _settings():
         vision_enabled=False,
         cloud_enabled=False,
         memory_mode='session',
+        persistent_memory_enabled=False,
+        memory_store_path='episodic.sqlite3',
+        compact_memory_enabled=False,
+        compact_memory_path='compact-memory.json',
+        compact_memory_max_characters=2000,
     )
 
 
@@ -210,3 +215,207 @@ def test_cloud_off_disables_online_only_voice(monkeypatch):
     assert joi.speak('Do not send this') is None
     online_voice.speak.assert_not_called()
     assert joi.status()['voice'] == 'DISABLED'
+
+
+def test_successful_persistent_chat_writes_complete_exchange(monkeypatch):
+    settings = _settings()
+    settings.memory_mode = 'persistent'
+    settings.persistent_memory_enabled = True
+    brain = Mock()
+    brain.chat.return_value = 'Durable reply'
+    store = Mock()
+    monkeypatch.setattr(orchestrator_module, 'LocalLMStudioBrain', Mock(return_value=brain))
+    memory_store = Mock(return_value=store)
+    monkeypatch.setattr(orchestrator_module, 'EpisodicMemoryStore', memory_store)
+    joi = JoiOrchestrator(settings, 'system', Mock())
+
+    assert joi.chat('Remember this') == 'Durable reply'
+
+    memory_store.assert_called_once_with('episodic.sqlite3')
+    store.append_exchange.assert_called_once_with('Remember this', 'Durable reply')
+
+
+def test_persistent_write_failure_does_not_block_chat(monkeypatch):
+    settings = _settings()
+    settings.memory_mode = 'persistent'
+    settings.persistent_memory_enabled = True
+    brain = Mock()
+    brain.chat.return_value = 'Reply survives'
+    store = Mock()
+    store.append_exchange.side_effect = RuntimeError('disk unavailable')
+    monkeypatch.setattr(orchestrator_module, 'LocalLMStudioBrain', Mock(return_value=brain))
+    monkeypatch.setattr(orchestrator_module, 'EpisodicMemoryStore', Mock(return_value=store))
+    logger = Mock()
+    joi = JoiOrchestrator(settings, 'system', logger)
+
+    assert joi.chat('Hello') == 'Reply survives'
+    assert joi.chat('Still working') == 'Reply survives'
+    assert joi.memory.snapshot()[-1] == {'role': 'assistant', 'content': 'Reply survives'}
+    store.append_exchange.assert_called_once_with('Hello', 'Reply survives')
+    logger.exception.assert_called_once_with('Persistent memory write failed')
+
+
+def test_failed_brain_request_is_not_persisted(monkeypatch):
+    settings = _settings()
+    settings.memory_mode = 'persistent'
+    settings.persistent_memory_enabled = True
+    brain = Mock()
+    brain.chat.side_effect = RuntimeError('offline')
+    store = Mock()
+    monkeypatch.setattr(orchestrator_module, 'LocalLMStudioBrain', Mock(return_value=brain))
+    monkeypatch.setattr(orchestrator_module, 'EpisodicMemoryStore', Mock(return_value=store))
+    joi = JoiOrchestrator(settings, 'system', Mock())
+
+    with pytest.raises(RuntimeError, match='offline'):
+        joi.chat('Do not store this')
+
+    store.append_exchange.assert_not_called()
+
+
+def test_persistent_store_initialization_failure_degrades_to_live_chat(monkeypatch):
+    settings = _settings()
+    settings.memory_mode = 'persistent'
+    settings.persistent_memory_enabled = True
+    brain = Mock()
+    brain.chat.return_value = 'Still available'
+    monkeypatch.setattr(orchestrator_module, 'LocalLMStudioBrain', Mock(return_value=brain))
+    monkeypatch.setattr(
+        orchestrator_module,
+        'EpisodicMemoryStore',
+        Mock(side_effect=RuntimeError('corrupted store')),
+    )
+    logger = Mock()
+
+    joi = JoiOrchestrator(settings, 'system', logger)
+
+    assert joi.chat('Hello') == 'Still available'
+    assert joi.status()['memory'] == 'PERSISTENT (UNAVAILABLE)'
+    logger.exception.assert_called_once_with('Persistent memory initialization failed')
+
+
+def test_memory_off_prevents_persistent_write(monkeypatch):
+    settings = _settings()
+    settings.memory_mode = 'persistent'
+    settings.persistent_memory_enabled = True
+    brain = Mock()
+    brain.chat.return_value = 'Private reply'
+    store = Mock()
+    monkeypatch.setattr(orchestrator_module, 'LocalLMStudioBrain', Mock(return_value=brain))
+    monkeypatch.setattr(orchestrator_module, 'EpisodicMemoryStore', Mock(return_value=store))
+    joi = JoiOrchestrator(settings, 'system', Mock())
+
+    joi.set_runtime_state('memory', 'off')
+
+    assert joi.chat('Private question') == 'Private reply'
+    store.append_exchange.assert_not_called()
+
+
+def test_compact_memory_receives_persisted_turns_without_prompt_injection(monkeypatch):
+    settings = _settings()
+    settings.memory_mode = 'persistent'
+    settings.persistent_memory_enabled = True
+    settings.compact_memory_enabled = True
+    brain = Mock()
+    brain.chat.return_value = 'Live reply'
+    turns = [Mock(turn_id='user-1'), Mock(turn_id='assistant-1')]
+    store = Mock()
+    store.append_exchange.return_value = turns
+    worker = Mock()
+    monkeypatch.setattr(orchestrator_module, 'LocalLMStudioBrain', Mock(return_value=brain))
+    monkeypatch.setattr(orchestrator_module, 'EpisodicMemoryStore', Mock(return_value=store))
+    monkeypatch.setattr(orchestrator_module, 'CompactMemoryStore', Mock())
+    monkeypatch.setattr(orchestrator_module, 'CompactMemoryManager', Mock())
+    monkeypatch.setattr(orchestrator_module, 'CompactMemoryWorker', Mock(return_value=worker))
+    joi = JoiOrchestrator(settings, 'system', Mock())
+
+    assert joi.chat('Live question') == 'Live reply'
+
+    worker.submit.assert_called_once_with(turns)
+    brain.chat.assert_called_once_with([
+        {'role': 'system', 'content': 'system'},
+        {'role': 'user', 'content': 'Live question'},
+    ])
+
+
+def test_compact_memory_does_not_run_when_persistent_write_fails(monkeypatch):
+    settings = _settings()
+    settings.memory_mode = 'persistent'
+    settings.persistent_memory_enabled = True
+    settings.compact_memory_enabled = True
+    brain = Mock()
+    brain.chat.return_value = 'Live reply'
+    store = Mock()
+    store.append_exchange.side_effect = RuntimeError('disk unavailable')
+    worker = Mock()
+    monkeypatch.setattr(orchestrator_module, 'LocalLMStudioBrain', Mock(return_value=brain))
+    monkeypatch.setattr(orchestrator_module, 'EpisodicMemoryStore', Mock(return_value=store))
+    monkeypatch.setattr(orchestrator_module, 'CompactMemoryStore', Mock())
+    monkeypatch.setattr(orchestrator_module, 'CompactMemoryManager', Mock())
+    monkeypatch.setattr(orchestrator_module, 'CompactMemoryWorker', Mock(return_value=worker))
+    joi = JoiOrchestrator(settings, 'system', Mock())
+
+    assert joi.chat('Live question') == 'Live reply'
+
+    worker.submit.assert_not_called()
+
+
+def test_corrupted_compact_memory_does_not_block_chat_or_episodic_write(
+    monkeypatch,
+    tmp_path,
+):
+    settings = _settings()
+    settings.memory_mode = 'persistent'
+    settings.persistent_memory_enabled = True
+    settings.compact_memory_enabled = True
+    settings.compact_memory_path = str(tmp_path / 'compact-memory.json')
+    (tmp_path / 'compact-memory.json').write_text('{broken', encoding='utf-8')
+    brain = Mock()
+    brain.chat.return_value = 'Live reply'
+    store = Mock()
+    store.append_exchange.return_value = [Mock(), Mock()]
+    monkeypatch.setattr(orchestrator_module, 'LocalLMStudioBrain', Mock(return_value=brain))
+    monkeypatch.setattr(orchestrator_module, 'EpisodicMemoryStore', Mock(return_value=store))
+    logger = Mock()
+    joi = JoiOrchestrator(settings, 'system', logger)
+
+    assert joi.chat('Live question') == 'Live reply'
+
+    store.append_exchange.assert_called_once_with('Live question', 'Live reply')
+    assert joi.compact_memory_worker is None
+    logger.exception.assert_called_once_with('Compact memory initialization failed')
+
+
+def test_disabled_compact_memory_constructs_no_shadow_components(monkeypatch):
+    settings = _settings()
+    settings.memory_mode = 'persistent'
+    settings.persistent_memory_enabled = True
+    brain = Mock()
+    brain.chat.return_value = 'Live reply'
+    store = Mock()
+    monkeypatch.setattr(orchestrator_module, 'LocalLMStudioBrain', Mock(return_value=brain))
+    monkeypatch.setattr(orchestrator_module, 'EpisodicMemoryStore', Mock(return_value=store))
+    compact_store = Mock()
+    monkeypatch.setattr(orchestrator_module, 'CompactMemoryStore', compact_store)
+    joi = JoiOrchestrator(settings, 'system', Mock())
+
+    assert joi.chat('Live question') == 'Live reply'
+
+    compact_store.assert_not_called()
+
+
+def test_close_flushes_compact_memory_worker(monkeypatch):
+    settings = _settings()
+    settings.memory_mode = 'persistent'
+    settings.persistent_memory_enabled = True
+    settings.compact_memory_enabled = True
+    worker = Mock()
+    monkeypatch.setattr(orchestrator_module, 'LocalLMStudioBrain', Mock())
+    monkeypatch.setattr(orchestrator_module, 'EpisodicMemoryStore', Mock())
+    monkeypatch.setattr(orchestrator_module, 'CompactMemoryStore', Mock())
+    monkeypatch.setattr(orchestrator_module, 'CompactMemoryManager', Mock())
+    monkeypatch.setattr(orchestrator_module, 'CompactMemoryWorker', Mock(return_value=worker))
+    joi = JoiOrchestrator(settings, 'system', Mock())
+
+    joi.close()
+
+    worker.close.assert_called_once_with()

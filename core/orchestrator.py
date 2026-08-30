@@ -1,6 +1,13 @@
 from brain.local_llm import LocalLMStudioBrain
 from core.router import BrainRouter
 from core.state import JoiState
+from memory.compact_memory import (
+    CompactMemoryManager,
+    CompactMemoryStore,
+    CompactMemoryWorker,
+    ExtractiveCompactSummarizer,
+)
+from memory.memory_store import EpisodicMemoryStore
 from memory.session_memory import SessionMemory
 from voice.voice_router import ElevenLabsVoiceProvider, KokoroVoiceRouter, VoiceRouter
 
@@ -23,6 +30,28 @@ class JoiOrchestrator:
             'cloud': settings.cloud_enabled,
         }
         self.memory = SessionMemory(system_prompt)
+        self.memory_store = None
+        self.memory_store_error = None
+        self.compact_memory_worker = None
+        self.compact_memory_error = None
+        if settings.persistent_memory_enabled:
+            try:
+                self.memory_store = EpisodicMemoryStore(settings.memory_store_path)
+            except Exception as exc:
+                self.memory_store_error = str(exc)
+                self.logger.exception('Persistent memory initialization failed')
+        if settings.compact_memory_enabled and self.memory_store is not None:
+            try:
+                compact_manager = CompactMemoryManager(
+                    store=CompactMemoryStore(settings.compact_memory_path),
+                    summarizer=ExtractiveCompactSummarizer(
+                        max_characters=settings.compact_memory_max_characters,
+                    ),
+                )
+                self.compact_memory_worker = CompactMemoryWorker(compact_manager, logger)
+            except Exception as exc:
+                self.compact_memory_error = str(exc)
+                self.logger.exception('Compact memory initialization failed')
         local_brain = LocalLMStudioBrain(settings.lmstudio_base_url, settings.local_model, settings.request_timeout_seconds)
         self.brain = BrainRouter(local_brain)
         self.voice = None
@@ -63,13 +92,16 @@ class JoiOrchestrator:
 
     def status(self):
         voice_mode = self.voice.mode if self.voice is not None else self.settings.voice_mode
+        memory_status = self.state.memory_mode.upper()
+        if self.state.memory_mode == 'persistent' and self.memory_store is None:
+            memory_status = 'PERSISTENT (UNAVAILABLE)'
         return {
             'app_name': self.settings.app_name,
             'brain': self.brain.health(),
             'mic': 'ON' if self.state.mic_enabled else 'OFF',
             'voice': f'ON ({voice_mode.upper()})' if self.state.voice_enabled else 'DISABLED',
             'vision': 'ON' if self.state.vision_enabled else 'OFF',
-            'memory': self.state.memory_mode.upper(),
+            'memory': memory_status,
             'cloud': 'ON' if self.state.cloud_enabled else 'OFF',
         }
 
@@ -77,8 +109,13 @@ class JoiOrchestrator:
         control = control.lower()
         value = value.lower()
         if control == 'memory':
-            if value not in {'off', 'session'}:
-                raise ValueError('MEMORY must be OFF or SESSION')
+            if value not in {'off', 'persistent', 'session'}:
+                raise ValueError('MEMORY must be OFF, PERSISTENT, or SESSION')
+            if value == 'persistent':
+                if not self.settings.persistent_memory_enabled:
+                    raise ValueError('PERSISTENT memory is not configured')
+                if self.memory_store is None:
+                    raise ValueError('PERSISTENT memory is unavailable')
             if value == 'off':
                 self.memory.reset()
             self.state.memory_mode = value
@@ -148,7 +185,26 @@ class JoiOrchestrator:
             self.logger.exception('Brain request failed')
             raise
         self.memory.add_assistant(reply)
+        if self.state.memory_mode == 'persistent':
+            self._persist_exchange(user_text, reply)
         return reply
+
+    def _persist_exchange(self, user_text: str, assistant_text: str):
+        if self.memory_store is None:
+            return
+        try:
+            turns = self.memory_store.append_exchange(user_text, assistant_text)
+        except Exception as exc:
+            self.memory_store = None
+            self.memory_store_error = str(exc)
+            self.logger.exception('Persistent memory write failed')
+            return
+        if self.compact_memory_worker is not None:
+            self.compact_memory_worker.submit(turns)
+
+    def close(self):
+        if self.compact_memory_worker is not None:
+            self.compact_memory_worker.close()
 
     def speak(self, text: str):
         if self.voice is None or not self.state.voice_enabled:

@@ -10,7 +10,10 @@ def main():
     settings = Settings.load()
     logger = configure_logging(settings.log_level, settings.log_file)
     joi = JoiOrchestrator(settings, SYSTEM_PROMPT, logger)
-    TerminalInterface(joi).run()
+    try:
+        TerminalInterface(joi).run()
+    finally:
+        joi.close()
 
 
 if __name__ == '__main__':

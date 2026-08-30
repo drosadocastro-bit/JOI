@@ -66,4 +66,4 @@ class TerminalInterface:
     def _print_help():
         print('Commands: /status  /reset  /help  /exit')
         print('State: /mic <on|off>  /voice <on|off>  /vision <on|off>')
-        print('       /memory <session|off>  /cloud <on|off>')
+        print('       /memory <off|session|persistent>  /cloud <on|off>')

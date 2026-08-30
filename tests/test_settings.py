@@ -135,7 +135,65 @@ def test_local_mode_ignores_untrusted_unused_cloud_endpoint(monkeypatch):
 
 
 def test_settings_rejects_invalid_memory_mode(monkeypatch):
-    monkeypatch.setenv('MEMORY_MODE', 'persistent')
+    monkeypatch.setenv('MEMORY_MODE', 'archive')
 
-    with pytest.raises(ValueError, match='MEMORY_MODE must be one of: off, session'):
+    with pytest.raises(ValueError, match='MEMORY_MODE must be one of: off, persistent, session'):
+        Settings.load()
+
+
+def test_settings_requires_feature_flag_for_persistent_memory(monkeypatch):
+    monkeypatch.setenv('MEMORY_MODE', 'persistent')
+    monkeypatch.setenv('ENABLE_PERSISTENT_MEMORY', 'false')
+
+    with pytest.raises(ValueError, match='persistent memory requires ENABLE_PERSISTENT_MEMORY=true'):
+        Settings.load()
+
+
+def test_settings_enables_persistent_memory_explicitly(monkeypatch, tmp_path):
+    path = tmp_path / 'episodic.sqlite3'
+    monkeypatch.setenv('MEMORY_MODE', 'persistent')
+    monkeypatch.setenv('ENABLE_PERSISTENT_MEMORY', 'true')
+    monkeypatch.setenv('MEMORY_STORE_PATH', str(path))
+
+    settings = Settings.load()
+
+    assert settings.persistent_memory_enabled is True
+    assert settings.memory_mode == 'persistent'
+    assert settings.memory_store_path == str(path)
+
+
+def test_settings_defaults_compact_memory_to_disabled(monkeypatch):
+    monkeypatch.delenv('ENABLE_COMPACT_MEMORY', raising=False)
+
+    assert Settings.load().compact_memory_enabled is False
+
+
+def test_settings_requires_persistent_mode_for_compact_memory(monkeypatch):
+    monkeypatch.setenv('ENABLE_PERSISTENT_MEMORY', 'true')
+    monkeypatch.setenv('ENABLE_COMPACT_MEMORY', 'true')
+    monkeypatch.setenv('MEMORY_MODE', 'session')
+
+    with pytest.raises(ValueError, match='compact memory requires MEMORY_MODE=persistent'):
+        Settings.load()
+
+
+def test_settings_loads_compact_memory_configuration(monkeypatch, tmp_path):
+    path = tmp_path / 'compact-memory.json'
+    monkeypatch.setenv('ENABLE_PERSISTENT_MEMORY', 'true')
+    monkeypatch.setenv('ENABLE_COMPACT_MEMORY', 'true')
+    monkeypatch.setenv('MEMORY_MODE', 'persistent')
+    monkeypatch.setenv('COMPACT_MEMORY_PATH', str(path))
+    monkeypatch.setenv('COMPACT_MEMORY_MAX_CHARACTERS', '1500')
+
+    settings = Settings.load()
+
+    assert settings.compact_memory_enabled is True
+    assert settings.compact_memory_path == str(path)
+    assert settings.compact_memory_max_characters == 1500
+
+
+def test_settings_rejects_too_small_compact_memory_limit(monkeypatch):
+    monkeypatch.setenv('COMPACT_MEMORY_MAX_CHARACTERS', '99')
+
+    with pytest.raises(ValueError, match='must be at least 100'):
         Settings.load()

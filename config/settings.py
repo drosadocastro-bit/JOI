@@ -43,6 +43,13 @@ def _choice_env(name: str, default: str, choices: set[str]) -> str:
     return value
 
 
+def _bool_env(name: str, default: bool = False) -> bool:
+    value = os.getenv(name, str(default)).lower()
+    if value not in {'true', 'false'}:
+        raise ValueError(f'{name} must be true or false')
+    return value == 'true'
+
+
 def _elevenlabs_base_url_env(required: bool) -> str:
     value = os.getenv('ELEVENLABS_BASE_URL', 'https://api.elevenlabs.io/v1').rstrip('/')
     if not required:
@@ -88,6 +95,11 @@ class Settings:
     vision_enabled: bool
     cloud_enabled: bool
     memory_mode: str
+    persistent_memory_enabled: bool
+    memory_store_path: str
+    compact_memory_enabled: bool
+    compact_memory_path: str
+    compact_memory_max_characters: int
 
     @classmethod
     def load(cls):
@@ -98,6 +110,19 @@ class Settings:
         voice_mode = _choice_env('VOICE_MODE', 'local', {'local', 'online', 'hybrid'})
         online_voice_enabled = voice_enabled and voice_mode in {'online', 'hybrid'}
         cloud_enabled = os.getenv('CLOUD_ENABLED', 'false').lower() == 'true'
+        memory_mode = _choice_env('MEMORY_MODE', 'session', {'off', 'persistent', 'session'})
+        persistent_memory_enabled = _bool_env('ENABLE_PERSISTENT_MEMORY')
+        if memory_mode == 'persistent' and not persistent_memory_enabled:
+            raise ValueError('persistent memory requires ENABLE_PERSISTENT_MEMORY=true')
+        compact_memory_enabled = _bool_env('ENABLE_COMPACT_MEMORY')
+        if compact_memory_enabled and memory_mode != 'persistent':
+            raise ValueError('compact memory requires MEMORY_MODE=persistent')
+        compact_memory_max_characters = _positive_int_env(
+            'COMPACT_MEMORY_MAX_CHARACTERS',
+            2000,
+        )
+        if compact_memory_max_characters < 100:
+            raise ValueError('COMPACT_MEMORY_MAX_CHARACTERS must be at least 100')
         tts_language = os.getenv('TTS_LANGUAGE', 'en-us').lower()
         elevenlabs_api_key = os.getenv('ELEVENLABS_API_KEY', '')
         elevenlabs_default_voice_id = os.getenv('ELEVENLABS_VOICE_ID', '')
@@ -153,5 +178,16 @@ class Settings:
             elevenlabs_timeout_seconds=_positive_int_env('ELEVENLABS_TIMEOUT_SECONDS', 30),
             vision_enabled=os.getenv('VISION_ENABLED', 'false').lower() == 'true',
             cloud_enabled=cloud_enabled,
-            memory_mode=_choice_env('MEMORY_MODE', 'session', {'off', 'session'}),
+            memory_mode=memory_mode,
+            persistent_memory_enabled=persistent_memory_enabled,
+            memory_store_path=os.getenv(
+                'MEMORY_STORE_PATH',
+                str(root / 'data' / 'memory' / 'episodic.sqlite3'),
+            ),
+            compact_memory_enabled=compact_memory_enabled,
+            compact_memory_path=os.getenv(
+                'COMPACT_MEMORY_PATH',
+                str(root / 'data' / 'memory' / 'compact-memory.json'),
+            ),
+            compact_memory_max_characters=compact_memory_max_characters,
         )
