@@ -224,6 +224,8 @@ background worker. It does not inject summaries into live prompts. Failed or
 corrupted compact state leaves conversation and episodic storage operational.
 Compact state created before a later correction or forget policy is not yet
 automatically invalidated or regenerated and remains non-authoritative.
+The required work and acceptance criteria for closing that gap are specified in
+[docs/compact-memory-closure-gate.md](docs/compact-memory-closure-gate.md).
 
 ## Tests and Acceptance
 

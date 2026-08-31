@@ -116,11 +116,17 @@ is later corrected or forgotten. It may therefore retain an obsolete source
 excerpt and must remain non-authoritative until policy-aware regeneration has
 its own acceptance gate.
 
-## Next Gate: NIC Graph Adapter
+The normative requirements for model-backed comparison, structured claims,
+policy-aware regeneration, drift measurement, and promotion are defined in
+[compact-memory-closure-gate.md](compact-memory-closure-gate.md). None of those
+requirements permits live prompt injection.
 
-NIC integration should begin write-only after its actual graph interface and
-schema are available for review. Until then, Compact Memory remains the only
-derived layer and has no effect on live responses.
+## Next Gate: Compact Memory Closure
+
+Phase 5A must close the Compact Memory gate before NIC graph integration begins.
+NIC integration should then begin write-only after its actual graph interface
+and schema are available for review. Until then, Compact Memory remains the
+only derived layer and has no effect on live responses.
 
 Relational continuity and adaptation remain gated behind memory correction,
 inspection, and measured shadow retrieval. Their sequencing and invariants are

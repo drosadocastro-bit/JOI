@@ -82,6 +82,14 @@
 - [x] Compact source-turn provenance and summarizer metadata
 - [x] Atomic Compact Memory replacement and corruption isolation
 - [x] Background updates with orderly shutdown flush
+- [x] Define Phase 5A Compact Memory closure specification
+- [ ] Preserve paired extractive baseline artifacts for model evaluation
+- [ ] Add disabled local model-backed Compact Memory candidate path
+- [ ] Enforce structured claims and effective-source provenance
+- [ ] Regenerate after correction and logical forgetting
+- [ ] Add unsupported-claim rejection and atomic candidate publication
+- [ ] Build machine-readable comparison, drift, and human-review harnesses
+- [ ] Pass Compact Memory closure gate at 25/50/100/200 updates
 - [ ] Evaluate model-backed summarization against extractive baseline
 - [ ] NIC graph integration in write-only mode
 - [ ] Source-linked vector storage
@@ -105,7 +113,8 @@
 - [ ] Shadow controlled learning before approved adaptation
 - [ ] Relational consolidation only after retrieval is proven
 
-Detailed sequencing and invariants: `docs/cognitive-roadmap.md`.
+Detailed sequencing and invariants: `docs/cognitive-roadmap.md`. Compact Memory
+promotion criteria: `docs/compact-memory-closure-gate.md`.
 
 ## Phase 6 — Vision
 - [ ] ASUS camera enumeration

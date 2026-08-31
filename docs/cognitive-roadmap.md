@@ -39,6 +39,11 @@ Required foundations:
 - stale memory cannot override the current user statement
 - retrieval quality is measured before relational memories consume it
 
+Compact Memory's prerequisite model-backed shadow evaluation is specified in
+[compact-memory-closure-gate.md](compact-memory-closure-gate.md). That gate
+must pass before graph, vector, relational, or live memory retrieval work can
+use Compact Memory claims.
+
 ## Phase A: Relational Continuity
 
 ### A1: Relational Candidate Schema
