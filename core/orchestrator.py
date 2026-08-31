@@ -202,6 +202,32 @@ class JoiOrchestrator:
         if self.compact_memory_worker is not None:
             self.compact_memory_worker.submit(turns)
 
+    def _require_memory_store(self):
+        if self.memory_store is None:
+            if not self.settings.persistent_memory_enabled:
+                raise ValueError('Persistent memory is not configured')
+            raise ValueError('Persistent memory is unavailable')
+        return self.memory_store
+
+    def memory_store_status(self):
+        return self._require_memory_store().status()
+
+    def memory_recent(self, limit: int = 10):
+        return self._require_memory_store().inspect_recent(limit=limit)
+
+    def memory_why(self, turn_id: str):
+        return self._require_memory_store().inspect_turn(turn_id)
+
+    def memory_correct(self, turn_id: str, replacement_content: str):
+        return self._require_memory_store().correct_turn(
+            turn_id,
+            replacement_content,
+            reason='explicit user correction',
+        )
+
+    def memory_forget(self, turn_id: str, reason: str | None = None):
+        return self._require_memory_store().forget_turn(turn_id, reason=reason)
+
     def close(self):
         if self.compact_memory_worker is not None:
             self.compact_memory_worker.close()

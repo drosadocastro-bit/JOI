@@ -106,3 +106,130 @@ def test_store_reopens_after_200_exchange_soak_with_provenance(tmp_path):
     assert [turn.role for turn in turns[:4]] == ['user', 'assistant', 'user', 'assistant']
     assert turns[0].content == 'Question 0'
     assert turns[-1].content == 'Answer 199'
+
+
+def test_correction_supersedes_prior_policy_without_rewriting_raw_turn(tmp_path):
+    identifiers = [
+        'exchange-1',
+        'turn-user-1',
+        'turn-assistant-1',
+        'policy-1',
+        'policy-2',
+    ]
+    store = _store(tmp_path, identifiers)
+    store.append_exchange('My favorite color is blue.', 'Noted.')
+
+    first = store.correct_turn('turn-user-1', 'My favorite color is green.')
+    second = store.correct_turn('turn-user-1', 'My favorite color is red.')
+    inspected = store.inspect_turn('turn-user-1')
+
+    assert first.supersedes_policy_id is None
+    assert second.supersedes_policy_id == first.policy_id
+    assert inspected.turn.content == 'My favorite color is blue.'
+    assert inspected.effective_content == 'My favorite color is red.'
+    assert inspected.status == 'corrected'
+    assert inspected.policies == (first, second)
+
+
+def test_forget_logically_suppresses_turn_without_deleting_evidence(tmp_path):
+    store = _store(
+        tmp_path,
+        ['exchange-1', 'turn-user-1', 'turn-assistant-1', 'policy-1'],
+    )
+    store.append_exchange('Private detail.', 'Understood.')
+
+    policy = store.forget_turn('turn-user-1', reason='user request')
+    inspected = store.inspect_turn('turn-user-1')
+
+    assert policy.action == 'forget'
+    assert inspected.status == 'forgotten'
+    assert inspected.effective_content is None
+    assert inspected.turn.content == 'Private detail.'
+    assert len(store.list_turns()) == 2
+
+
+def test_policy_records_are_append_only_at_database_boundary(tmp_path):
+    store = _store(
+        tmp_path,
+        ['exchange-1', 'turn-user-1', 'turn-assistant-1', 'policy-1'],
+    )
+    store.append_exchange('Original.', 'Reply.')
+    store.correct_turn('turn-user-1', 'Corrected.')
+
+    with sqlite3.connect(store.path) as connection:
+        with pytest.raises(sqlite3.IntegrityError, match='memory policies are append-only'):
+            connection.execute("UPDATE memory_policies SET action = 'forget'")
+        with pytest.raises(sqlite3.IntegrityError, match='memory policies are append-only'):
+            connection.execute('DELETE FROM memory_policies')
+
+
+def test_policy_rejects_unknown_turn_and_empty_correction(tmp_path):
+    store = _store(tmp_path)
+
+    with pytest.raises(MemoryStoreError, match='turn not found'):
+        store.forget_turn('missing')
+    with pytest.raises(ValueError, match='replacement content must not be empty'):
+        store.correct_turn('missing', ' ')
+
+
+def test_recent_inspection_returns_latest_turns_with_policy_status(tmp_path):
+    identifiers = iter(
+        ['exchange-1', 'user-1', 'assistant-1', 'exchange-2', 'user-2', 'assistant-2', 'policy-1']
+    )
+    store = EpisodicMemoryStore(tmp_path / 'episodic.sqlite3', id_factory=lambda: next(identifiers))
+    store.append_exchange('First question', 'First answer')
+    store.append_exchange('Second question', 'Second answer')
+    store.forget_turn('user-2')
+
+    recent = store.inspect_recent(limit=2)
+
+    assert [item.turn.turn_id for item in recent] == ['user-2', 'assistant-2']
+    assert [item.status for item in recent] == ['forgotten', 'original']
+
+
+def test_schema_v1_migrates_without_changing_raw_turns(tmp_path):
+    path = tmp_path / 'v1.sqlite3'
+    with sqlite3.connect(path) as connection:
+        connection.executescript(
+            '''
+            CREATE TABLE episodic_turns (
+                turn_id TEXT PRIMARY KEY,
+                exchange_id TEXT NOT NULL,
+                sequence INTEGER NOT NULL,
+                role TEXT NOT NULL,
+                content TEXT NOT NULL,
+                created_at_utc TEXT NOT NULL,
+                schema_version INTEGER NOT NULL,
+                UNIQUE (exchange_id, sequence)
+            );
+            INSERT INTO episodic_turns VALUES (
+                'turn-1', 'exchange-1', 0, 'user', 'Original evidence',
+                '2026-08-31T12:00:00+00:00', 1
+            );
+            PRAGMA user_version = 1;
+            '''
+        )
+
+    store = EpisodicMemoryStore(path)
+
+    assert store.inspect_turn('turn-1').turn.content == 'Original evidence'
+    with sqlite3.connect(path) as connection:
+        assert connection.execute('PRAGMA user_version').fetchone()[0] == 2
+
+
+def test_memory_status_reports_evidence_and_policy_counts(tmp_path):
+    store = _store(
+        tmp_path,
+        ['exchange-1', 'turn-user-1', 'turn-assistant-1', 'policy-1'],
+    )
+    store.append_exchange('Original.', 'Reply.')
+    store.correct_turn('turn-user-1', 'Corrected.')
+
+    assert store.status() == {
+        'schema_version': 2,
+        'turn_count': 2,
+        'exchange_count': 1,
+        'policy_count': 1,
+        'corrected_turn_count': 1,
+        'forgotten_turn_count': 0,
+    }

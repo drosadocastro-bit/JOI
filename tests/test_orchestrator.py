@@ -419,3 +419,34 @@ def test_close_flushes_compact_memory_worker(monkeypatch):
     joi.close()
 
     worker.close.assert_called_once_with()
+
+
+def test_memory_inspection_and_policy_commands_delegate_to_store(monkeypatch):
+    settings = _settings()
+    settings.persistent_memory_enabled = True
+    store = Mock()
+    monkeypatch.setattr(orchestrator_module, 'LocalLMStudioBrain', Mock())
+    monkeypatch.setattr(orchestrator_module, 'EpisodicMemoryStore', Mock(return_value=store))
+    joi = JoiOrchestrator(settings, 'system', Mock())
+
+    assert joi.memory_store_status() == store.status.return_value
+    assert joi.memory_recent(5) == store.inspect_recent.return_value
+    assert joi.memory_why('turn-1') == store.inspect_turn.return_value
+    assert joi.memory_correct('turn-1', 'Correct Value') == store.correct_turn.return_value
+    assert joi.memory_forget('turn-1', 'User Request') == store.forget_turn.return_value
+    store.inspect_recent.assert_called_once_with(limit=5)
+    store.inspect_turn.assert_called_once_with('turn-1')
+    store.correct_turn.assert_called_once_with(
+        'turn-1',
+        'Correct Value',
+        reason='explicit user correction',
+    )
+    store.forget_turn.assert_called_once_with('turn-1', reason='User Request')
+
+
+def test_memory_commands_refuse_unavailable_store(monkeypatch):
+    monkeypatch.setattr(orchestrator_module, 'LocalLMStudioBrain', Mock())
+    joi = JoiOrchestrator(_settings(), 'system', Mock())
+
+    with pytest.raises(ValueError, match='Persistent memory is not configured'):
+        joi.memory_recent()

@@ -68,14 +68,14 @@
 ## Phase 5 — Memory
 - [x] Initial write policy: completed exchanges only, explicit persistent mode
 - [ ] Read policy
-- [ ] Forget/delete policy
-- [ ] Memory correction and supersession records
+- [x] Logical forget policy (physical deletion remains deferred)
+- [x] Memory correction and supersession records
 - [x] Feature-flagged persistent episodic store
 - [x] Stable turn/exchange IDs, UTC timestamps, and schema version
 - [x] Atomic user/assistant exchange writes
 - [x] Database-level append-only protection
 - [x] Storage failure degrades without blocking conversation
-- [ ] Memory inspection
+- [x] Explicit memory status, recent, and provenance inspection
 - [x] Memory OFF mode prevents session retention and durable writes
 - [x] Restart and 200-exchange persistent-memory soak
 - [x] Compact Memory in disabled extractive shadow mode
@@ -93,7 +93,7 @@
 - [ ] Read-only dreaming candidates after retrieval is proven
 
 ## Future Cognitive And Relational Roadmap
-- [ ] Complete Phase 5 correction, inspection, and shadow retrieval gates
+- [ ] Complete Phase 5 shadow retrieval gate (correction and inspection complete)
 - [ ] Relational candidate schema with explicit/inferred authority
 - [ ] Relational pattern learning in shadow mode
 - [ ] Confidence-gated shared continuity retrieval

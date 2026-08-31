@@ -44,8 +44,9 @@ Implemented:
 - ElevenLabs Spanish voice approved through a live human listening test
 - personality contract for identity, honesty, rhythm, and bilingual behavior
 - feature-flagged, append-only episodic conversation storage
+- inspectable correction, supersession, and logical-forgetting records
 - feature-flagged Compact Memory in extractive shadow mode
-- 87 passing tests
+- 100 passing tests
 
 Not implemented yet:
 
@@ -197,6 +198,20 @@ SQLite file contains plaintext conversation content and remains excluded from
 Git. See [docs/memory-architecture.md](docs/memory-architecture.md) for the
 authority model, failure behavior, and staged retrieval plan.
 
+Persistent memory can be inspected and corrected explicitly from the terminal:
+
+```text
+/memory status
+/memory recent [limit]
+/memory why <turn-id>
+/memory correct <turn-id> <replacement>
+/memory forget <turn-id> [reason]
+```
+
+Corrections and forgetting append policy records; they never update or delete
+the original turn. Forgetting suppresses the turn's effective content but is
+not physical erasure of the SQLite evidence.
+
 Compact Memory can be enabled only with persistent mode:
 
 ```dotenv
@@ -207,6 +222,8 @@ COMPACT_MEMORY_MAX_CHARACTERS=2000
 The initial summarizer retains bounded source excerpts and provenance in a
 background worker. It does not inject summaries into live prompts. Failed or
 corrupted compact state leaves conversation and episodic storage operational.
+Compact state created before a later correction or forget policy is not yet
+automatically invalidated or regenerated and remains non-authoritative.
 
 ## Tests and Acceptance
 

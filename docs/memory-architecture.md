@@ -48,8 +48,26 @@ are committed in one SQLite transaction with:
 - a schema version
 
 Update and delete triggers protect raw turns from mutation at the database
-boundary. Corrections and forgetting require future policy records; they must
-not pretend that original evidence never existed.
+boundary. Corrections and forgetting are separate append-only policy records;
+they never pretend that original evidence did not exist. Each later policy
+references the policy it supersedes. The latest policy determines the effective
+view: a correction supplies replacement content, while a forget policy
+suppresses effective content without physically deleting the raw turn.
+
+The explicit inspection surface is available only when persistent memory is
+configured:
+
+```text
+/memory status
+/memory recent [limit]
+/memory why <turn-id>
+/memory correct <turn-id> <replacement>
+/memory forget <turn-id> [reason]
+```
+
+`status` reports schema and record counts, `recent` shows effective state, and
+`why` shows raw evidence plus the complete policy provenance chain. These
+commands do not retrieve memory into the model prompt.
 
 ## Runtime Behavior
 
@@ -93,6 +111,10 @@ disables only the compact layer.
 Compact Memory remains shadow-only derived state. It is not injected into model
 prompts, and no excerpt becomes authoritative independently of its raw turn.
 `COMPACT_MEMORY_MAX_CHARACTERS` bounds the rendered state and defaults to 2000.
+Existing compact state is not yet invalidated or regenerated when a source turn
+is later corrected or forgotten. It may therefore retain an obsolete source
+excerpt and must remain non-authoritative until policy-aware regeneration has
+its own acceptance gate.
 
 ## Next Gate: NIC Graph Adapter
 
