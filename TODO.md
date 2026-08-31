@@ -90,6 +90,8 @@
 - [x] Add unsupported-claim rejection and atomic candidate publication
 - [x] Build machine-readable comparison reports
 - [x] Add deterministic drift regression at 25/50/100/200 updates
+- [x] Run real Nemotron checkpoint benchmark (FAIL: four timeouts, no candidates)
+- [ ] Resolve model summarizer latency/structured-output benchmark failure
 - [ ] Create and pass the human-review corpus
 - [ ] Pass Compact Memory closure gate at 25/50/100/200 updates
 - [ ] Evaluate model-backed summarization against extractive baseline

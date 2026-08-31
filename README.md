@@ -48,7 +48,7 @@ Implemented:
 - feature-flagged Compact Memory in extractive shadow mode
 - feature-flagged local model Compact Memory candidate with structured claims
 - policy-aware candidate regeneration and machine-readable shadow evaluation
-- 125 passing tests
+- 130 passing tests
 
 Not implemented yet:
 
@@ -245,6 +245,20 @@ Deterministic drift regression runs at 25, 50, 100, and 200 updates:
 ```powershell
 .\.venv\Scripts\python.exe -m pytest tests\test_compact_memory_drift.py -q
 ```
+
+The reproducible real-model benchmark runner uses the same cumulative corpus:
+
+```powershell
+.\.venv\Scripts\python.exe compact_memory_benchmark.py
+```
+
+The 2026-08-31 Nemotron run completed all four required checkpoint snapshots
+but timed out at each 30-second benchmark limit, accepted no model claims, and
+received a **FAIL** recommendation. No hard provenance, resurrection,
+unsupported-claim, or state-corruption failure occurred because every candidate
+was rejected before publication. See the
+[machine-readable result](docs/benchmarks/2026-08-31-nemotron-compact-memory-checkpoints/compact-memory-benchmark.json)
+and [concise report](docs/benchmarks/2026-08-31-nemotron-compact-memory-checkpoints/compact-memory-benchmark.md).
 
 This implements the shadow evaluation machinery but does not close Phase 5A.
 A real-model benchmark, agreed thresholds, and the human review corpus remain

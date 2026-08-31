@@ -271,10 +271,16 @@ class ModelCompactMemoryManager:
 
 
 class ModelCompactSummarizer:
-    def __init__(self, brain, model: str):
+    def __init__(
+        self,
+        brain,
+        model: str,
+        clock: Callable[[], datetime] | None = None,
+    ):
         self.brain = brain
         self.model = model
         self.version = f'model-v1:{model}'
+        self.clock = clock or (lambda: datetime.now(timezone.utc))
 
     def __call__(
         self,
@@ -290,7 +296,11 @@ class ModelCompactSummarizer:
             for turn in snapshot.turns
             if not turn.forgotten and turn.content is not None
         ]
+        generated_at = self.clock()
+        if generated_at.tzinfo is None:
+            raise CompactMemoryError('model summarizer clock must be timezone-aware')
         request = {
+            'generated_at_utc': generated_at.astimezone(timezone.utc).isoformat(),
             'source_policy_revision': snapshot.policy_revision,
             'summarizer': self.version,
             'effective_turns': effective_turns,

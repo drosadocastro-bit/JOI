@@ -1,0 +1,115 @@
+{
+  "schema_version": 1,
+  "generated_at_utc": "2026-08-31T16:16:36.642324+00:00",
+  "environment": {
+    "operating_system": "Windows-11-10.0.26200-SP0",
+    "python_version": "3.13.7",
+    "processor": "AMD64 Family 25 Model 68 Stepping 1, AuthenticAMD"
+  },
+  "model": {
+    "identifier": "nvidia/nemotron-3-nano",
+    "endpoint": "http://127.0.0.1:1234/v1",
+    "visible": true,
+    "request_timeout_seconds": 30,
+    "generation_parameters": "LM Studio API defaults; stream=false"
+  },
+  "corpus": {
+    "identifier": "joi-compact-memory-deterministic",
+    "version": "compact-memory-deterministic-v1",
+    "requested_checkpoints": [
+      25,
+      50,
+      100,
+      200
+    ],
+    "completed_updates": 200,
+    "execution_mode": "independent cumulative checkpoint snapshots",
+    "max_source_characters": 2000,
+    "trials_per_checkpoint": 1
+  },
+  "checkpoints": [
+    {
+      "update_count": 25,
+      "extractive_claim_count": 49,
+      "model_backed_claim_count": 0,
+      "factual_coverage": 0.0,
+      "unsupported_factual_claims": 0,
+      "provenance_coverage": 0.0,
+      "correction_adherence": 0.0,
+      "forgetting_adherence": 0.0,
+      "compression_ratio": 0.0,
+      "output_size_bytes": 0,
+      "average_summarization_latency_seconds": 30.003204900000128,
+      "p95_summarization_latency_seconds": 30.003204900000128,
+      "failed_or_malformed_candidate_count": 1
+    },
+    {
+      "update_count": 50,
+      "extractive_claim_count": 65,
+      "model_backed_claim_count": 0,
+      "factual_coverage": 0.0,
+      "unsupported_factual_claims": 0,
+      "provenance_coverage": 0.0,
+      "correction_adherence": 0.0,
+      "forgetting_adherence": 0.0,
+      "compression_ratio": 0.0,
+      "output_size_bytes": 0,
+      "average_summarization_latency_seconds": 30.01269890000185,
+      "p95_summarization_latency_seconds": 30.01269890000185,
+      "failed_or_malformed_candidate_count": 1
+    },
+    {
+      "update_count": 100,
+      "extractive_claim_count": 65,
+      "model_backed_claim_count": 0,
+      "factual_coverage": 0.0,
+      "unsupported_factual_claims": 0,
+      "provenance_coverage": 0.0,
+      "correction_adherence": 0.0,
+      "forgetting_adherence": 0.0,
+      "compression_ratio": 0.0,
+      "output_size_bytes": 0,
+      "average_summarization_latency_seconds": 30.01236449999851,
+      "p95_summarization_latency_seconds": 30.01236449999851,
+      "failed_or_malformed_candidate_count": 1
+    },
+    {
+      "update_count": 200,
+      "extractive_claim_count": 62,
+      "model_backed_claim_count": 0,
+      "factual_coverage": 0.0,
+      "unsupported_factual_claims": 0,
+      "provenance_coverage": 0.0,
+      "correction_adherence": 0.0,
+      "forgetting_adherence": 0.0,
+      "compression_ratio": 0.0,
+      "output_size_bytes": 0,
+      "average_summarization_latency_seconds": 30.003978699998697,
+      "p95_summarization_latency_seconds": 30.003978699998697,
+      "failed_or_malformed_candidate_count": 1
+    }
+  ],
+  "candidate_failures": [
+    {
+      "update": 25,
+      "reason": "model summarizer failed"
+    },
+    {
+      "update": 50,
+      "reason": "model summarizer failed"
+    },
+    {
+      "update": 100,
+      "reason": "model summarizer failed"
+    },
+    {
+      "update": 200,
+      "reason": "model summarizer failed"
+    }
+  ],
+  "hard_failures": [],
+  "model_available": true,
+  "recommendation": "FAIL",
+  "live_prompt_injection_enabled": false,
+  "human_review_complete": false
+}

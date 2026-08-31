@@ -14,6 +14,14 @@ introducing memory drift, unsupported claims, or leakage from corrected or
 logically forgotten evidence. Compact Memory remains derived, local,
 inspectable, and absent from live prompts throughout this phase.
 
+The first real-model run on 2026-08-31 received a **FAIL** recommendation.
+`nvidia/nemotron-3-nano` timed out at the 30-second benchmark limit for each
+independent cumulative checkpoint at 25, 50, 100, and 200 updates. No candidate
+claim passed validation or became durable. The extractive baseline remained
+available, no hard safety invariant was violated, and live prompt injection
+remained disabled. Results are recorded in
+[the benchmark report](benchmarks/2026-08-31-nemotron-compact-memory-checkpoints/compact-memory-benchmark.md).
+
 ## 5A.1 Preserve The Extractive Baseline
 
 Keep `extractive-v1` as the control implementation.
