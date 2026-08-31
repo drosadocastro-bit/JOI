@@ -385,10 +385,15 @@ automatically. Voice and cloud features default to disabled in `.env.example`.
 		physical experiments.
 
 Detailed work and acceptance gates are tracked in `TODO.md`.
+Memory authority and failure semantics are documented in
+[docs/memory-architecture.md](docs/memory-architecture.md). Future relational
+continuity, contextual adaptation, bounded initiative, and controlled learning
+are gated in [docs/cognitive-roadmap.md](docs/cognitive-roadmap.md).
 
 ## Current Limitations
 
-- Session memory is bounded but not persistent across process restarts.
+- Persistent memory is experimental, disabled by default, and not yet retrieved
+	into live prompts.
 - Spanish uses a provisional voice with a non-native accent.
 - TTS currently loads an isolated worker for each spoken reply.
 - Text generation and speech synthesis are not streamed together.

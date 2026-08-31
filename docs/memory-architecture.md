@@ -100,6 +100,10 @@ NIC integration should begin write-only after its actual graph interface and
 schema are available for review. Until then, Compact Memory remains the only
 derived layer and has no effect on live responses.
 
+Relational continuity and adaptation remain gated behind memory correction,
+inspection, and measured shadow retrieval. Their sequencing and invariants are
+defined in [cognitive-roadmap.md](cognitive-roadmap.md).
+
 ## Deferred Gates
 
 - Vector storage remains an independently disabled semantic fallback.

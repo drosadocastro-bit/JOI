@@ -69,6 +69,7 @@
 - [x] Initial write policy: completed exchanges only, explicit persistent mode
 - [ ] Read policy
 - [ ] Forget/delete policy
+- [ ] Memory correction and supersession records
 - [x] Feature-flagged persistent episodic store
 - [x] Stable turn/exchange IDs, UTC timestamps, and schema version
 - [x] Atomic user/assistant exchange writes
@@ -85,10 +86,26 @@
 - [ ] NIC graph integration in write-only mode
 - [ ] Source-linked vector storage
 - [ ] Shadow retrieval and evaluation harness
+- [ ] Retrieval relevance, false-recall, and provenance metrics
 - [ ] Confidence-gated memory injection
 - [ ] Salience, reinforcement, and non-destructive decay
 - [ ] Summary-of-summaries after measured drift
 - [ ] Read-only dreaming candidates after retrieval is proven
+
+## Future Cognitive And Relational Roadmap
+- [ ] Complete Phase 5 correction, inspection, and shadow retrieval gates
+- [ ] Relational candidate schema with explicit/inferred authority
+- [ ] Relational pattern learning in shadow mode
+- [ ] Confidence-gated shared continuity retrieval
+- [ ] Explainable interaction context state
+- [ ] Versioned and reversible contextual adaptation
+- [ ] Inspectable interaction regulation state
+- [ ] Bounded initiative and scoped goal candidates
+- [ ] Authorized action pipeline and MCP boundary
+- [ ] Shadow controlled learning before approved adaptation
+- [ ] Relational consolidation only after retrieval is proven
+
+Detailed sequencing and invariants: `docs/cognitive-roadmap.md`.
 
 ## Phase 6 — Vision
 - [ ] ASUS camera enumeration
