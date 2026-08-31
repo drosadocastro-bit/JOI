@@ -48,7 +48,7 @@ Implemented:
 - feature-flagged Compact Memory in extractive shadow mode
 - feature-flagged local model Compact Memory candidate with structured claims
 - policy-aware candidate regeneration and machine-readable shadow evaluation
-- 130 passing tests
+- 138 passing tests
 
 Not implemented yet:
 
@@ -260,9 +260,16 @@ was rejected before publication. See the
 [machine-readable result](docs/benchmarks/2026-08-31-nemotron-compact-memory-checkpoints/compact-memory-benchmark.json)
 and [concise report](docs/benchmarks/2026-08-31-nemotron-compact-memory-checkpoints/compact-memory-benchmark.md).
 
+Separate streaming diagnostics found that the bounded request was only 7.1-9.2
+KB. Nemotron reached reasoning output but no JSON content at every checkpoint;
+Qwen3.5-9B also reached no JSON under the same default-on reasoning configuration,
+including 120-second non-promotional sensitivity trials. The evidence does not
+identify task size as the primary cause. Both measured configurations remain
+unsuitable for the 30-second budget. See the
+[post-FAIL diagnosis](docs/compact-memory-post-fail-diagnosis.md).
+
 This implements the shadow evaluation machinery but does not close Phase 5A.
-A real-model benchmark, agreed thresholds, and the human review corpus remain
-required by
+The frozen benchmark remains FAIL, and the human review corpus remains required by
 [docs/compact-memory-closure-gate.md](docs/compact-memory-closure-gate.md).
 
 ## Tests and Acceptance

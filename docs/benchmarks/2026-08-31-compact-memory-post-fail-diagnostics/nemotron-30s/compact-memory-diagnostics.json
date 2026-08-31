@@ -1,0 +1,1997 @@
+{
+  "schema_version": 1,
+  "generated_at_utc": "2026-08-31T16:47:13.597531+00:00",
+  "purpose": "post-FAIL latency diagnosis; non-promotional",
+  "environment": {
+    "operating_system": "Windows-11-10.0.26200-SP0",
+    "python_version": "3.13.7",
+    "processor": "AMD64 Family 25 Model 68 Stepping 1, AuthenticAMD"
+  },
+  "corpus": {
+    "version": "compact-memory-deterministic-v1",
+    "checkpoints": [
+      25,
+      50,
+      100,
+      200
+    ],
+    "max_source_characters": 2000
+  },
+  "generation": {
+    "settings": "LM Studio defaults; stream=true only for telemetry; usage requested",
+    "live_prompt_injection_enabled": false,
+    "candidate_publication_enabled": false
+  },
+  "frozen_baseline": {
+    "commit": "dedf2b8",
+    "algorithm": "sha256",
+    "files": [
+      {
+        "path": "compact_memory_benchmark.py",
+        "sha256": "2d7f1b5d7223f9d8a20eb63e92d4d4eb4437f70d7dd5e3fb9c2bf363dfa646ec",
+        "size_bytes": 16498
+      },
+      {
+        "path": "docs/benchmarks/2026-08-31-nemotron-compact-memory-checkpoints/compact-memory-benchmark.json",
+        "sha256": "4d92e8e5d7002559565f9af8c6e90d7ff40e2ea79028cce37cdf20977cd36a8f",
+        "size_bytes": 3581
+      },
+      {
+        "path": "docs/benchmarks/2026-08-31-nemotron-compact-memory-checkpoints/compact-memory-benchmark.md",
+        "sha256": "05e143443aa7e0ad61962353550f71c25cb84ba2e82d8edffddcb4a48c579245",
+        "size_bytes": 1666
+      },
+      {
+        "path": "docs/benchmarks/2026-08-31-nemotron-compact-memory-checkpoints/update-reports.json",
+        "sha256": "278135164b5e5b3850867115b07460b8273e2aa12559c506e8770412c56e0496",
+        "size_bytes": 48847
+      }
+    ]
+  },
+  "models": [
+    {
+      "model": "nvidia/nemotron-3-nano",
+      "health": {
+        "endpoint_available": true,
+        "model_visible": true,
+        "visible_models": [
+          "nvidia/nemotron-3-nano",
+          "qwen/qwen3.5-9b",
+          "qwen/qwen2.5-vl-7b",
+          "fireball-meta-llama-3.2-8b-instruct-agent-003-128k-code-dpo",
+          "julia_qwen3_8b",
+          "functiongemma-270m-it",
+          "qwen/qwen3-8b",
+          "text-embedding-nomic-embed-text-v1.5",
+          "ibm/granite-3.1-8b",
+          "google/gemma-3n-e4b",
+          "qwen/qwen3-1.7b",
+          "ibm/granite-4-h-tiny",
+          "qwen/qwen3-4b-thinking-2507"
+        ]
+      },
+      "metadata": {
+        "type": "llm",
+        "publisher": "nvidia",
+        "key": "nvidia/nemotron-3-nano",
+        "display_name": "Nemotron 3 Nano",
+        "architecture": "nemotron_h_moe",
+        "quantization": {
+          "name": "Q4_K_M",
+          "bits_per_weight": 4
+        },
+        "size_bytes": 24515232077,
+        "params_string": "30B",
+        "loaded_instances": [
+          {
+            "id": "nvidia/nemotron-3-nano",
+            "config": {
+              "context_length": 1048576,
+              "eval_batch_size": 2048,
+              "physical_batch_size": 512,
+              "parallel": 4,
+              "flash_attention": true,
+              "context_checkpoints": 32,
+              "reasoning_budget_message": "",
+              "speculative_draft_mtp": false,
+              "speculative_draft_simple": false,
+              "speculative_draft_model": "",
+              "speculative_draft_max_tokens": 16,
+              "speculative_draft_min_tokens": 0,
+              "speculative_draft_min_continue_probability": 0.75,
+              "num_experts": 6,
+              "offload_kv_cache_to_gpu": true
+            },
+            "remaining_ttl_seconds": 3553
+          }
+        ],
+        "max_context_length": 1048576,
+        "format": "gguf",
+        "capabilities": {
+          "vision": false,
+          "trained_for_tool_use": true,
+          "reasoning": {
+            "allowed_options": [
+              "off",
+              "on"
+            ],
+            "default": "on"
+          }
+        },
+        "description": null,
+        "variants": [
+          "nvidia/nemotron-3-nano@q4_k_m"
+        ],
+        "selected_variant": "nvidia/nemotron-3-nano@q4_k_m"
+      },
+      "trials": [
+        {
+          "checkpoint": 25,
+          "timeout_seconds": 30,
+          "accepted": false,
+          "failure_class": "model_timeout",
+          "request_error": "diagnostic request exceeded its total deadline",
+          "parse_error": null,
+          "validation_error": null,
+          "prompt_burden": {
+            "checkpoint_update_count": 25,
+            "raw_turn_count": 50,
+            "bounded_effective_turn_count": 49,
+            "candidate_fact_count": 49,
+            "correction_count": 1,
+            "forgotten_item_count": 1,
+            "effective_source_characters": 1475,
+            "serialized_snapshot_bytes": 11798,
+            "max_source_characters": 2000,
+            "serialized_prompt_bytes": 7058
+          },
+          "telemetry": {
+            "content": "",
+            "reasoning_content": "We need to extract explicit claims from the transcript. Definition: explicit claims are user or assistant utterances that directly assert a fact, describe a desire, or specify an actionable item. Intentions, inferences, or paraphrased content are not explicit claims.\n\nWe have many entries: user statements \"Preference 1: use option blue-1.\", etc. Those seem explicit: they assert a desire (use option blue-1). Also there is a corrected one: \"Preference 18 corrected: use option green-18.\" That also is explicit. Also there are assistant acknowledgments but they are not explicit claims (they are just acknowledging). So claims are the user preferences that directly assert a fact or desire. So we need to extract each user preference utterance that is explicit claim.\n\nWe need to output JSON with \"claims\" array. Each claim includes claim_id, source_turn_ids (list), source_policy_ids (list), confidence (float), status \"explicit\", generated_at_utc (same as provided?), and summarizer.\n\nWe need unique claim_id per claim. We can assign something like \"claim-1\", etc.\n\nsource_turn_ids: list of turn IDs that contain the claim. Since each claim is a single turn, we can list that turn_id. source_policy",
+            "time_to_first_token_seconds": 9.451467999999295,
+            "time_to_first_content_seconds": null,
+            "input_token_count": null,
+            "output_token_count": null,
+            "tokens_per_second": null,
+            "finish_reason": null,
+            "stream_event_count": 264,
+            "usage": null,
+            "total_latency_seconds": 30.01037219999853,
+            "content_truncated": false,
+            "reasoning_content_truncated": false
+          },
+          "parse_latency_seconds": null,
+          "candidate_claim_count": 0,
+          "raw_rejected_output": null,
+          "raw_rejected_output_truncated": false,
+          "resource_telemetry": {
+            "sample_interval_seconds": 0.5,
+            "sample_count": 59,
+            "cpu_percent_average": 49.42409879003763,
+            "cpu_percent_peak": 60.3515625,
+            "available_ram_bytes_minimum": 2242875392,
+            "samples": [
+              {
+                "elapsed_seconds": 0.0,
+                "cpu_percent": 20.077972709551663,
+                "available_ram_bytes": 2859208704,
+                "memory_load_percent": 91
+              },
+              {
+                "elapsed_seconds": 0.5,
+                "cpu_percent": 21.2890625,
+                "available_ram_bytes": 2933768192,
+                "memory_load_percent": 91
+              },
+              {
+                "elapsed_seconds": 1.0,
+                "cpu_percent": 20.07575757575758,
+                "available_ram_bytes": 2789900288,
+                "memory_load_percent": 91
+              },
+              {
+                "elapsed_seconds": 1.5,
+                "cpu_percent": 36.328125,
+                "available_ram_bytes": 2242875392,
+                "memory_load_percent": 93
+              },
+              {
+                "elapsed_seconds": 2.0,
+                "cpu_percent": 44.3359375,
+                "available_ram_bytes": 2901651456,
+                "memory_load_percent": 91
+              },
+              {
+                "elapsed_seconds": 2.5,
+                "cpu_percent": 37.689393939393945,
+                "available_ram_bytes": 2814263296,
+                "memory_load_percent": 91
+              },
+              {
+                "elapsed_seconds": 3.0,
+                "cpu_percent": 35.7421875,
+                "available_ram_bytes": 3008311296,
+                "memory_load_percent": 91
+              },
+              {
+                "elapsed_seconds": 3.5,
+                "cpu_percent": 44.921875,
+                "available_ram_bytes": 2702745600,
+                "memory_load_percent": 91
+              },
+              {
+                "elapsed_seconds": 4.0,
+                "cpu_percent": 34.9609375,
+                "available_ram_bytes": 2906906624,
+                "memory_load_percent": 91
+              },
+              {
+                "elapsed_seconds": 4.5,
+                "cpu_percent": 36.9140625,
+                "available_ram_bytes": 3479212032,
+                "memory_load_percent": 89
+              },
+              {
+                "elapsed_seconds": 5.0,
+                "cpu_percent": 37.878787878787875,
+                "available_ram_bytes": 4024946688,
+                "memory_load_percent": 88
+              },
+              {
+                "elapsed_seconds": 5.5,
+                "cpu_percent": 35.984848484848484,
+                "available_ram_bytes": 4419411968,
+                "memory_load_percent": 86
+              },
+              {
+                "elapsed_seconds": 6.0,
+                "cpu_percent": 42.8030303030303,
+                "available_ram_bytes": 5217570816,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 6.5,
+                "cpu_percent": 43.1640625,
+                "available_ram_bytes": 5484359680,
+                "memory_load_percent": 83
+              },
+              {
+                "elapsed_seconds": 7.0,
+                "cpu_percent": 44.50757575757576,
+                "available_ram_bytes": 5460336640,
+                "memory_load_percent": 83
+              },
+              {
+                "elapsed_seconds": 7.5,
+                "cpu_percent": 39.84375,
+                "available_ram_bytes": 5464150016,
+                "memory_load_percent": 83
+              },
+              {
+                "elapsed_seconds": 8.0,
+                "cpu_percent": 41.796875,
+                "available_ram_bytes": 5496045568,
+                "memory_load_percent": 83
+              },
+              {
+                "elapsed_seconds": 8.5,
+                "cpu_percent": 38.28125,
+                "available_ram_bytes": 5496004608,
+                "memory_load_percent": 83
+              },
+              {
+                "elapsed_seconds": 9.0,
+                "cpu_percent": 44.31818181818182,
+                "available_ram_bytes": 5444419584,
+                "memory_load_percent": 83
+              },
+              {
+                "elapsed_seconds": 9.5,
+                "cpu_percent": 58.984375,
+                "available_ram_bytes": 5429764096,
+                "memory_load_percent": 83
+              },
+              {
+                "elapsed_seconds": 10.0,
+                "cpu_percent": 56.25,
+                "available_ram_bytes": 5427785728,
+                "memory_load_percent": 83
+              },
+              {
+                "elapsed_seconds": 10.5,
+                "cpu_percent": 55.871212121212125,
+                "available_ram_bytes": 5404667904,
+                "memory_load_percent": 83
+              },
+              {
+                "elapsed_seconds": 11.0,
+                "cpu_percent": 55.859375,
+                "available_ram_bytes": 5401935872,
+                "memory_load_percent": 83
+              },
+              {
+                "elapsed_seconds": 11.5,
+                "cpu_percent": 57.421875,
+                "available_ram_bytes": 5400555520,
+                "memory_load_percent": 83
+              },
+              {
+                "elapsed_seconds": 12.0,
+                "cpu_percent": 54.4921875,
+                "available_ram_bytes": 5392801792,
+                "memory_load_percent": 83
+              },
+              {
+                "elapsed_seconds": 12.5,
+                "cpu_percent": 59.1796875,
+                "available_ram_bytes": 5392965632,
+                "memory_load_percent": 83
+              },
+              {
+                "elapsed_seconds": 13.0,
+                "cpu_percent": 53.515625,
+                "available_ram_bytes": 5384798208,
+                "memory_load_percent": 83
+              },
+              {
+                "elapsed_seconds": 13.5,
+                "cpu_percent": 54.92424242424243,
+                "available_ram_bytes": 5376143360,
+                "memory_load_percent": 83
+              },
+              {
+                "elapsed_seconds": 14.0,
+                "cpu_percent": 53.88994307400379,
+                "available_ram_bytes": 5369540608,
+                "memory_load_percent": 83
+              },
+              {
+                "elapsed_seconds": 14.5,
+                "cpu_percent": 58.034026465028354,
+                "available_ram_bytes": 5369114624,
+                "memory_load_percent": 83
+              },
+              {
+                "elapsed_seconds": 15.0,
+                "cpu_percent": 53.90625,
+                "available_ram_bytes": 5369466880,
+                "memory_load_percent": 83
+              },
+              {
+                "elapsed_seconds": 15.5,
+                "cpu_percent": 52.9296875,
+                "available_ram_bytes": 5364793344,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 16.0,
+                "cpu_percent": 55.6640625,
+                "available_ram_bytes": 5357953024,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 16.5,
+                "cpu_percent": 60.3515625,
+                "available_ram_bytes": 5350461440,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 17.0,
+                "cpu_percent": 56.81818181818181,
+                "available_ram_bytes": 5349462016,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 17.5,
+                "cpu_percent": 54.6875,
+                "available_ram_bytes": 5348777984,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 18.0,
+                "cpu_percent": 56.0546875,
+                "available_ram_bytes": 5328138240,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 18.5,
+                "cpu_percent": 54.734848484848484,
+                "available_ram_bytes": 5339533312,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 19.0,
+                "cpu_percent": 53.515625,
+                "available_ram_bytes": 5338476544,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 19.5,
+                "cpu_percent": 54.734848484848484,
+                "available_ram_bytes": 5337575424,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 20.0,
+                "cpu_percent": 54.92424242424243,
+                "available_ram_bytes": 5335543808,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 20.5,
+                "cpu_percent": 56.640625,
+                "available_ram_bytes": 5333917696,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 21.0,
+                "cpu_percent": 54.35606060606061,
+                "available_ram_bytes": 5332123648,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 21.5,
+                "cpu_percent": 53.7109375,
+                "available_ram_bytes": 5331447808,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 22.0,
+                "cpu_percent": 55.11363636363637,
+                "available_ram_bytes": 5329498112,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 22.5,
+                "cpu_percent": 56.81818181818181,
+                "available_ram_bytes": 5322711040,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 23.0,
+                "cpu_percent": 55.6640625,
+                "available_ram_bytes": 5321379840,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 23.5,
+                "cpu_percent": 57.38636363636363,
+                "available_ram_bytes": 5319520256,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 24.0,
+                "cpu_percent": 57.00757575757576,
+                "available_ram_bytes": 5319036928,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 24.5,
+                "cpu_percent": 53.90625,
+                "available_ram_bytes": 5299249152,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 25.0,
+                "cpu_percent": 53.515625,
+                "available_ram_bytes": 5309456384,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 25.5,
+                "cpu_percent": 55.6640625,
+                "available_ram_bytes": 5335302144,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 26.0,
+                "cpu_percent": 52.5390625,
+                "available_ram_bytes": 5334855680,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 26.5,
+                "cpu_percent": 53.97727272727273,
+                "available_ram_bytes": 5331677184,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 27.0,
+                "cpu_percent": 52.27272727272727,
+                "available_ram_bytes": 5330206720,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 27.5,
+                "cpu_percent": 54.16666666666667,
+                "available_ram_bytes": 5327802368,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 28.0,
+                "cpu_percent": 52.5390625,
+                "available_ram_bytes": 5327380480,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 28.5,
+                "cpu_percent": 54.8828125,
+                "available_ram_bytes": 5326454784,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 29.0,
+                "cpu_percent": 58.203125,
+                "available_ram_bytes": 5316116480,
+                "memory_load_percent": 84
+              }
+            ],
+            "gpu_before": [
+              {
+                "Path": "\\\\desktop-0vcc8pt\\gpu engine(pid_24904_luid_0x00000000_0x000126b0_phys_0_eng_0_engtype_3d)\\utilization percentage",
+                "CookedValue": 2.849802010020138
+              },
+              {
+                "Path": "\\\\desktop-0vcc8pt\\gpu engine(pid_25492_luid_0x00000000_0x000126b0_phys_0_eng_0_engtype_3d)\\utilization percentage",
+                "CookedValue": 13.284281992610266
+              },
+              {
+                "Path": "\\\\desktop-0vcc8pt\\gpu engine(pid_4_luid_0x00000000_0x000126b0_phys_0_eng_1_engtype_copy)\\utilization percentage",
+                "CookedValue": 0.028444796987335264
+              },
+              {
+                "Path": "\\\\desktop-0vcc8pt\\gpu adapter memory(luid_0x00000000_0x000126b0_phys_0)\\dedicated usage",
+                "CookedValue": 376307712
+              },
+              {
+                "Path": "\\\\desktop-0vcc8pt\\gpu adapter memory(luid_0x00000000_0x000126b0_phys_0)\\shared usage",
+                "CookedValue": 779190272
+              },
+              {
+                "Path": "\\\\desktop-0vcc8pt\\gpu adapter memory(luid_0x00000000_0x000145e6_phys_0)\\shared usage",
+                "CookedValue": 8192
+              },
+              {
+                "Path": "\\\\desktop-0vcc8pt\\gpu adapter memory(luid_0x00000000_0x0001464a_phys_0)\\shared usage",
+                "CookedValue": 1651326976
+              }
+            ],
+            "gpu_after": [
+              {
+                "Path": "\\\\desktop-0vcc8pt\\gpu engine(pid_24904_luid_0x00000000_0x000126b0_phys_0_eng_0_engtype_3d)\\utilization percentage",
+                "CookedValue": 4.063460836706042
+              },
+              {
+                "Path": "\\\\desktop-0vcc8pt\\gpu engine(pid_25492_luid_0x00000000_0x000126b0_phys_0_eng_0_engtype_3d)\\utilization percentage",
+                "CookedValue": 12.346528049859035
+              },
+              {
+                "Path": "\\\\desktop-0vcc8pt\\gpu adapter memory(luid_0x00000000_0x000126b0_phys_0)\\dedicated usage",
+                "CookedValue": 366592000
+              },
+              {
+                "Path": "\\\\desktop-0vcc8pt\\gpu adapter memory(luid_0x00000000_0x0001464a_phys_0)\\dedicated usage",
+                "CookedValue": 8376430592
+              },
+              {
+                "Path": "\\\\desktop-0vcc8pt\\gpu adapter memory(luid_0x00000000_0x000126b0_phys_0)\\shared usage",
+                "CookedValue": 779190272
+              },
+              {
+                "Path": "\\\\desktop-0vcc8pt\\gpu adapter memory(luid_0x00000000_0x000145e6_phys_0)\\shared usage",
+                "CookedValue": 8192
+              },
+              {
+                "Path": "\\\\desktop-0vcc8pt\\gpu adapter memory(luid_0x00000000_0x0001464a_phys_0)\\shared usage",
+                "CookedValue": 1651326976
+              }
+            ],
+            "gpu_note": "Windows aggregate counters; adapter and process attribution are not inferred."
+          },
+          "publication_attempted": false
+        },
+        {
+          "checkpoint": 50,
+          "timeout_seconds": 30,
+          "accepted": false,
+          "failure_class": "model_timeout",
+          "request_error": "diagnostic request exceeded its total deadline",
+          "parse_error": null,
+          "validation_error": null,
+          "prompt_burden": {
+            "checkpoint_update_count": 50,
+            "raw_turn_count": 100,
+            "bounded_effective_turn_count": 65,
+            "candidate_fact_count": 65,
+            "correction_count": 2,
+            "forgotten_item_count": 2,
+            "effective_source_characters": 1994,
+            "serialized_snapshot_bytes": 15754,
+            "max_source_characters": 2000,
+            "serialized_prompt_bytes": 9222
+          },
+          "telemetry": {
+            "content": "",
+            "reasoning_content": "We need to extract explicit claims from conversation, using summary_version 1 and source_policy_revision 4. The instruction: \"Extract only explicit claims by copying their complete source content exactly. Never infer, combine, or paraphrase.\" Use summary_version 1 and supplied summarizer and source_policy_revision. Each claim requires unique claim_id, one or more source_turn_ids, corresponding source_policy_ids, confidence, status \"explicit\", generated_at_utc, and summarizer.\n\nWe must return JSON only. Claims array.\n\nWe need to identify explicit claims in the conversation. The conversation includes many \"Preference X: use option ...\" statements from user, and \"Acknowledged preference X.\" from assistant. The explicit claims likely are the statements where user expresses a preference? Or maybe \"explicit claim\" refers to claims made in the conversation that are explicit. The instruction says \"Extract only explicit claims by copying their complete source content exactly.\" Likely we need to extract the claim content from the source turns that are explicit. Which turns contain explicit claims? Possibly the user statements like \"Preference 18 corrected: use option green-18.\" and \"Preference 43 corrected: use option green-43.\" Those are explicit claims? Or maybe the \"Preference X: use option ...\" statements are explicit claims about preferences. The instruction: \"Extract only explicit claims by copying their complete source content exactly.\" So we need to copy the source content exactly as appears in the conversation (the content field). For each claim, we need source_turn_ids (list) and source_policy_ids (list). The source",
+            "time_to_first_token_seconds": 4.01254709999921,
+            "time_to_first_content_seconds": null,
+            "input_token_count": null,
+            "output_token_count": null,
+            "tokens_per_second": null,
+            "finish_reason": null,
+            "stream_event_count": 329,
+            "usage": null,
+            "total_latency_seconds": 30.01094269999885,
+            "content_truncated": false,
+            "reasoning_content_truncated": false
+          },
+          "parse_latency_seconds": null,
+          "candidate_claim_count": 0,
+          "raw_rejected_output": null,
+          "raw_rejected_output_truncated": false,
+          "resource_telemetry": {
+            "sample_interval_seconds": 0.5,
+            "sample_count": 59,
+            "cpu_percent_average": 52.52588850151585,
+            "cpu_percent_peak": 61.328125,
+            "available_ram_bytes_minimum": 5060558848,
+            "samples": [
+              {
+                "elapsed_seconds": 0.0,
+                "cpu_percent": 18.67704280155642,
+                "available_ram_bytes": 5121454080,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 0.5,
+                "cpu_percent": 29.296875,
+                "available_ram_bytes": 5112147968,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 1.0,
+                "cpu_percent": 36.5234375,
+                "available_ram_bytes": 5060558848,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 1.5,
+                "cpu_percent": 61.328125,
+                "available_ram_bytes": 5155561472,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 2.0,
+                "cpu_percent": 41.09848484848485,
+                "available_ram_bytes": 5179494400,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 2.5,
+                "cpu_percent": 40.0390625,
+                "available_ram_bytes": 5179789312,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 3.0,
+                "cpu_percent": 43.18181818181818,
+                "available_ram_bytes": 5177974784,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 3.5,
+                "cpu_percent": 39.2578125,
+                "available_ram_bytes": 5115977728,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 4.0,
+                "cpu_percent": 54.1015625,
+                "available_ram_bytes": 5162045440,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 4.5,
+                "cpu_percent": 52.5390625,
+                "available_ram_bytes": 5161459712,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 5.0,
+                "cpu_percent": 55.859375,
+                "available_ram_bytes": 5161926656,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 5.5,
+                "cpu_percent": 51.89393939393939,
+                "available_ram_bytes": 5157253120,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 6.0,
+                "cpu_percent": 59.1796875,
+                "available_ram_bytes": 5162876928,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 6.5,
+                "cpu_percent": 52.734375,
+                "available_ram_bytes": 5154381824,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 7.0,
+                "cpu_percent": 53.7109375,
+                "available_ram_bytes": 5155618816,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 7.5,
+                "cpu_percent": 53.59848484848485,
+                "available_ram_bytes": 5153124352,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 8.0,
+                "cpu_percent": 57.03125,
+                "available_ram_bytes": 5138206720,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 8.5,
+                "cpu_percent": 54.16666666666667,
+                "available_ram_bytes": 5148405760,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 9.0,
+                "cpu_percent": 56.4453125,
+                "available_ram_bytes": 5145927680,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 9.5,
+                "cpu_percent": 59.65909090909092,
+                "available_ram_bytes": 5144276992,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 10.0,
+                "cpu_percent": 53.3203125,
+                "available_ram_bytes": 5144608768,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 10.5,
+                "cpu_percent": 54.1015625,
+                "available_ram_bytes": 5142360064,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 11.0,
+                "cpu_percent": 54.54545454545454,
+                "available_ram_bytes": 5142745088,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 11.5,
+                "cpu_percent": 53.40909090909092,
+                "available_ram_bytes": 5138931712,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 12.0,
+                "cpu_percent": 53.125,
+                "available_ram_bytes": 5138882560,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 12.5,
+                "cpu_percent": 56.8359375,
+                "available_ram_bytes": 5138878464,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 13.0,
+                "cpu_percent": 55.6640625,
+                "available_ram_bytes": 5138780160,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 13.5,
+                "cpu_percent": 53.03030303030303,
+                "available_ram_bytes": 5135126528,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 14.0,
+                "cpu_percent": 54.35606060606061,
+                "available_ram_bytes": 5136044032,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 14.5,
+                "cpu_percent": 54.296875,
+                "available_ram_bytes": 5119057920,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 15.0,
+                "cpu_percent": 53.125,
+                "available_ram_bytes": 5133955072,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 15.5,
+                "cpu_percent": 53.59848484848485,
+                "available_ram_bytes": 5126610944,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 16.0,
+                "cpu_percent": 54.6875,
+                "available_ram_bytes": 5127929856,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 16.5,
+                "cpu_percent": 54.4921875,
+                "available_ram_bytes": 5126754304,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 17.0,
+                "cpu_percent": 57.38636363636363,
+                "available_ram_bytes": 5128503296,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 17.5,
+                "cpu_percent": 56.25,
+                "available_ram_bytes": 5122981888,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 18.0,
+                "cpu_percent": 57.1969696969697,
+                "available_ram_bytes": 5122404352,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 18.5,
+                "cpu_percent": 54.1015625,
+                "available_ram_bytes": 5122940928,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 19.0,
+                "cpu_percent": 53.515625,
+                "available_ram_bytes": 5102096384,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 19.5,
+                "cpu_percent": 54.8828125,
+                "available_ram_bytes": 5113155584,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 20.0,
+                "cpu_percent": 55.859375,
+                "available_ram_bytes": 5113819136,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 20.5,
+                "cpu_percent": 53.59848484848485,
+                "available_ram_bytes": 5111443456,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 21.0,
+                "cpu_percent": 55.2734375,
+                "available_ram_bytes": 5110886400,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 21.5,
+                "cpu_percent": 57.421875,
+                "available_ram_bytes": 5113761792,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 22.0,
+                "cpu_percent": 52.734375,
+                "available_ram_bytes": 5113061376,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 22.5,
+                "cpu_percent": 52.5390625,
+                "available_ram_bytes": 5112860672,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 23.0,
+                "cpu_percent": 54.296875,
+                "available_ram_bytes": 5111721984,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 23.5,
+                "cpu_percent": 56.628787878787875,
+                "available_ram_bytes": 5117571072,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 24.0,
+                "cpu_percent": 51.953125,
+                "available_ram_bytes": 5117382656,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 24.5,
+                "cpu_percent": 52.1484375,
+                "available_ram_bytes": 5108473856,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 25.0,
+                "cpu_percent": 56.81818181818181,
+                "available_ram_bytes": 5108006912,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 25.5,
+                "cpu_percent": 55.46875,
+                "available_ram_bytes": 5107499008,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 26.0,
+                "cpu_percent": 54.734848484848484,
+                "available_ram_bytes": 5104689152,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 26.5,
+                "cpu_percent": 54.8828125,
+                "available_ram_bytes": 5105782784,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 27.0,
+                "cpu_percent": 53.59848484848485,
+                "available_ram_bytes": 5104783360,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 27.5,
+                "cpu_percent": 54.6875,
+                "available_ram_bytes": 5107384320,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 28.0,
+                "cpu_percent": 55.68181818181819,
+                "available_ram_bytes": 5102735360,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 28.5,
+                "cpu_percent": 54.1015625,
+                "available_ram_bytes": 5103443968,
+                "memory_load_percent": 84
+              },
+              {
+                "elapsed_seconds": 29.0,
+                "cpu_percent": 54.35606060606061,
+                "available_ram_bytes": 5102305280,
+                "memory_load_percent": 84
+              }
+            ],
+            "gpu_before": [
+              {
+                "Path": "\\\\desktop-0vcc8pt\\gpu engine(pid_24904_luid_0x00000000_0x000126b0_phys_0_eng_0_engtype_3d)\\utilization percentage",
+                "CookedValue": 3.967798611270486
+              },
+              {
+                "Path": "\\\\desktop-0vcc8pt\\gpu engine(pid_25492_luid_0x00000000_0x000126b0_phys_0_eng_0_engtype_3d)\\utilization percentage",
+                "CookedValue": 12.008867719973221
+              },
+              {
+                "Path": "\\\\desktop-0vcc8pt\\gpu engine(pid_4_luid_0x00000000_0x000126b0_phys_0_eng_1_engtype_copy)\\utilization percentage",
+                "CookedValue": 0.023312876455877856
+              },
+              {
+                "Path": "\\\\desktop-0vcc8pt\\gpu adapter memory(luid_0x00000000_0x000126b0_phys_0)\\dedicated usage",
+                "CookedValue": 366592000
+              },
+              {
+                "Path": "\\\\desktop-0vcc8pt\\gpu adapter memory(luid_0x00000000_0x0001464a_phys_0)\\dedicated usage",
+                "CookedValue": 8376430592
+              },
+              {
+                "Path": "\\\\desktop-0vcc8pt\\gpu adapter memory(luid_0x00000000_0x000126b0_phys_0)\\shared usage",
+                "CookedValue": 779190272
+              },
+              {
+                "Path": "\\\\desktop-0vcc8pt\\gpu adapter memory(luid_0x00000000_0x000145e6_phys_0)\\shared usage",
+                "CookedValue": 8192
+              },
+              {
+                "Path": "\\\\desktop-0vcc8pt\\gpu adapter memory(luid_0x00000000_0x0001464a_phys_0)\\shared usage",
+                "CookedValue": 1651326976
+              }
+            ],
+            "gpu_after": [
+              {
+                "Path": "\\\\desktop-0vcc8pt\\gpu engine(pid_24904_luid_0x00000000_0x000126b0_phys_0_eng_0_engtype_3d)\\utilization percentage",
+                "CookedValue": 4.038109067674828
+              },
+              {
+                "Path": "\\\\desktop-0vcc8pt\\gpu engine(pid_25492_luid_0x00000000_0x000126b0_phys_0_eng_0_engtype_3d)\\utilization percentage",
+                "CookedValue": 11.86994745757171
+              },
+              {
+                "Path": "\\\\desktop-0vcc8pt\\gpu adapter memory(luid_0x00000000_0x000126b0_phys_0)\\dedicated usage",
+                "CookedValue": 366592000
+              },
+              {
+                "Path": "\\\\desktop-0vcc8pt\\gpu adapter memory(luid_0x00000000_0x0001464a_phys_0)\\dedicated usage",
+                "CookedValue": 8376430592
+              },
+              {
+                "Path": "\\\\desktop-0vcc8pt\\gpu adapter memory(luid_0x00000000_0x000126b0_phys_0)\\shared usage",
+                "CookedValue": 779190272
+              },
+              {
+                "Path": "\\\\desktop-0vcc8pt\\gpu adapter memory(luid_0x00000000_0x000145e6_phys_0)\\shared usage",
+                "CookedValue": 8192
+              },
+              {
+                "Path": "\\\\desktop-0vcc8pt\\gpu adapter memory(luid_0x00000000_0x0001464a_phys_0)\\shared usage",
+                "CookedValue": 1651326976
+              }
+            ],
+            "gpu_note": "Windows aggregate counters; adapter and process attribution are not inferred."
+          },
+          "publication_attempted": false
+        },
+        {
+          "checkpoint": 100,
+          "timeout_seconds": 30,
+          "accepted": false,
+          "failure_class": "model_timeout",
+          "request_error": "diagnostic request exceeded its total deadline",
+          "parse_error": null,
+          "validation_error": null,
+          "prompt_burden": {
+            "checkpoint_update_count": 100,
+            "raw_turn_count": 200,
+            "bounded_effective_turn_count": 65,
+            "candidate_fact_count": 65,
+            "correction_count": 3,
+            "forgotten_item_count": 3,
+            "effective_source_characters": 1993,
+            "serialized_snapshot_bytes": 15732,
+            "max_source_characters": 2000,
+            "serialized_prompt_bytes": 9196
+          },
+          "telemetry": {
+            "content": "",
+            "reasoning_content": "We need to extract explicit claims from turns that contain source_policy_id. In given data, many have source_policy_id null; one turn has source_policy_id \"policy-correct-95\". That turn content: \"Preference 93 corrected: use option green-93.\" That's an explicit claim? It includes \"use option green-93\". That's a claim about using option green-93. It is explicit. So we should output a JSON with claims array containing one claim object.\n\nFields: claim_id unique, source_turn_ids list (likely [\"user-93\"]? Actually turn is user-93 with source_policy_id \"policy-correct-95\". The claim is in user turn, so source_turn_ids should be [\"user-93\"]? Or maybe include both user and assistant? The claim is the preference statement; it's the user's turn. So source_turn_ids: [\"user-93\"].\n\nCorresponding source_policy_ids: [\"policy-correct-95\"].\n\nConfidence: maybe \"high\" or \"1\"? The instruction says \"confidence\" but not defined. Probably a numeric confidence score? Could be \"high\". But must be something. Could be \"1\". Use maybe \"high\". But they said extract only explicit claims by copying their complete source content exactly. Confidence likely a value like \"high\". I'll use \"high\".\n\nStatus \"explicit\". generated_at_utc same as provided? Probably same timestamp. Use \"2026-08-31T16:",
+            "time_to_first_token_seconds": 3.9950951999999234,
+            "time_to_first_content_seconds": null,
+            "input_token_count": null,
+            "output_token_count": null,
+            "tokens_per_second": null,
+            "finish_reason": null,
+            "stream_event_count": 324,
+            "usage": null,
+            "total_latency_seconds": 30.012792099998478,
+            "content_truncated": false,
+            "reasoning_content_truncated": false
+          },
+          "parse_latency_seconds": null,
+          "candidate_claim_count": 0,
+          "raw_rejected_output": null,
+          "raw_rejected_output_truncated": false,
+          "resource_telemetry": {
+            "sample_interval_seconds": 0.5,
+            "sample_count": 59,
+            "cpu_percent_average": 55.425347371385584,
+            "cpu_percent_peak": 74.38330170777989,
+            "available_ram_bytes_minimum": 4683169792,
+            "samples": [
+              {
+                "elapsed_seconds": 0.0,
+                "cpu_percent": 15.984405458089668,
+                "available_ram_bytes": 4934770688,
+                "memory_load_percent": 85
+              },
+              {
+                "elapsed_seconds": 0.5,
+                "cpu_percent": 42.8030303030303,
+                "available_ram_bytes": 4901810176,
+                "memory_load_percent": 85
+              },
+              {
+                "elapsed_seconds": 1.0,
+                "cpu_percent": 46.6796875,
+                "available_ram_bytes": 4909527040,
+                "memory_load_percent": 85
+              },
+              {
+                "elapsed_seconds": 1.5,
+                "cpu_percent": 50.78125,
+                "available_ram_bytes": 4907511808,
+                "memory_load_percent": 85
+              },
+              {
+                "elapsed_seconds": 2.0,
+                "cpu_percent": 51.32575757575757,
+                "available_ram_bytes": 4908179456,
+                "memory_load_percent": 85
+              },
+              {
+                "elapsed_seconds": 2.5,
+                "cpu_percent": 48.046875,
+                "available_ram_bytes": 4907147264,
+                "memory_load_percent": 85
+              },
+              {
+                "elapsed_seconds": 3.0,
+                "cpu_percent": 45.5078125,
+                "available_ram_bytes": 4906606592,
+                "memory_load_percent": 85
+              },
+              {
+                "elapsed_seconds": 3.5,
+                "cpu_percent": 55.68181818181819,
+                "available_ram_bytes": 4830425088,
+                "memory_load_percent": 85
+              },
+              {
+                "elapsed_seconds": 4.0,
+                "cpu_percent": 66.796875,
+                "available_ram_bytes": 4823375872,
+                "memory_load_percent": 85
+              },
+              {
+                "elapsed_seconds": 4.5,
+                "cpu_percent": 74.38330170777989,
+                "available_ram_bytes": 4810178560,
+                "memory_load_percent": 85
+              },
+              {
+                "elapsed_seconds": 5.0,
+                "cpu_percent": 67.2514619883041,
+                "available_ram_bytes": 4877750272,
+                "memory_load_percent": 85
+              },
+              {
+                "elapsed_seconds": 5.5,
+                "cpu_percent": 70.5078125,
+                "available_ram_bytes": 4872675328,
+                "memory_load_percent": 85
+              },
+              {
+                "elapsed_seconds": 6.0,
+                "cpu_percent": 63.28125,
+                "available_ram_bytes": 4874272768,
+                "memory_load_percent": 85
+              },
+              {
+                "elapsed_seconds": 6.5,
+                "cpu_percent": 61.9140625,
+                "available_ram_bytes": 4872232960,
+                "memory_load_percent": 85
+              },
+              {
+                "elapsed_seconds": 7.0,
+                "cpu_percent": 64.20454545454545,
+                "available_ram_bytes": 4863332352,
+                "memory_load_percent": 85
+              },
+              {
+                "elapsed_seconds": 7.5,
+                "cpu_percent": 59.84848484848485,
+                "available_ram_bytes": 4862582784,
+                "memory_load_percent": 85
+              },
+              {
+                "elapsed_seconds": 8.0,
+                "cpu_percent": 58.0078125,
+                "available_ram_bytes": 4865159168,
+                "memory_load_percent": 85
+              },
+              {
+                "elapsed_seconds": 8.5,
+                "cpu_percent": 57.03125,
+                "available_ram_bytes": 4862910464,
+                "memory_load_percent": 85
+              },
+              {
+                "elapsed_seconds": 9.0,
+                "cpu_percent": 55.078125,
+                "available_ram_bytes": 4854575104,
+                "memory_load_percent": 85
+              },
+              {
+                "elapsed_seconds": 9.5,
+                "cpu_percent": 55.11363636363637,
+                "available_ram_bytes": 4853080064,
+                "memory_load_percent": 85
+              },
+              {
+                "elapsed_seconds": 10.0,
+                "cpu_percent": 52.65151515151515,
+                "available_ram_bytes": 4852781056,
+                "memory_load_percent": 85
+              },
+              {
+                "elapsed_seconds": 10.5,
+                "cpu_percent": 56.060606060606055,
+                "available_ram_bytes": 4849397760,
+                "memory_load_percent": 85
+              },
+              {
+                "elapsed_seconds": 11.0,
+                "cpu_percent": 54.1015625,
+                "available_ram_bytes": 4844544000,
+                "memory_load_percent": 85
+              },
+              {
+                "elapsed_seconds": 11.5,
+                "cpu_percent": 57.00757575757576,
+                "available_ram_bytes": 4837511168,
+                "memory_load_percent": 85
+              },
+              {
+                "elapsed_seconds": 12.0,
+                "cpu_percent": 54.4921875,
+                "available_ram_bytes": 4836515840,
+                "memory_load_percent": 85
+              },
+              {
+                "elapsed_seconds": 12.5,
+                "cpu_percent": 55.49242424242424,
+                "available_ram_bytes": 4835774464,
+                "memory_load_percent": 85
+              },
+              {
+                "elapsed_seconds": 13.0,
+                "cpu_percent": 54.92424242424243,
+                "available_ram_bytes": 4835590144,
+                "memory_load_percent": 85
+              },
+              {
+                "elapsed_seconds": 13.5,
+                "cpu_percent": 58.3984375,
+                "available_ram_bytes": 4825260032,
+                "memory_load_percent": 85
+              },
+              {
+                "elapsed_seconds": 14.0,
+                "cpu_percent": 53.90625,
+                "available_ram_bytes": 4824727552,
+                "memory_load_percent": 85
+              },
+              {
+                "elapsed_seconds": 14.5,
+                "cpu_percent": 52.9296875,
+                "available_ram_bytes": 4824346624,
+                "memory_load_percent": 85
+              },
+              {
+                "elapsed_seconds": 15.0,
+                "cpu_percent": 54.92424242424243,
+                "available_ram_bytes": 4823199744,
+                "memory_load_percent": 85
+              },
+              {
+                "elapsed_seconds": 15.5,
+                "cpu_percent": 56.25,
+                "available_ram_bytes": 4804530176,
+                "memory_load_percent": 85
+              },
+              {
+                "elapsed_seconds": 16.0,
+                "cpu_percent": 54.296875,
+                "available_ram_bytes": 4815929344,
+                "memory_load_percent": 85
+              },
+              {
+                "elapsed_seconds": 16.5,
+                "cpu_percent": 55.68181818181819,
+                "available_ram_bytes": 4814643200,
+                "memory_load_percent": 85
+              },
+              {
+                "elapsed_seconds": 17.0,
+                "cpu_percent": 50.9765625,
+                "available_ram_bytes": 4814114816,
+                "memory_load_percent": 85
+              },
+              {
+                "elapsed_seconds": 17.5,
+                "cpu_percent": 61.93181818181819,
+                "available_ram_bytes": 4773724160,
+                "memory_load_percent": 85
+              },
+              {
+                "elapsed_seconds": 18.0,
+                "cpu_percent": 58.52272727272727,
+                "available_ram_bytes": 4733681664,
+                "memory_load_percent": 85
+              },
+              {
+                "elapsed_seconds": 18.5,
+                "cpu_percent": 55.46875,
+                "available_ram_bytes": 4729995264,
+                "memory_load_percent": 85
+              },
+              {
+                "elapsed_seconds": 19.0,
+                "cpu_percent": 56.0546875,
+                "available_ram_bytes": 4728692736,
+                "memory_load_percent": 85
+              },
+              {
+                "elapsed_seconds": 19.5,
+                "cpu_percent": 54.296875,
+                "available_ram_bytes": 4726697984,
+                "memory_load_percent": 85
+              },
+              {
+                "elapsed_seconds": 20.0,
+                "cpu_percent": 56.8359375,
+                "available_ram_bytes": 4723118080,
+                "memory_load_percent": 85
+              },
+              {
+                "elapsed_seconds": 20.5,
+                "cpu_percent": 54.16666666666667,
+                "available_ram_bytes": 4720680960,
+                "memory_load_percent": 85
+              },
+              {
+                "elapsed_seconds": 21.0,
+                "cpu_percent": 59.09090909090908,
+                "available_ram_bytes": 4720848896,
+                "memory_load_percent": 85
+              },
+              {
+                "elapsed_seconds": 21.5,
+                "cpu_percent": 54.8828125,
+                "available_ram_bytes": 4718120960,
+                "memory_load_percent": 85
+              },
+              {
+                "elapsed_seconds": 22.0,
+                "cpu_percent": 55.46875,
+                "available_ram_bytes": 4704608256,
+                "memory_load_percent": 85
+              },
+              {
+                "elapsed_seconds": 22.5,
+                "cpu_percent": 55.078125,
+                "available_ram_bytes": 4712914944,
+                "memory_load_percent": 85
+              },
+              {
+                "elapsed_seconds": 23.0,
+                "cpu_percent": 53.97727272727273,
+                "available_ram_bytes": 4716548096,
+                "memory_load_percent": 85
+              },
+              {
+                "elapsed_seconds": 23.5,
+                "cpu_percent": 51.7578125,
+                "available_ram_bytes": 4713287680,
+                "memory_load_percent": 85
+              },
+              {
+                "elapsed_seconds": 24.0,
+                "cpu_percent": 54.54545454545454,
+                "available_ram_bytes": 4689154048,
+                "memory_load_percent": 86
+              },
+              {
+                "elapsed_seconds": 24.5,
+                "cpu_percent": 64.01515151515152,
+                "available_ram_bytes": 4683169792,
+                "memory_load_percent": 86
+              },
+              {
+                "elapsed_seconds": 25.0,
+                "cpu_percent": 58.59375,
+                "available_ram_bytes": 4729393152,
+                "memory_load_percent": 85
+              },
+              {
+                "elapsed_seconds": 25.5,
+                "cpu_percent": 51.953125,
+                "available_ram_bytes": 4730294272,
+                "memory_load_percent": 85
+              },
+              {
+                "elapsed_seconds": 26.0,
+                "cpu_percent": 55.6640625,
+                "available_ram_bytes": 4729933824,
+                "memory_load_percent": 85
+              },
+              {
+                "elapsed_seconds": 26.5,
+                "cpu_percent": 55.68181818181819,
+                "available_ram_bytes": 4718616576,
+                "memory_load_percent": 85
+              },
+              {
+                "elapsed_seconds": 27.0,
+                "cpu_percent": 56.4453125,
+                "available_ram_bytes": 4775694336,
+                "memory_load_percent": 85
+              },
+              {
+                "elapsed_seconds": 27.5,
+                "cpu_percent": 50.1953125,
+                "available_ram_bytes": 4774473728,
+                "memory_load_percent": 85
+              },
+              {
+                "elapsed_seconds": 28.0,
+                "cpu_percent": 52.27272727272727,
+                "available_ram_bytes": 4774273024,
+                "memory_load_percent": 85
+              },
+              {
+                "elapsed_seconds": 28.5,
+                "cpu_percent": 52.5390625,
+                "available_ram_bytes": 4774301696,
+                "memory_load_percent": 85
+              },
+              {
+                "elapsed_seconds": 29.0,
+                "cpu_percent": 58.33333333333333,
+                "available_ram_bytes": 4773761024,
+                "memory_load_percent": 85
+              }
+            ],
+            "gpu_before": [
+              {
+                "Path": "\\\\desktop-0vcc8pt\\gpu engine(pid_24904_luid_0x00000000_0x000126b0_phys_0_eng_0_engtype_3d)\\utilization percentage",
+                "CookedValue": 4.0831641019942895
+              },
+              {
+                "Path": "\\\\desktop-0vcc8pt\\gpu engine(pid_25492_luid_0x00000000_0x000126b0_phys_0_eng_0_engtype_3d)\\utilization percentage",
+                "CookedValue": 12.151539079239669
+              },
+              {
+                "Path": "\\\\desktop-0vcc8pt\\gpu adapter memory(luid_0x00000000_0x000126b0_phys_0)\\dedicated usage",
+                "CookedValue": 366592000
+              },
+              {
+                "Path": "\\\\desktop-0vcc8pt\\gpu adapter memory(luid_0x00000000_0x0001464a_phys_0)\\dedicated usage",
+                "CookedValue": 8376430592
+              },
+              {
+                "Path": "\\\\desktop-0vcc8pt\\gpu adapter memory(luid_0x00000000_0x000126b0_phys_0)\\shared usage",
+                "CookedValue": 779190272
+              },
+              {
+                "Path": "\\\\desktop-0vcc8pt\\gpu adapter memory(luid_0x00000000_0x000145e6_phys_0)\\shared usage",
+                "CookedValue": 8192
+              },
+              {
+                "Path": "\\\\desktop-0vcc8pt\\gpu adapter memory(luid_0x00000000_0x0001464a_phys_0)\\shared usage",
+                "CookedValue": 1651326976
+              }
+            ],
+            "gpu_after": [
+              {
+                "Path": "\\\\desktop-0vcc8pt\\gpu engine(pid_24904_luid_0x00000000_0x000126b0_phys_0_eng_0_engtype_3d)\\utilization percentage",
+                "CookedValue": 3.9939540448326283
+              },
+              {
+                "Path": "\\\\desktop-0vcc8pt\\gpu engine(pid_25492_luid_0x00000000_0x000126b0_phys_0_eng_0_engtype_3d)\\utilization percentage",
+                "CookedValue": 12.259247406590484
+              },
+              {
+                "Path": "\\\\desktop-0vcc8pt\\gpu adapter memory(luid_0x00000000_0x000126b0_phys_0)\\dedicated usage",
+                "CookedValue": 370614272
+              },
+              {
+                "Path": "\\\\desktop-0vcc8pt\\gpu adapter memory(luid_0x00000000_0x0001464a_phys_0)\\dedicated usage",
+                "CookedValue": 8376430592
+              },
+              {
+                "Path": "\\\\desktop-0vcc8pt\\gpu adapter memory(luid_0x00000000_0x000126b0_phys_0)\\shared usage",
+                "CookedValue": 779190272
+              },
+              {
+                "Path": "\\\\desktop-0vcc8pt\\gpu adapter memory(luid_0x00000000_0x000145e6_phys_0)\\shared usage",
+                "CookedValue": 8192
+              },
+              {
+                "Path": "\\\\desktop-0vcc8pt\\gpu adapter memory(luid_0x00000000_0x0001464a_phys_0)\\shared usage",
+                "CookedValue": 1651326976
+              }
+            ],
+            "gpu_note": "Windows aggregate counters; adapter and process attribution are not inferred."
+          },
+          "publication_attempted": false
+        },
+        {
+          "checkpoint": 200,
+          "timeout_seconds": 30,
+          "accepted": false,
+          "failure_class": "model_timeout",
+          "request_error": "diagnostic request exceeded its total deadline",
+          "parse_error": null,
+          "validation_error": null,
+          "prompt_burden": {
+            "checkpoint_update_count": 200,
+            "raw_turn_count": 400,
+            "bounded_effective_turn_count": 62,
+            "candidate_fact_count": 62,
+            "correction_count": 4,
+            "forgotten_item_count": 4,
+            "effective_source_characters": 1987,
+            "serialized_snapshot_bytes": 15219,
+            "max_source_characters": 2000,
+            "serialized_prompt_bytes": 8956
+          },
+          "telemetry": {
+            "content": "",
+            "reasoning_content": "We need to output JSON with a claims array, extracting explicit claims from source_policy_revision 8. The source policy revision presumably defines claim source IDs. In this data, there is one entry with source_policy_id \"policy-correct-195\" on turn user-193. That likely indicates a corrected claim. The task: extract only explicit claims by copying their complete source content exactly. Use summary_version 1 and supplied summarizer and source_policy_revision. Each claim requires unique claim_id, one or more source_turn_ids, corresponding source_policy_ids, confidence, status \"explicit\", generated_at_utc, and summarizer. Return empty claims array when no explicit claim is suitable.\n\nWe need to determine explicit claims. The only source_policy_id is \"policy-correct-195\" on turn user-193. That turn content: \"Preference 193 corrected: use option green-193.\" This is a claim? It says \"Preference 193 corrected: use option green-193.\" That seems like a corrected preference claim. So we should extract that claim as explicit. Need claim_id unique. Probably something like \"claim-193\". source_turn_ids: [\"user-193\"]; source_policy_ids: [\"policy-correct-195\"]; confidence maybe 1? Not specified; maybe we can set confidence 1. status \"explicit\". generated_at_utc same as generated_at_utc given: \"2026-08-31T16:46:36.9492",
+            "time_to_first_token_seconds": 3.5786148000006506,
+            "time_to_first_content_seconds": null,
+            "input_token_count": null,
+            "output_token_count": null,
+            "tokens_per_second": null,
+            "finish_reason": null,
+            "stream_event_count": 334,
+            "usage": null,
+            "total_latency_seconds": 30.006089900001825,
+            "content_truncated": false,
+            "reasoning_content_truncated": false
+          },
+          "parse_latency_seconds": null,
+          "candidate_claim_count": 0,
+          "raw_rejected_output": null,
+          "raw_rejected_output_truncated": false,
+          "resource_telemetry": {
+            "sample_interval_seconds": 0.5,
+            "sample_count": 59,
+            "cpu_percent_average": 53.8972043003454,
+            "cpu_percent_peak": 68.37121212121212,
+            "available_ram_bytes_minimum": 4384096256,
+            "samples": [
+              {
+                "elapsed_seconds": 0.0,
+                "cpu_percent": 23.929961089494167,
+                "available_ram_bytes": 4504854528,
+                "memory_load_percent": 86
+              },
+              {
+                "elapsed_seconds": 0.5,
+                "cpu_percent": 41.47727272727273,
+                "available_ram_bytes": 4508286976,
+                "memory_load_percent": 86
+              },
+              {
+                "elapsed_seconds": 1.0,
+                "cpu_percent": 43.560606060606055,
+                "available_ram_bytes": 4506308608,
+                "memory_load_percent": 86
+              },
+              {
+                "elapsed_seconds": 1.5,
+                "cpu_percent": 40.15151515151515,
+                "available_ram_bytes": 4515840000,
+                "memory_load_percent": 86
+              },
+              {
+                "elapsed_seconds": 2.0,
+                "cpu_percent": 42.1875,
+                "available_ram_bytes": 4505178112,
+                "memory_load_percent": 86
+              },
+              {
+                "elapsed_seconds": 2.5,
+                "cpu_percent": 41.796875,
+                "available_ram_bytes": 4504719360,
+                "memory_load_percent": 86
+              },
+              {
+                "elapsed_seconds": 3.0,
+                "cpu_percent": 38.82575757575758,
+                "available_ram_bytes": 4456243200,
+                "memory_load_percent": 86
+              },
+              {
+                "elapsed_seconds": 3.5,
+                "cpu_percent": 56.640625,
+                "available_ram_bytes": 4450648064,
+                "memory_load_percent": 86
+              },
+              {
+                "elapsed_seconds": 4.0,
+                "cpu_percent": 55.078125,
+                "available_ram_bytes": 4481839104,
+                "memory_load_percent": 86
+              },
+              {
+                "elapsed_seconds": 4.5,
+                "cpu_percent": 52.734375,
+                "available_ram_bytes": 4486402048,
+                "memory_load_percent": 86
+              },
+              {
+                "elapsed_seconds": 5.0,
+                "cpu_percent": 54.16666666666667,
+                "available_ram_bytes": 4488478720,
+                "memory_load_percent": 86
+              },
+              {
+                "elapsed_seconds": 5.5,
+                "cpu_percent": 53.125,
+                "available_ram_bytes": 4481499136,
+                "memory_load_percent": 86
+              },
+              {
+                "elapsed_seconds": 6.0,
+                "cpu_percent": 54.4921875,
+                "available_ram_bytes": 4486938624,
+                "memory_load_percent": 86
+              },
+              {
+                "elapsed_seconds": 6.5,
+                "cpu_percent": 52.9296875,
+                "available_ram_bytes": 4487233536,
+                "memory_load_percent": 86
+              },
+              {
+                "elapsed_seconds": 7.0,
+                "cpu_percent": 54.16666666666667,
+                "available_ram_bytes": 4487925760,
+                "memory_load_percent": 86
+              },
+              {
+                "elapsed_seconds": 7.5,
+                "cpu_percent": 52.734375,
+                "available_ram_bytes": 4486864896,
+                "memory_load_percent": 86
+              },
+              {
+                "elapsed_seconds": 8.0,
+                "cpu_percent": 56.25,
+                "available_ram_bytes": 4490039296,
+                "memory_load_percent": 86
+              },
+              {
+                "elapsed_seconds": 8.5,
+                "cpu_percent": 56.060606060606055,
+                "available_ram_bytes": 4484284416,
+                "memory_load_percent": 86
+              },
+              {
+                "elapsed_seconds": 9.0,
+                "cpu_percent": 53.7109375,
+                "available_ram_bytes": 4485926912,
+                "memory_load_percent": 86
+              },
+              {
+                "elapsed_seconds": 9.5,
+                "cpu_percent": 54.54545454545454,
+                "available_ram_bytes": 4484706304,
+                "memory_load_percent": 86
+              },
+              {
+                "elapsed_seconds": 10.0,
+                "cpu_percent": 56.8359375,
+                "available_ram_bytes": 4466561024,
+                "memory_load_percent": 86
+              },
+              {
+                "elapsed_seconds": 10.5,
+                "cpu_percent": 54.54545454545454,
+                "available_ram_bytes": 4479057920,
+                "memory_load_percent": 86
+              },
+              {
+                "elapsed_seconds": 11.0,
+                "cpu_percent": 55.2734375,
+                "available_ram_bytes": 4480765952,
+                "memory_load_percent": 86
+              },
+              {
+                "elapsed_seconds": 11.5,
+                "cpu_percent": 57.03125,
+                "available_ram_bytes": 4480118784,
+                "memory_load_percent": 86
+              },
+              {
+                "elapsed_seconds": 12.0,
+                "cpu_percent": 54.6875,
+                "available_ram_bytes": 4479774720,
+                "memory_load_percent": 86
+              },
+              {
+                "elapsed_seconds": 12.5,
+                "cpu_percent": 58.96946564885497,
+                "available_ram_bytes": 4476063744,
+                "memory_load_percent": 86
+              },
+              {
+                "elapsed_seconds": 13.0,
+                "cpu_percent": 53.68217054263567,
+                "available_ram_bytes": 4475953152,
+                "memory_load_percent": 86
+              },
+              {
+                "elapsed_seconds": 13.5,
+                "cpu_percent": 54.1015625,
+                "available_ram_bytes": 4475314176,
+                "memory_load_percent": 86
+              },
+              {
+                "elapsed_seconds": 14.0,
+                "cpu_percent": 53.59848484848485,
+                "available_ram_bytes": 4475363328,
+                "memory_load_percent": 86
+              },
+              {
+                "elapsed_seconds": 14.5,
+                "cpu_percent": 55.3030303030303,
+                "available_ram_bytes": 4468219904,
+                "memory_load_percent": 86
+              },
+              {
+                "elapsed_seconds": 15.0,
+                "cpu_percent": 54.1015625,
+                "available_ram_bytes": 4468199424,
+                "memory_load_percent": 86
+              },
+              {
+                "elapsed_seconds": 15.5,
+                "cpu_percent": 58.14393939393939,
+                "available_ram_bytes": 4469706752,
+                "memory_load_percent": 86
+              },
+              {
+                "elapsed_seconds": 16.0,
+                "cpu_percent": 55.078125,
+                "available_ram_bytes": 4467658752,
+                "memory_load_percent": 86
+              },
+              {
+                "elapsed_seconds": 16.5,
+                "cpu_percent": 58.3984375,
+                "available_ram_bytes": 4458614784,
+                "memory_load_percent": 86
+              },
+              {
+                "elapsed_seconds": 17.0,
+                "cpu_percent": 54.4921875,
+                "available_ram_bytes": 4460384256,
+                "memory_load_percent": 86
+              },
+              {
+                "elapsed_seconds": 17.5,
+                "cpu_percent": 59.765625,
+                "available_ram_bytes": 4460675072,
+                "memory_load_percent": 86
+              },
+              {
+                "elapsed_seconds": 18.0,
+                "cpu_percent": 53.21969696969697,
+                "available_ram_bytes": 4460081152,
+                "memory_load_percent": 86
+              },
+              {
+                "elapsed_seconds": 18.5,
+                "cpu_percent": 58.33333333333333,
+                "available_ram_bytes": 4460859392,
+                "memory_load_percent": 86
+              },
+              {
+                "elapsed_seconds": 19.0,
+                "cpu_percent": 56.640625,
+                "available_ram_bytes": 4453687296,
+                "memory_load_percent": 86
+              },
+              {
+                "elapsed_seconds": 19.5,
+                "cpu_percent": 55.078125,
+                "available_ram_bytes": 4448555008,
+                "memory_load_percent": 86
+              },
+              {
+                "elapsed_seconds": 20.0,
+                "cpu_percent": 54.1015625,
+                "available_ram_bytes": 4448960512,
+                "memory_load_percent": 86
+              },
+              {
+                "elapsed_seconds": 20.5,
+                "cpu_percent": 56.8359375,
+                "available_ram_bytes": 4451295232,
+                "memory_load_percent": 86
+              },
+              {
+                "elapsed_seconds": 21.0,
+                "cpu_percent": 68.37121212121212,
+                "available_ram_bytes": 4411449344,
+                "memory_load_percent": 86
+              },
+              {
+                "elapsed_seconds": 21.5,
+                "cpu_percent": 54.734848484848484,
+                "available_ram_bytes": 4413743104,
+                "memory_load_percent": 86
+              },
+              {
+                "elapsed_seconds": 22.0,
+                "cpu_percent": 57.8125,
+                "available_ram_bytes": 4409171968,
+                "memory_load_percent": 86
+              },
+              {
+                "elapsed_seconds": 22.5,
+                "cpu_percent": 57.00757575757576,
+                "available_ram_bytes": 4407177216,
+                "memory_load_percent": 86
+              },
+              {
+                "elapsed_seconds": 23.0,
+                "cpu_percent": 53.78787878787878,
+                "available_ram_bytes": 4408328192,
+                "memory_load_percent": 86
+              },
+              {
+                "elapsed_seconds": 23.5,
+                "cpu_percent": 55.078125,
+                "available_ram_bytes": 4396130304,
+                "memory_load_percent": 86
+              },
+              {
+                "elapsed_seconds": 24.0,
+                "cpu_percent": 52.9296875,
+                "available_ram_bytes": 4397223936,
+                "memory_load_percent": 86
+              },
+              {
+                "elapsed_seconds": 24.5,
+                "cpu_percent": 56.4453125,
+                "available_ram_bytes": 4395843584,
+                "memory_load_percent": 86
+              },
+              {
+                "elapsed_seconds": 25.0,
+                "cpu_percent": 53.3203125,
+                "available_ram_bytes": 4394942464,
+                "memory_load_percent": 86
+              },
+              {
+                "elapsed_seconds": 25.5,
+                "cpu_percent": 60.546875,
+                "available_ram_bytes": 4392734720,
+                "memory_load_percent": 86
+              },
+              {
+                "elapsed_seconds": 26.0,
+                "cpu_percent": 57.421875,
+                "available_ram_bytes": 4390170624,
+                "memory_load_percent": 86
+              },
+              {
+                "elapsed_seconds": 26.5,
+                "cpu_percent": 61.36363636363637,
+                "available_ram_bytes": 4389429248,
+                "memory_load_percent": 86
+              },
+              {
+                "elapsed_seconds": 27.0,
+                "cpu_percent": 59.46969696969697,
+                "available_ram_bytes": 4388327424,
+                "memory_load_percent": 86
+              },
+              {
+                "elapsed_seconds": 27.5,
+                "cpu_percent": 54.296875,
+                "available_ram_bytes": 4386516992,
+                "memory_load_percent": 86
+              },
+              {
+                "elapsed_seconds": 28.0,
+                "cpu_percent": 61.328125,
+                "available_ram_bytes": 4384096256,
+                "memory_load_percent": 86
+              },
+              {
+                "elapsed_seconds": 28.5,
+                "cpu_percent": 54.35606060606061,
+                "available_ram_bytes": 4385546240,
+                "memory_load_percent": 86
+              },
+              {
+                "elapsed_seconds": 29.0,
+                "cpu_percent": 54.8828125,
+                "available_ram_bytes": 4384681984,
+                "memory_load_percent": 86
+              }
+            ],
+            "gpu_before": [
+              {
+                "Path": "\\\\desktop-0vcc8pt\\gpu engine(pid_24904_luid_0x00000000_0x000126b0_phys_0_eng_0_engtype_3d)\\utilization percentage",
+                "CookedValue": 3.3602164794978053
+              },
+              {
+                "Path": "\\\\desktop-0vcc8pt\\gpu engine(pid_25492_luid_0x00000000_0x000126b0_phys_0_eng_0_engtype_3d)\\utilization percentage",
+                "CookedValue": 13.195942555924878
+              },
+              {
+                "Path": "\\\\desktop-0vcc8pt\\gpu adapter memory(luid_0x00000000_0x000126b0_phys_0)\\dedicated usage",
+                "CookedValue": 370614272
+              },
+              {
+                "Path": "\\\\desktop-0vcc8pt\\gpu adapter memory(luid_0x00000000_0x0001464a_phys_0)\\dedicated usage",
+                "CookedValue": 8376430592
+              },
+              {
+                "Path": "\\\\desktop-0vcc8pt\\gpu adapter memory(luid_0x00000000_0x000126b0_phys_0)\\shared usage",
+                "CookedValue": 779190272
+              },
+              {
+                "Path": "\\\\desktop-0vcc8pt\\gpu adapter memory(luid_0x00000000_0x000145e6_phys_0)\\shared usage",
+                "CookedValue": 8192
+              },
+              {
+                "Path": "\\\\desktop-0vcc8pt\\gpu adapter memory(luid_0x00000000_0x0001464a_phys_0)\\shared usage",
+                "CookedValue": 1651326976
+              }
+            ],
+            "gpu_after": [
+              {
+                "Path": "\\\\desktop-0vcc8pt\\gpu engine(pid_24904_luid_0x00000000_0x000126b0_phys_0_eng_0_engtype_3d)\\utilization percentage",
+                "CookedValue": 4.097897711291597
+              },
+              {
+                "Path": "\\\\desktop-0vcc8pt\\gpu engine(pid_25492_luid_0x00000000_0x000126b0_phys_0_eng_0_engtype_3d)\\utilization percentage",
+                "CookedValue": 12.277947232885996
+              },
+              {
+                "Path": "\\\\desktop-0vcc8pt\\gpu adapter memory(luid_0x00000000_0x000126b0_phys_0)\\dedicated usage",
+                "CookedValue": 370614272
+              },
+              {
+                "Path": "\\\\desktop-0vcc8pt\\gpu adapter memory(luid_0x00000000_0x0001464a_phys_0)\\dedicated usage",
+                "CookedValue": 8376430592
+              },
+              {
+                "Path": "\\\\desktop-0vcc8pt\\gpu adapter memory(luid_0x00000000_0x000126b0_phys_0)\\shared usage",
+                "CookedValue": 779190272
+              },
+              {
+                "Path": "\\\\desktop-0vcc8pt\\gpu adapter memory(luid_0x00000000_0x000145e6_phys_0)\\shared usage",
+                "CookedValue": 8192
+              },
+              {
+                "Path": "\\\\desktop-0vcc8pt\\gpu adapter memory(luid_0x00000000_0x0001464a_phys_0)\\shared usage",
+                "CookedValue": 1651326976
+              }
+            ],
+            "gpu_note": "Windows aggregate counters; adapter and process attribution are not inferred."
+          },
+          "publication_attempted": false
+        }
+      ]
+    }
+  ],
+  "acceptance_contract_changed": false,
+  "human_review_complete": false
+}
