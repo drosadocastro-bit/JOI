@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "date": "2026-08-31",
+  "purpose": "direct reasoning-ON versus reasoning-OFF Compact Memory comparison",
+  "frozen_reasoning_on_commit": "f9d8375",
+  "corpus_version": "compact-memory-deterministic-v1",
+  "checkpoints": [25, 50, 100, 200],
+  "primary_budget_seconds": 30,
+  "acceptance_contract_changed": false,
+  "models": [
+    {
+      "model": "nvidia/nemotron-3-nano",
+      "reasoning_off_control_verified": true,
+      "control_reasoning_tokens": 0,
+      "reasoning_on": {
+        "first_token_seconds": [9.451468, 4.012547, 3.995095, 3.578615],
+        "first_json_content_seconds": [null, null, null, null],
+        "accepted_candidates": 0
+      },
+      "reasoning_off": {
+        "first_token_seconds": [4.711914, 19.060762, 19.333348, 21.050334],
+        "first_json_content_seconds": [4.711922, 19.060767, 19.333353, 21.050348],
+        "total_latency_seconds": [14.651143, 30.004317, 29.734873, 21.627546],
+        "input_tokens": [2006, null, 2664, 2699],
+        "output_tokens": [135, null, 139, 9],
+        "parse_success": [false, false, false, false],
+        "malformed_output": [true, false, true, true],
+        "accepted_candidates": 0
+      },
+      "classification": "mixed cause",
+      "observed_causes": [
+        "reasoning-budget starvation",
+        "structured-output incompatibility",
+        "resource-pressure risk"
+      ]
+    },
+    {
+      "model": "qwen/qwen3.5-9b",
+      "reasoning_off_control_verified": true,
+      "control_reasoning_tokens": 0,
+      "reasoning_on": {
+        "first_token_seconds": [null, null, null, null],
+        "first_json_content_seconds": [null, null, null, null],
+        "accepted_candidates": 0
+      },
+      "reasoning_off": {
+        "first_token_seconds": [null, null, null, null],
+        "first_json_content_seconds": [null, null, null, null],
+        "total_latency_seconds": [30.007822, 30.011781, 30.009264, 30.003568],
+        "input_tokens": [null, null, null, null],
+        "output_tokens": [null, null, null, null],
+        "parse_success": [false, false, false, false],
+        "malformed_output": [false, false, false, false],
+        "accepted_candidates": 0
+      },
+      "classification": "model suitability failure",
+      "observed_causes": ["model suitability failure"]
+    }
+  ],
+  "valid_candidate_metrics_available": false,
+  "metric_unavailability_reason": "Neither model produced a candidate accepted by the frozen parser and provenance validator.",
+  "overall_classification": "mixed cause",
+  "stop_model_tuning": true,
+  "next_action": "Reconsider the summarizer architecture or provider before further model tuning.",
+  "candidate_publication_enabled": false,
+  "durable_compact_memory_modified": false,
+  "previous_valid_memory_authoritative": true,
+  "phase_5a_closed": false,
+  "human_review_complete": false
+}

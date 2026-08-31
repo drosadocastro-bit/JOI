@@ -48,7 +48,7 @@ Implemented:
 - feature-flagged Compact Memory in extractive shadow mode
 - feature-flagged local model Compact Memory candidate with structured claims
 - policy-aware candidate regeneration and machine-readable shadow evaluation
-- 138 passing tests
+- 144 passing tests
 
 Not implemented yet:
 
@@ -267,6 +267,13 @@ including 120-second non-promotional sensitivity trials. The evidence does not
 identify task size as the primary cause. Both measured configurations remain
 unsuitable for the 30-second budget. See the
 [post-FAIL diagnosis](docs/compact-memory-post-fail-diagnosis.md).
+
+A separate reasoning-OFF experiment verified zero reasoning tokens for both
+models without changing the frozen contract. Nemotron reached JSON inside the
+budget but produced only malformed candidates; Qwen emitted no full-task token
+at any checkpoint. Both models therefore remain rejected, model tuning is
+stopped, and the summarizer architecture or provider must be reconsidered. See
+the [reasoning-OFF diagnosis](docs/compact-memory-reasoning-off-diagnosis.md).
 
 This implements the shadow evaluation machinery but does not close Phase 5A.
 The frozen benchmark remains FAIL, and the human review corpus remains required by

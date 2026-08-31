@@ -93,7 +93,9 @@
 - [x] Run real Nemotron checkpoint benchmark (FAIL: four timeouts, no candidates)
 - [x] Diagnose benchmark latency without changing the frozen contract
 - [x] Compare Qwen3.5-9B under the identical default-on reasoning contract
-- [ ] Evaluate explicitly reasoning-disabled structured generation separately
+- [x] Evaluate explicitly reasoning-disabled structured generation separately
+- [x] Stop model tuning after Nemotron and Qwen reasoning-OFF failures
+- [ ] Reconsider Compact Memory summarizer architecture or provider
 - [ ] Resolve model summarizer latency/structured-output benchmark failure
 - [ ] Create and pass the human-review corpus
 - [ ] Pass Compact Memory closure gate at 25/50/100/200 updates
