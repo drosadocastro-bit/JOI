@@ -5,6 +5,7 @@ from unittest.mock import Mock
 import pytest
 
 from memory.compact_memory import (
+    CompactClaim,
     CompactMemoryDraft,
     CompactMemoryError,
     CompactMemoryManager,
@@ -13,8 +14,14 @@ from memory.compact_memory import (
     CompactMemoryWorker,
     CompactSource,
     ExtractiveCompactSummarizer,
+    ModelCompactMemoryManager,
+    ModelCompactMemoryStore,
+    ModelCompactSummarizer,
+    CompactMemoryEvaluator,
+    CompactEvaluationStore,
+    parse_model_candidate,
 )
-from memory.memory_store import EpisodicTurn
+from memory.memory_store import EffectiveMemorySnapshot, EffectiveMemoryTurn, EpisodicTurn
 
 
 def _turn(turn_id, role, content):
@@ -169,3 +176,242 @@ def test_closed_worker_refuses_new_updates():
 
     with pytest.raises(CompactMemoryError, match='worker is closed'):
         worker.submit((_turn('user-1', 'user', 'Too late'),))
+
+
+def _effective_snapshot(policy_revision=0, content='I prefer concise replies.'):
+    return EffectiveMemorySnapshot(
+        policy_revision=policy_revision,
+        turns=(EffectiveMemoryTurn(
+            turn_id='user-1',
+            exchange_id='exchange-1',
+            role='user',
+            content=content,
+            source_policy_id=None,
+            forgotten=False,
+            completed_exchange=True,
+            created_at_utc='2026-08-30T12:00:00+00:00',
+        ),),
+    )
+
+
+def _candidate_payload(**claim_overrides):
+    claim = {
+        'claim_id': 'claim-1',
+        'text': 'I prefer concise replies.',
+        'source_turn_ids': ['user-1'],
+        'source_policy_ids': [None],
+        'confidence': 0.95,
+        'status': 'explicit',
+        'generated_at_utc': '2026-08-30T12:30:00+00:00',
+        'summarizer': 'model-v1:test-model',
+    }
+    claim.update(claim_overrides)
+    return {
+        'summary_version': 1,
+        'generated_at_utc': '2026-08-30T12:30:00+00:00',
+        'summarizer': 'model-v1:test-model',
+        'source_policy_revision': 0,
+        'claims': [claim],
+    }
+
+
+def test_model_candidate_parser_enforces_structured_claim_schema():
+    candidate = parse_model_candidate(json.dumps(_candidate_payload()))
+
+    assert candidate.claims == (CompactClaim(
+        claim_id='claim-1',
+        text='I prefer concise replies.',
+        source_turn_ids=('user-1',),
+        source_policy_ids=(None,),
+        confidence=0.95,
+        status='explicit',
+        generated_at_utc='2026-08-30T12:30:00+00:00',
+        summarizer='model-v1:test-model',
+    ),)
+
+
+@pytest.mark.parametrize(
+    'payload, message',
+    [
+        ({'summary_version': 1}, 'model candidate is malformed'),
+        (_candidate_payload(status='inferred'), 'inferred claims are not accepted'),
+        (_candidate_payload(source_turn_ids=[]), 'claim provenance is malformed'),
+    ],
+)
+def test_model_candidate_parser_rejects_unsafe_shapes(payload, message):
+    with pytest.raises(CompactMemoryError, match=message):
+        parse_model_candidate(json.dumps(payload))
+
+
+def test_model_candidate_rejects_stale_or_unsupported_claim_and_preserves_state(tmp_path):
+    path = tmp_path / 'model-candidate.json'
+    store = ModelCompactMemoryStore(path)
+    valid = parse_model_candidate(json.dumps(_candidate_payload()))
+    store.save(valid)
+    manager = ModelCompactMemoryManager(store=store, summarizer=Mock())
+    manager.summarizer.return_value = parse_model_candidate(json.dumps(
+        _candidate_payload(text='The user likes fabricated facts.'),
+    ))
+
+    with pytest.raises(CompactMemoryError, match='unsupported claim'):
+        manager.update(_effective_snapshot())
+
+    assert store.load() == valid
+
+
+def test_model_candidate_accepts_current_corrected_provenance(tmp_path):
+    snapshot = EffectiveMemorySnapshot(
+        policy_revision=1,
+        turns=(EffectiveMemoryTurn(
+            turn_id='user-1',
+            exchange_id='exchange-1',
+            role='user',
+            content='Green is my favorite.',
+            source_policy_id='policy-1',
+            forgotten=False,
+            completed_exchange=True,
+            created_at_utc='2026-08-30T12:00:00+00:00',
+        ),),
+    )
+    payload = _candidate_payload(
+        text='Green is my favorite.',
+        source_policy_ids=['policy-1'],
+    )
+    payload['source_policy_revision'] = 1
+    candidate = parse_model_candidate(json.dumps(payload))
+    manager = ModelCompactMemoryManager(
+        store=ModelCompactMemoryStore(tmp_path / 'model-candidate.json'),
+        summarizer=Mock(return_value=candidate),
+    )
+
+    assert manager.update(snapshot) == candidate
+
+
+def test_model_candidate_rejects_forgotten_and_stale_policy_sources(tmp_path):
+    forgotten_payload = _candidate_payload(source_policy_ids=['policy-1'])
+    forgotten_payload['source_policy_revision'] = 1
+    manager = ModelCompactMemoryManager(
+        store=ModelCompactMemoryStore(tmp_path / 'model-candidate.json'),
+        summarizer=Mock(return_value=parse_model_candidate(json.dumps(forgotten_payload))),
+    )
+    forgotten = EffectiveMemorySnapshot(
+        policy_revision=1,
+        turns=(EffectiveMemoryTurn(
+            turn_id='user-1', exchange_id='exchange-1', role='user', content=None,
+            source_policy_id='policy-1', forgotten=True,
+            completed_exchange=True,
+            created_at_utc='2026-08-30T12:00:00+00:00',
+        ),),
+    )
+
+    with pytest.raises(CompactMemoryError, match='forgotten source'):
+        manager.update(forgotten)
+
+    stale = _effective_snapshot(policy_revision=1)
+    with pytest.raises(CompactMemoryError, match='source policy is stale'):
+        manager.update(stale)
+
+
+def test_model_summarizer_requests_json_from_effective_evidence():
+    brain = Mock()
+    brain.chat.return_value = json.dumps(_candidate_payload())
+    summarizer = ModelCompactSummarizer(brain, model='test-model')
+
+    candidate = summarizer(_effective_snapshot())
+
+    assert candidate.claims[0].text == 'I prefer concise replies.'
+    messages = brain.chat.call_args.args[0]
+    assert messages[0]['role'] == 'system'
+    assert 'JSON only' in messages[0]['content']
+    assert 'I prefer concise replies.' in messages[1]['content']
+    assert 'source_policy_revision": 0' in messages[1]['content']
+
+
+def test_model_summarizer_rejects_invalid_json():
+    brain = Mock()
+    brain.chat.return_value = 'not json'
+
+    with pytest.raises(CompactMemoryError, match='model candidate is malformed'):
+        ModelCompactSummarizer(brain, model='test-model')(_effective_snapshot())
+
+
+def test_evaluator_records_paired_baseline_and_candidate_metrics(tmp_path):
+    candidate = parse_model_candidate(json.dumps(_candidate_payload()))
+    manager = ModelCompactMemoryManager(
+        ModelCompactMemoryStore(tmp_path / 'candidate.json'),
+        Mock(return_value=candidate),
+    )
+    evaluator = CompactMemoryEvaluator(
+        manager=manager,
+        report_store=CompactEvaluationStore(tmp_path / 'evaluation.json'),
+        clock=lambda: datetime(2026, 8, 30, 12, 31, tzinfo=timezone.utc),
+    )
+
+    report = evaluator.update(_effective_snapshot())
+
+    assert report.accepted is True
+    assert report.baseline_claim_count == 1
+    assert report.candidate_claim_count == 1
+    assert report.shared_claim_count == 1
+    assert report.baseline_summary_version == 1
+    assert report.baseline_summarizer == 'extractive-v1'
+    assert report.factual_coverage == 1.0
+    assert report.provenance_coverage == 1.0
+    assert report.unsupported_claim_rate == 0.0
+    assert report.source_policy_revision == 0
+    assert report.baseline_output == [{
+        'text': 'I prefer concise replies.',
+        'source_turn_ids': ['user-1'],
+        'source_policy_ids': [None],
+    }]
+    assert report.candidate_output[0]['claim_id'] == 'claim-1'
+    assert CompactEvaluationStore(tmp_path / 'evaluation.json').load() == [report]
+
+
+def test_evaluator_reports_rejection_without_replacing_candidate(tmp_path):
+    valid = parse_model_candidate(json.dumps(_candidate_payload()))
+    candidate_store = ModelCompactMemoryStore(tmp_path / 'candidate.json')
+    candidate_store.save(valid)
+    manager = ModelCompactMemoryManager(
+        candidate_store,
+        Mock(return_value=parse_model_candidate(json.dumps(
+            _candidate_payload(text='Unsupported addition.'),
+        ))),
+    )
+    evaluator = CompactMemoryEvaluator(
+        manager=manager,
+        report_store=CompactEvaluationStore(tmp_path / 'evaluation.json'),
+    )
+
+    report = evaluator.update(_effective_snapshot())
+
+    assert report.accepted is False
+    assert report.rejection_reason == 'unsupported claim'
+    assert report.unsupported_claim_rate == 1.0
+    assert candidate_store.load() == valid
+
+
+def test_manager_rejects_incomplete_exchange_and_concurrent_policy_change(tmp_path):
+    candidate = parse_model_candidate(json.dumps(_candidate_payload()))
+    incomplete = _effective_snapshot()
+    incomplete = EffectiveMemorySnapshot(
+        policy_revision=0,
+        turns=(EffectiveMemoryTurn(
+            **{**incomplete.turns[0].__dict__, 'completed_exchange': False}
+        ),),
+    )
+    manager = ModelCompactMemoryManager(
+        ModelCompactMemoryStore(tmp_path / 'candidate.json'),
+        Mock(return_value=candidate),
+    )
+
+    with pytest.raises(CompactMemoryError, match='incomplete exchange'):
+        manager.update(incomplete)
+
+    manager = ModelCompactMemoryManager(
+        ModelCompactMemoryStore(tmp_path / 'candidate.json'),
+        Mock(return_value=candidate),
+        policy_revision_reader=lambda: 1,
+    )
+    with pytest.raises(CompactMemoryError, match='changed during generation'):
+        manager.update(_effective_snapshot())

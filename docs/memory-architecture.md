@@ -111,10 +111,19 @@ disables only the compact layer.
 Compact Memory remains shadow-only derived state. It is not injected into model
 prompts, and no excerpt becomes authoritative independently of its raw turn.
 `COMPACT_MEMORY_MAX_CHARACTERS` bounds the rendered state and defaults to 2000.
-Existing compact state is not yet invalidated or regenerated when a source turn
-is later corrected or forgotten. It may therefore retain an obsolete source
-excerpt and must remain non-authoritative until policy-aware regeneration has
-its own acceptance gate.
+The optional model-backed shadow candidate reads a bounded effective snapshot
+from episodic memory. The snapshot records the latest source policy ID and a
+global append-only policy revision. Corrections and logical forgetting enqueue
+regeneration; stale revisions, forgotten sources, incomplete exchanges,
+inferred claims, and claims that are not exact effective-source excerpts are
+rejected before atomic candidate replacement. The legacy extractive artifact
+is retained as the control baseline and remains non-authoritative.
+
+Each shadow evaluation report records the paired extractive and model outputs,
+coverage, unsupported and contradiction rates, provenance coverage,
+compression, staleness, correction and forgetting adherence, latency, storage
+size, and rejection reason. Reports and model candidates remain local derived
+artifacts and are never prompt inputs.
 
 The normative requirements for model-backed comparison, structured claims,
 policy-aware regeneration, drift measurement, and promotion are defined in
@@ -123,7 +132,10 @@ requirements permits live prompt injection.
 
 ## Next Gate: Compact Memory Closure
 
-Phase 5A must close the Compact Memory gate before NIC graph integration begins.
+The Phase 5A implementation includes deterministic drift regression at 25, 50,
+100, and 200 updates. The gate remains open pending real-model measurements,
+predeclared quality and performance thresholds, and human review. Phase 5A must
+close before NIC graph integration begins.
 NIC integration should then begin write-only after its actual graph interface
 and schema are available for review. Until then, Compact Memory remains the
 only derived layer and has no effect on live responses.

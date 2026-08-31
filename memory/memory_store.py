@@ -46,6 +46,24 @@ class InspectedMemoryTurn:
 	policies: tuple[MemoryPolicyRecord, ...]
 
 
+@dataclass(frozen=True)
+class EffectiveMemoryTurn:
+	turn_id: str
+	exchange_id: str
+	role: str
+	content: str | None
+	source_policy_id: str | None
+	forgotten: bool
+	completed_exchange: bool
+	created_at_utc: str
+
+
+@dataclass(frozen=True)
+class EffectiveMemorySnapshot:
+	policy_revision: int
+	turns: tuple[EffectiveMemoryTurn, ...]
+
+
 class EpisodicMemoryStore:
 	def __init__(
 		self,
@@ -436,3 +454,55 @@ class EpisodicMemoryStore:
 			'corrected_turn_count': sum(action == 'correct' for action, in latest_actions),
 			'forgotten_turn_count': sum(action == 'forget' for action, in latest_actions),
 		}
+
+	def effective_snapshot(
+		self,
+		include_forgotten: bool = True,
+	) -> EffectiveMemorySnapshot:
+		try:
+			with self._connect() as connection:
+				policy_revision = connection.execute(
+					'SELECT COUNT(*) FROM memory_policies'
+				).fetchone()[0]
+				rows = connection.execute(
+					'''
+					SELECT
+						turn.turn_id,
+						turn.exchange_id,
+						turn.role,
+						CASE
+							WHEN policy.action = 'forget' THEN NULL
+							WHEN policy.action = 'correct' THEN policy.replacement_content
+							ELSE turn.content
+						END,
+						policy.policy_id,
+						CASE WHEN policy.action = 'forget' THEN 1 ELSE 0 END,
+						CASE WHEN (
+							SELECT COUNT(*)
+							FROM episodic_turns AS exchange_turn
+							WHERE exchange_turn.exchange_id = turn.exchange_id
+						) = 2 THEN 1 ELSE 0 END,
+						turn.created_at_utc
+					FROM episodic_turns AS turn
+					LEFT JOIN memory_policies AS policy
+						ON policy.rowid = (
+							SELECT MAX(latest.rowid)
+							FROM memory_policies AS latest
+							WHERE latest.target_turn_id = turn.turn_id
+						)
+					ORDER BY turn.rowid
+					'''
+				).fetchall()
+		except (OSError, sqlite3.Error) as exc:
+			raise MemoryStoreError('could not read effective memory') from exc
+		turns = tuple(
+			EffectiveMemoryTurn(
+				*row[:5],
+				bool(row[5]),
+				bool(row[6]),
+				row[7],
+			)
+			for row in rows
+			if include_forgotten or not bool(row[5])
+		)
+		return EffectiveMemorySnapshot(policy_revision=policy_revision, turns=turns)

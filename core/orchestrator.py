@@ -2,10 +2,16 @@ from brain.local_llm import LocalLMStudioBrain
 from core.router import BrainRouter
 from core.state import JoiState
 from memory.compact_memory import (
+    CompactEvaluationStore,
+    CompactMemoryEvaluator,
     CompactMemoryManager,
     CompactMemoryStore,
     CompactMemoryWorker,
     ExtractiveCompactSummarizer,
+    ModelCompactMemoryManager,
+    ModelCompactMemoryStore,
+    ModelCompactMemoryWorker,
+    ModelCompactSummarizer,
 )
 from memory.memory_store import EpisodicMemoryStore
 from memory.session_memory import SessionMemory
@@ -34,6 +40,8 @@ class JoiOrchestrator:
         self.memory_store_error = None
         self.compact_memory_worker = None
         self.compact_memory_error = None
+        self.model_compact_memory_worker = None
+        self.model_compact_memory_error = None
         if settings.persistent_memory_enabled:
             try:
                 self.memory_store = EpisodicMemoryStore(settings.memory_store_path)
@@ -54,6 +62,38 @@ class JoiOrchestrator:
                 self.logger.exception('Compact memory initialization failed')
         local_brain = LocalLMStudioBrain(settings.lmstudio_base_url, settings.local_model, settings.request_timeout_seconds)
         self.brain = BrainRouter(local_brain)
+        if (
+            getattr(settings, 'model_compact_memory_enabled', False)
+            and self.compact_memory_worker is not None
+            and self.memory_store is not None
+        ):
+            try:
+                model_brain = LocalLMStudioBrain(
+                    settings.lmstudio_base_url,
+                    settings.local_model,
+                    settings.request_timeout_seconds,
+                )
+                model_manager = ModelCompactMemoryManager(
+                    store=ModelCompactMemoryStore(settings.model_compact_memory_path),
+                    summarizer=ModelCompactSummarizer(model_brain, settings.local_model),
+                    policy_revision_reader=lambda: (
+                        self.memory_store.effective_snapshot().policy_revision
+                    ),
+                )
+                evaluator = CompactMemoryEvaluator(
+                    manager=model_manager,
+                    report_store=CompactEvaluationStore(
+                        settings.compact_memory_evaluation_path
+                    ),
+                    max_source_characters=settings.compact_memory_max_characters,
+                )
+                self.model_compact_memory_worker = ModelCompactMemoryWorker(
+                    evaluator,
+                    logger,
+                )
+            except Exception as exc:
+                self.model_compact_memory_error = str(exc)
+                self.logger.exception('Model compact memory initialization failed')
         self.voice = None
         if settings.voice_enabled:
             if settings.voice_mode in {'online', 'hybrid'} and not settings.cloud_enabled:
@@ -201,6 +241,16 @@ class JoiOrchestrator:
             return
         if self.compact_memory_worker is not None:
             self.compact_memory_worker.submit(turns)
+        self._submit_model_compact_snapshot()
+
+    def _submit_model_compact_snapshot(self):
+        if self.model_compact_memory_worker is None or self.memory_store is None:
+            return
+        try:
+            snapshot = self.memory_store.effective_snapshot()
+            self.model_compact_memory_worker.submit(snapshot)
+        except Exception:
+            self.logger.exception('Model compact memory snapshot failed')
 
     def _require_memory_store(self):
         if self.memory_store is None:
@@ -219,18 +269,24 @@ class JoiOrchestrator:
         return self._require_memory_store().inspect_turn(turn_id)
 
     def memory_correct(self, turn_id: str, replacement_content: str):
-        return self._require_memory_store().correct_turn(
+        policy = self._require_memory_store().correct_turn(
             turn_id,
             replacement_content,
             reason='explicit user correction',
         )
+        self._submit_model_compact_snapshot()
+        return policy
 
     def memory_forget(self, turn_id: str, reason: str | None = None):
-        return self._require_memory_store().forget_turn(turn_id, reason=reason)
+        policy = self._require_memory_store().forget_turn(turn_id, reason=reason)
+        self._submit_model_compact_snapshot()
+        return policy
 
     def close(self):
         if self.compact_memory_worker is not None:
             self.compact_memory_worker.close()
+        if self.model_compact_memory_worker is not None:
+            self.model_compact_memory_worker.close()
 
     def speak(self, text: str):
         if self.voice is None or not self.state.voice_enabled:

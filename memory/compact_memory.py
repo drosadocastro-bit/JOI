@@ -2,13 +2,14 @@ import json
 import os
 import queue
 import threading
+import time
 from collections.abc import Callable, Sequence
 from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Protocol
 
-from memory.memory_store import EpisodicTurn
+from memory.memory_store import EffectiveMemorySnapshot, EpisodicTurn
 
 
 COMPACT_MEMORY_SCHEMA_VERSION = 1
@@ -43,6 +44,27 @@ class CompactMemoryState:
     schema_version: int = COMPACT_MEMORY_SCHEMA_VERSION
 
 
+@dataclass(frozen=True)
+class CompactClaim:
+    claim_id: str
+    text: str
+    source_turn_ids: tuple[str, ...]
+    source_policy_ids: tuple[str | None, ...]
+    confidence: float
+    status: str
+    generated_at_utc: str
+    summarizer: str
+
+
+@dataclass(frozen=True)
+class ModelCompactMemoryCandidate:
+    summary_version: int
+    generated_at_utc: str
+    summarizer: str
+    source_policy_revision: int
+    claims: tuple[CompactClaim, ...]
+
+
 class CompactSummarizer(Protocol):
     version: str
 
@@ -55,6 +77,496 @@ class CompactSummarizer(Protocol):
 
 def _normalized_content(content: str) -> str:
     return ' '.join(content.split())
+
+
+def _require_utc_timestamp(value: str) -> None:
+    try:
+        timestamp = datetime.fromisoformat(value)
+    except (TypeError, ValueError) as exc:
+        raise CompactMemoryError('model candidate is malformed') from exc
+    if timestamp.tzinfo is None or timestamp.utcoffset() != timezone.utc.utcoffset(timestamp):
+        raise CompactMemoryError('model candidate is malformed')
+
+
+def parse_model_candidate(raw: str) -> ModelCompactMemoryCandidate:
+    try:
+        payload = json.loads(raw)
+        if set(payload) != {
+            'summary_version', 'generated_at_utc', 'summarizer',
+            'source_policy_revision', 'claims',
+        }:
+            raise CompactMemoryError('model candidate is malformed')
+        if payload['summary_version'] != 1:
+            raise CompactMemoryError('model candidate is malformed')
+        if not isinstance(payload['summarizer'], str) or not payload['summarizer']:
+            raise CompactMemoryError('model candidate is malformed')
+        if (
+            isinstance(payload['source_policy_revision'], bool)
+            or not isinstance(payload['source_policy_revision'], int)
+            or payload['source_policy_revision'] < 0
+        ):
+            raise CompactMemoryError('model candidate is malformed')
+        if not isinstance(payload['claims'], list):
+            raise CompactMemoryError('model candidate is malformed')
+        _require_utc_timestamp(payload['generated_at_utc'])
+        claims = tuple(_claim_from_payload(item) for item in payload['claims'])
+        claim_ids = [claim.claim_id for claim in claims]
+        if len(set(claim_ids)) != len(claim_ids):
+            raise CompactMemoryError('duplicate claim IDs')
+        if any(
+            claim.summarizer != payload['summarizer']
+            or claim.generated_at_utc != payload['generated_at_utc']
+            for claim in claims
+        ):
+            raise CompactMemoryError('model candidate metadata is inconsistent')
+        return ModelCompactMemoryCandidate(
+            summary_version=payload['summary_version'],
+            generated_at_utc=payload['generated_at_utc'],
+            summarizer=payload['summarizer'],
+            source_policy_revision=payload['source_policy_revision'],
+            claims=claims,
+        )
+    except CompactMemoryError:
+        raise
+    except (json.JSONDecodeError, KeyError, TypeError, ValueError) as exc:
+        raise CompactMemoryError('model candidate is malformed') from exc
+
+
+def _claim_from_payload(payload) -> CompactClaim:
+    required = {
+        'claim_id', 'text', 'source_turn_ids', 'source_policy_ids', 'confidence',
+        'status', 'generated_at_utc', 'summarizer',
+    }
+    if not isinstance(payload, dict) or set(payload) != required:
+        raise CompactMemoryError('model candidate is malformed')
+    source_turn_ids = payload['source_turn_ids']
+    source_policy_ids = payload['source_policy_ids']
+    if (
+        not isinstance(source_turn_ids, list)
+        or not source_turn_ids
+        or any(not isinstance(item, str) or not item for item in source_turn_ids)
+        or len(set(source_turn_ids)) != len(source_turn_ids)
+        or not isinstance(source_policy_ids, list)
+        or len(source_policy_ids) != len(source_turn_ids)
+        or any(item is not None and not isinstance(item, str) for item in source_policy_ids)
+    ):
+        raise CompactMemoryError('claim provenance is malformed')
+    if payload['status'] != 'explicit':
+        raise CompactMemoryError('inferred claims are not accepted')
+    confidence = payload['confidence']
+    if isinstance(confidence, bool) or not isinstance(confidence, (int, float)):
+        raise CompactMemoryError('model candidate is malformed')
+    if not 0 <= confidence <= 1:
+        raise CompactMemoryError('model candidate is malformed')
+    if any(
+        not isinstance(payload[field], str) or not payload[field]
+        for field in ('claim_id', 'text', 'generated_at_utc', 'summarizer')
+    ):
+        raise CompactMemoryError('model candidate is malformed')
+    _require_utc_timestamp(payload['generated_at_utc'])
+    return CompactClaim(
+        claim_id=payload['claim_id'],
+        text=_normalized_content(payload['text']),
+        source_turn_ids=tuple(source_turn_ids),
+        source_policy_ids=tuple(source_policy_ids),
+        confidence=float(confidence),
+        status=payload['status'],
+        generated_at_utc=payload['generated_at_utc'],
+        summarizer=payload['summarizer'],
+    )
+
+
+class ModelCompactMemoryStore:
+    def __init__(self, path: str | Path):
+        self.path = Path(path)
+
+    def load(self) -> ModelCompactMemoryCandidate | None:
+        if not self.path.exists():
+            return None
+        try:
+            return parse_model_candidate(self.path.read_text(encoding='utf-8'))
+        except CompactMemoryError:
+            raise
+        except OSError as exc:
+            raise CompactMemoryError('could not load model compact memory') from exc
+
+    def save(self, candidate: ModelCompactMemoryCandidate) -> None:
+        temporary_path = self.path.with_suffix(f'{self.path.suffix}.tmp')
+        try:
+            self.path.parent.mkdir(parents=True, exist_ok=True)
+            payload = asdict(candidate)
+            with temporary_path.open('w', encoding='utf-8', newline='\n') as stream:
+                json.dump(payload, stream, ensure_ascii=True, indent=2)
+                stream.write('\n')
+                stream.flush()
+                os.fsync(stream.fileno())
+            temporary_path.replace(self.path)
+        except OSError as exc:
+            raise CompactMemoryError('could not save model compact memory') from exc
+        finally:
+            temporary_path.unlink(missing_ok=True)
+
+
+class ModelCompactMemoryManager:
+    def __init__(
+        self,
+        store: ModelCompactMemoryStore,
+        summarizer,
+        policy_revision_reader: Callable[[], int] | None = None,
+    ):
+        self.store = store
+        self.summarizer = summarizer
+        self.policy_revision_reader = policy_revision_reader
+        self.state = store.load()
+
+    def update(
+        self,
+        snapshot: EffectiveMemorySnapshot,
+    ) -> ModelCompactMemoryCandidate:
+        try:
+            candidate = self.summarizer(snapshot)
+        except CompactMemoryError:
+            raise
+        except Exception as exc:
+            raise CompactMemoryError('model summarizer failed') from exc
+        if not isinstance(candidate, ModelCompactMemoryCandidate):
+            raise CompactMemoryError('model summarizer returned an invalid candidate')
+        self._validate_provenance(candidate, snapshot)
+        if (
+            self.policy_revision_reader is not None
+            and self.policy_revision_reader() != snapshot.policy_revision
+        ):
+            raise CompactMemoryError('candidate policy revision changed during generation')
+        self.store.save(candidate)
+        self.state = candidate
+        return candidate
+
+    @staticmethod
+    def _validate_provenance(
+        candidate: ModelCompactMemoryCandidate,
+        snapshot: EffectiveMemorySnapshot,
+    ) -> None:
+        if candidate.source_policy_revision != snapshot.policy_revision:
+            raise CompactMemoryError('candidate policy revision is stale')
+        sources = {turn.turn_id: turn for turn in snapshot.turns}
+        for claim in candidate.claims:
+            referenced_content = []
+            for turn_id, policy_id in zip(
+                claim.source_turn_ids,
+                claim.source_policy_ids,
+                strict=True,
+            ):
+                source = sources.get(turn_id)
+                if source is None:
+                    raise CompactMemoryError('claim source does not exist')
+                if not source.completed_exchange:
+                    raise CompactMemoryError('claim references incomplete exchange')
+                if source.forgotten or source.content is None:
+                    raise CompactMemoryError('claim references forgotten source')
+                if source.source_policy_id != policy_id:
+                    raise CompactMemoryError('claim source policy is stale')
+                referenced_content.append(_normalized_content(source.content))
+            if _normalized_content(claim.text) not in referenced_content:
+                raise CompactMemoryError('unsupported claim')
+
+
+class ModelCompactSummarizer:
+    def __init__(self, brain, model: str):
+        self.brain = brain
+        self.model = model
+        self.version = f'model-v1:{model}'
+
+    def __call__(
+        self,
+        snapshot: EffectiveMemorySnapshot,
+    ) -> ModelCompactMemoryCandidate:
+        effective_turns = [
+            {
+                'turn_id': turn.turn_id,
+                'role': turn.role,
+                'content': turn.content,
+                'source_policy_id': turn.source_policy_id,
+            }
+            for turn in snapshot.turns
+            if not turn.forgotten and turn.content is not None
+        ]
+        request = {
+            'source_policy_revision': snapshot.policy_revision,
+            'summarizer': self.version,
+            'effective_turns': effective_turns,
+        }
+        messages = [
+            {
+                'role': 'system',
+                'content': (
+                    'Return JSON only. Extract only explicit claims by copying '
+                    'their complete source content exactly. Never infer, combine, '
+                    'or paraphrase. Use summary_version 1 and the supplied '
+                    'summarizer and source_policy_revision. Each claim requires a '
+                    'unique claim_id, one or more source_turn_ids, corresponding '
+                    'source_policy_ids, confidence, status "explicit", '
+                    'generated_at_utc, and summarizer. Return an empty claims '
+                    'array when no explicit claim is suitable.'
+                ),
+            },
+            {
+                'role': 'user',
+                'content': json.dumps(request, ensure_ascii=True, sort_keys=True),
+            },
+        ]
+        return parse_model_candidate(self.brain.chat(messages))
+
+
+@dataclass(frozen=True)
+class CompactEvaluationReport:
+    generated_at_utc: str
+    checkpoint: int | None
+    source_policy_revision: int
+    baseline_summary_version: int
+    baseline_summarizer: str
+    baseline_output: list[dict]
+    candidate_output: list[dict]
+    baseline_claim_count: int
+    candidate_claim_count: int
+    shared_claim_count: int
+    baseline_only_claim_count: int
+    candidate_only_claim_count: int
+    unsupported_claim_count: int
+    unsupported_claim_rate: float
+    contradiction_rate: float
+    inferred_claim_count: int
+    provenance_failure_count: int
+    factual_coverage: float
+    provenance_coverage: float
+    compression_ratio: float
+    stale_claim_rate: float
+    correction_adherence: float
+    forgetting_adherence: float
+    latency_seconds: float
+    token_cost: int | None
+    storage_bytes: int
+    accepted: bool
+    rejection_reason: str | None
+
+
+class CompactEvaluationStore:
+    def __init__(self, path: str | Path):
+        self.path = Path(path)
+
+    def load(self) -> list[CompactEvaluationReport]:
+        if not self.path.exists():
+            return []
+        try:
+            payload = json.loads(self.path.read_text(encoding='utf-8'))
+            if not isinstance(payload, list):
+                raise TypeError
+            return [CompactEvaluationReport(**item) for item in payload]
+        except (OSError, json.JSONDecodeError, TypeError, ValueError) as exc:
+            raise CompactMemoryError('compact evaluation history is malformed') from exc
+
+    def append(self, report: CompactEvaluationReport) -> None:
+        reports = self.load()
+        reports.append(report)
+        temporary_path = self.path.with_suffix(f'{self.path.suffix}.tmp')
+        try:
+            self.path.parent.mkdir(parents=True, exist_ok=True)
+            with temporary_path.open('w', encoding='utf-8', newline='\n') as stream:
+                json.dump([asdict(item) for item in reports], stream, indent=2)
+                stream.write('\n')
+                stream.flush()
+                os.fsync(stream.fileno())
+            temporary_path.replace(self.path)
+        except OSError as exc:
+            raise CompactMemoryError('could not save compact evaluation') from exc
+        finally:
+            temporary_path.unlink(missing_ok=True)
+
+
+class CompactMemoryEvaluator:
+    def __init__(
+        self,
+        manager: ModelCompactMemoryManager,
+        report_store: CompactEvaluationStore,
+        clock: Callable[[], datetime] | None = None,
+        max_source_characters: int = 2000,
+    ):
+        if max_source_characters < 100:
+            raise ValueError('max_source_characters must be at least 100')
+        self.manager = manager
+        self.report_store = report_store
+        self.clock = clock or (lambda: datetime.now(timezone.utc))
+        self.max_source_characters = max_source_characters
+
+    def update(
+        self,
+        snapshot: EffectiveMemorySnapshot,
+        checkpoint: int | None = None,
+    ) -> CompactEvaluationReport:
+        snapshot = _bounded_effective_snapshot(snapshot, self.max_source_characters)
+        baseline = {
+            _normalized_content(turn.content)
+            for turn in snapshot.turns
+            if not turn.forgotten and turn.content is not None
+        }
+        started = time.perf_counter()
+        candidate = None
+        rejection_reason = None
+        try:
+            candidate = self.manager.update(snapshot)
+        except CompactMemoryError as exc:
+            rejection_reason = str(exc)
+        latency = time.perf_counter() - started
+        candidate_texts = {
+            _normalized_content(claim.text)
+            for claim in (candidate.claims if candidate is not None else ())
+        }
+        shared = baseline & candidate_texts
+        unsupported = candidate_texts - baseline
+        candidate_count = len(candidate_texts)
+        baseline_output = [
+            {
+                'text': _normalized_content(turn.content),
+                'source_turn_ids': [turn.turn_id],
+                'source_policy_ids': [turn.source_policy_id],
+            }
+            for turn in snapshot.turns
+            if not turn.forgotten and turn.content is not None
+        ]
+        candidate_output = (
+            [
+                {
+                    **asdict(claim),
+                    'source_turn_ids': list(claim.source_turn_ids),
+                    'source_policy_ids': list(claim.source_policy_ids),
+                }
+                for claim in candidate.claims
+            ]
+            if candidate is not None else []
+        )
+        unsupported_count = len(unsupported) + int(
+            rejection_reason == 'unsupported claim'
+        )
+        source_characters = sum(len(text) for text in baseline)
+        candidate_characters = sum(len(text) for text in candidate_texts)
+        report = CompactEvaluationReport(
+            generated_at_utc=self._timestamp(),
+            checkpoint=checkpoint,
+            source_policy_revision=snapshot.policy_revision,
+            baseline_summary_version=COMPACT_MEMORY_SCHEMA_VERSION,
+            baseline_summarizer=ExtractiveCompactSummarizer.version,
+            baseline_output=baseline_output,
+            candidate_output=candidate_output,
+            baseline_claim_count=len(baseline),
+            candidate_claim_count=candidate_count,
+            shared_claim_count=len(shared),
+            baseline_only_claim_count=len(baseline - candidate_texts),
+            candidate_only_claim_count=len(candidate_texts - baseline),
+            unsupported_claim_count=unsupported_count,
+            unsupported_claim_rate=(
+                unsupported_count / max(candidate_count, unsupported_count, 1)
+            ),
+            contradiction_rate=(
+                unsupported_count / max(candidate_count, unsupported_count, 1)
+            ),
+            inferred_claim_count=sum(
+                claim.status == 'inferred'
+                for claim in (candidate.claims if candidate is not None else ())
+            ),
+            provenance_failure_count=int(
+                rejection_reason is not None
+                and any(word in rejection_reason for word in ('source', 'policy'))
+            ),
+            factual_coverage=len(shared) / len(baseline) if baseline else 1.0,
+            provenance_coverage=1.0 if candidate is not None else 0.0,
+            compression_ratio=(
+                candidate_characters / source_characters if source_characters else 0.0
+            ),
+            stale_claim_rate=0.0 if candidate is not None else 1.0,
+            correction_adherence=1.0 if candidate is not None else 0.0,
+            forgetting_adherence=1.0 if candidate is not None else 0.0,
+            latency_seconds=latency,
+            token_cost=None,
+            storage_bytes=len(json.dumps(asdict(candidate))) if candidate else 0,
+            accepted=candidate is not None,
+            rejection_reason=rejection_reason,
+        )
+        self.report_store.append(report)
+        return report
+
+    def _timestamp(self) -> str:
+        timestamp = self.clock()
+        if timestamp.tzinfo is None:
+            raise CompactMemoryError('compact evaluation clock must be timezone-aware')
+        return timestamp.astimezone(timezone.utc).isoformat()
+
+
+def _bounded_effective_snapshot(
+    snapshot: EffectiveMemorySnapshot,
+    max_characters: int,
+) -> EffectiveMemorySnapshot:
+    retained = []
+    retained_characters = 0
+    for turn in reversed(snapshot.turns):
+        if turn.forgotten or turn.content is None:
+            continue
+        source_characters = len(turn.content)
+        if retained and retained_characters + source_characters > max_characters:
+            break
+        if source_characters > max_characters:
+            continue
+        retained.append(turn)
+        retained_characters += source_characters
+    return EffectiveMemorySnapshot(
+        policy_revision=snapshot.policy_revision,
+        turns=tuple(reversed(retained)),
+    )
+
+
+class ModelCompactMemoryWorker:
+    def __init__(self, evaluator: CompactMemoryEvaluator, logger):
+        self.evaluator = evaluator
+        self.logger = logger
+        self.jobs = queue.Queue()
+        self.closed = False
+        self.thread = threading.Thread(
+            target=self._run,
+            name='joi-model-compact-memory',
+            daemon=True,
+        )
+        self.thread.start()
+
+    def submit(self, snapshot: EffectiveMemorySnapshot) -> None:
+        if self.closed:
+            raise CompactMemoryError('model compact memory worker is closed')
+        self.jobs.put(snapshot)
+
+    def close(self) -> None:
+        if self.closed:
+            return
+        self.closed = True
+        self.jobs.put(None)
+        self.jobs.join()
+        self.thread.join()
+
+    def _run(self) -> None:
+        while True:
+            snapshot = self.jobs.get()
+            try:
+                if snapshot is None:
+                    return
+                report = self.evaluator.update(snapshot)
+                self.logger.info(
+                    'Model compact shadow evaluated: accepted=%s claims=%d '
+                    'coverage=%.3f revision=%d',
+                    report.accepted,
+                    report.candidate_claim_count,
+                    report.factual_coverage,
+                    report.source_policy_revision,
+                )
+            except Exception:
+                self.logger.exception('Model compact shadow update failed')
+            finally:
+                self.jobs.task_done()
 
 
 def _source_from_turn(turn: EpisodicTurn) -> CompactSource:

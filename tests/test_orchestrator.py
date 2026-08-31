@@ -35,6 +35,9 @@ def _settings():
         compact_memory_enabled=False,
         compact_memory_path='compact-memory.json',
         compact_memory_max_characters=2000,
+        model_compact_memory_enabled=False,
+        model_compact_memory_path='compact-memory-model-candidate.json',
+        compact_memory_evaluation_path='compact-memory-evaluation.json',
     )
 
 
@@ -450,3 +453,91 @@ def test_memory_commands_refuse_unavailable_store(monkeypatch):
 
     with pytest.raises(ValueError, match='Persistent memory is not configured'):
         joi.memory_recent()
+
+
+def test_model_compact_shadow_receives_effective_snapshot_after_exchange(monkeypatch):
+    settings = _settings()
+    settings.memory_mode = 'persistent'
+    settings.persistent_memory_enabled = True
+    settings.compact_memory_enabled = True
+    settings.model_compact_memory_enabled = True
+    brain = Mock()
+    brain.chat.return_value = 'Live reply'
+    snapshot = Mock(policy_revision=0)
+    store = Mock()
+    store.append_exchange.return_value = [Mock(), Mock()]
+    store.effective_snapshot.return_value = snapshot
+    extractive_worker = Mock()
+    model_worker = Mock()
+    monkeypatch.setattr(orchestrator_module, 'LocalLMStudioBrain', Mock(return_value=brain))
+    monkeypatch.setattr(orchestrator_module, 'EpisodicMemoryStore', Mock(return_value=store))
+    monkeypatch.setattr(orchestrator_module, 'CompactMemoryStore', Mock())
+    monkeypatch.setattr(orchestrator_module, 'CompactMemoryManager', Mock())
+    monkeypatch.setattr(
+        orchestrator_module,
+        'CompactMemoryWorker',
+        Mock(return_value=extractive_worker),
+    )
+    monkeypatch.setattr(
+        orchestrator_module,
+        'ModelCompactMemoryWorker',
+        Mock(return_value=model_worker),
+    )
+
+    joi = JoiOrchestrator(settings, 'system', Mock())
+    assert joi.chat('Live question') == 'Live reply'
+
+    model_worker.submit.assert_called_once_with(snapshot)
+    assert brain.chat.call_count == 1
+
+
+def test_memory_policy_changes_trigger_model_compact_regeneration(monkeypatch):
+    settings = _settings()
+    settings.memory_mode = 'persistent'
+    settings.persistent_memory_enabled = True
+    settings.compact_memory_enabled = True
+    settings.model_compact_memory_enabled = True
+    snapshot = Mock(policy_revision=2)
+    store = Mock()
+    store.effective_snapshot.return_value = snapshot
+    model_worker = Mock()
+    monkeypatch.setattr(orchestrator_module, 'LocalLMStudioBrain', Mock())
+    monkeypatch.setattr(orchestrator_module, 'EpisodicMemoryStore', Mock(return_value=store))
+    monkeypatch.setattr(orchestrator_module, 'CompactMemoryStore', Mock())
+    monkeypatch.setattr(orchestrator_module, 'CompactMemoryManager', Mock())
+    monkeypatch.setattr(orchestrator_module, 'CompactMemoryWorker', Mock())
+    monkeypatch.setattr(
+        orchestrator_module,
+        'ModelCompactMemoryWorker',
+        Mock(return_value=model_worker),
+    )
+    joi = JoiOrchestrator(settings, 'system', Mock())
+
+    joi.memory_correct('turn-1', 'Corrected')
+    joi.memory_forget('turn-2', 'User request')
+
+    assert model_worker.submit.call_count == 2
+    model_worker.submit.assert_called_with(snapshot)
+
+
+def test_close_flushes_model_compact_memory_worker(monkeypatch):
+    settings = _settings()
+    settings.memory_mode = 'persistent'
+    settings.persistent_memory_enabled = True
+    settings.compact_memory_enabled = True
+    settings.model_compact_memory_enabled = True
+    model_worker = Mock()
+    monkeypatch.setattr(orchestrator_module, 'LocalLMStudioBrain', Mock())
+    monkeypatch.setattr(orchestrator_module, 'EpisodicMemoryStore', Mock())
+    monkeypatch.setattr(orchestrator_module, 'CompactMemoryStore', Mock())
+    monkeypatch.setattr(orchestrator_module, 'CompactMemoryManager', Mock())
+    monkeypatch.setattr(orchestrator_module, 'CompactMemoryWorker', Mock())
+    monkeypatch.setattr(
+        orchestrator_module,
+        'ModelCompactMemoryWorker',
+        Mock(return_value=model_worker),
+    )
+
+    JoiOrchestrator(settings, 'system', Mock()).close()
+
+    model_worker.close.assert_called_once_with()

@@ -4,8 +4,10 @@
 
 This document defines the acceptance gate for moving Compact Memory from the
 implemented extractive shadow baseline to a validated model-backed shadow
-system. It is a specification, not a claim that model-backed Compact Memory is
-currently implemented or approved.
+system. The disabled model-backed path, structured validation, policy-aware
+regeneration, paired reporting, and deterministic drift regression are now
+implemented. The gate is not approved until real-model and human-review
+evidence satisfies the acceptance criteria below.
 
 The goal is to evaluate whether a local model can improve compression without
 introducing memory drift, unsupported claims, or leakage from corrected or

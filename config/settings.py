@@ -100,6 +100,9 @@ class Settings:
     compact_memory_enabled: bool
     compact_memory_path: str
     compact_memory_max_characters: int
+    model_compact_memory_enabled: bool
+    model_compact_memory_path: str
+    compact_memory_evaluation_path: str
 
     @classmethod
     def load(cls):
@@ -117,6 +120,11 @@ class Settings:
         compact_memory_enabled = _bool_env('ENABLE_COMPACT_MEMORY')
         if compact_memory_enabled and memory_mode != 'persistent':
             raise ValueError('compact memory requires MEMORY_MODE=persistent')
+        model_compact_memory_enabled = _bool_env('ENABLE_MODEL_COMPACT_MEMORY')
+        if model_compact_memory_enabled and not compact_memory_enabled:
+            raise ValueError(
+                'model compact memory requires ENABLE_COMPACT_MEMORY=true'
+            )
         compact_memory_max_characters = _positive_int_env(
             'COMPACT_MEMORY_MAX_CHARACTERS',
             2000,
@@ -190,4 +198,13 @@ class Settings:
                 str(root / 'data' / 'memory' / 'compact-memory.json'),
             ),
             compact_memory_max_characters=compact_memory_max_characters,
+            model_compact_memory_enabled=model_compact_memory_enabled,
+            model_compact_memory_path=os.getenv(
+                'MODEL_COMPACT_MEMORY_PATH',
+                str(root / 'data' / 'memory' / 'compact-memory-model-candidate.json'),
+            ),
+            compact_memory_evaluation_path=os.getenv(
+                'COMPACT_MEMORY_EVALUATION_PATH',
+                str(root / 'data' / 'memory' / 'compact-memory-evaluation.json'),
+            ),
         )

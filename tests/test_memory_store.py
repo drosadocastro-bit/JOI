@@ -233,3 +233,38 @@ def test_memory_status_reports_evidence_and_policy_counts(tmp_path):
         'corrected_turn_count': 1,
         'forgotten_turn_count': 0,
     }
+
+
+def test_effective_snapshot_tracks_corrections_forgets_and_policy_revision(tmp_path):
+    store = _store(
+        tmp_path,
+        [
+            'exchange-1', 'user-1', 'assistant-1',
+            'policy-1', 'policy-2',
+        ],
+    )
+    store.append_exchange('Blue is my favorite.', 'Noted.')
+    store.correct_turn('user-1', 'Green is my favorite.')
+    store.forget_turn('assistant-1')
+
+    snapshot = store.effective_snapshot()
+
+    assert snapshot.policy_revision == 2
+    assert snapshot.turns[0].turn_id == 'user-1'
+    assert snapshot.turns[0].content == 'Green is my favorite.'
+    assert snapshot.turns[0].source_policy_id == 'policy-1'
+    assert snapshot.turns[1].forgotten is True
+    assert snapshot.turns[1].content is None
+
+
+def test_effective_snapshot_can_exclude_forgotten_sources(tmp_path):
+    store = _store(
+        tmp_path,
+        ['exchange-1', 'user-1', 'assistant-1', 'policy-1'],
+    )
+    store.append_exchange('Keep this.', 'Forget this reply.')
+    store.forget_turn('assistant-1')
+
+    snapshot = store.effective_snapshot(include_forgotten=False)
+
+    assert [turn.turn_id for turn in snapshot.turns] == ['user-1']

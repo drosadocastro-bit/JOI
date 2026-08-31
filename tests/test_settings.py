@@ -197,3 +197,38 @@ def test_settings_rejects_too_small_compact_memory_limit(monkeypatch):
 
     with pytest.raises(ValueError, match='must be at least 100'):
         Settings.load()
+
+
+def test_settings_defaults_model_compact_memory_to_disabled(monkeypatch):
+    monkeypatch.delenv('ENABLE_MODEL_COMPACT_MEMORY', raising=False)
+
+    settings = Settings.load()
+
+    assert settings.model_compact_memory_enabled is False
+
+
+def test_settings_requires_compact_memory_for_model_candidate(monkeypatch):
+    monkeypatch.setenv('ENABLE_MODEL_COMPACT_MEMORY', 'true')
+
+    with pytest.raises(
+        ValueError,
+        match='model compact memory requires ENABLE_COMPACT_MEMORY=true',
+    ):
+        Settings.load()
+
+
+def test_settings_loads_model_compact_memory_paths(monkeypatch, tmp_path):
+    candidate_path = tmp_path / 'candidate.json'
+    report_path = tmp_path / 'evaluation.json'
+    monkeypatch.setenv('ENABLE_PERSISTENT_MEMORY', 'true')
+    monkeypatch.setenv('ENABLE_COMPACT_MEMORY', 'true')
+    monkeypatch.setenv('ENABLE_MODEL_COMPACT_MEMORY', 'true')
+    monkeypatch.setenv('MEMORY_MODE', 'persistent')
+    monkeypatch.setenv('MODEL_COMPACT_MEMORY_PATH', str(candidate_path))
+    monkeypatch.setenv('COMPACT_MEMORY_EVALUATION_PATH', str(report_path))
+
+    settings = Settings.load()
+
+    assert settings.model_compact_memory_enabled is True
+    assert settings.model_compact_memory_path == str(candidate_path)
+    assert settings.compact_memory_evaluation_path == str(report_path)

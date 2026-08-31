@@ -46,7 +46,9 @@ Implemented:
 - feature-flagged, append-only episodic conversation storage
 - inspectable correction, supersession, and logical-forgetting records
 - feature-flagged Compact Memory in extractive shadow mode
-- 100 passing tests
+- feature-flagged local model Compact Memory candidate with structured claims
+- policy-aware candidate regeneration and machine-readable shadow evaluation
+- 125 passing tests
 
 Not implemented yet:
 
@@ -222,9 +224,31 @@ COMPACT_MEMORY_MAX_CHARACTERS=2000
 The initial summarizer retains bounded source excerpts and provenance in a
 background worker. It does not inject summaries into live prompts. Failed or
 corrupted compact state leaves conversation and episodic storage operational.
-Compact state created before a later correction or forget policy is not yet
-automatically invalidated or regenerated and remains non-authoritative.
-The required work and acceptance criteria for closing that gap are specified in
+The optional model-backed candidate additionally requires:
+
+```dotenv
+ENABLE_MODEL_COMPACT_MEMORY=true
+```
+
+It uses the configured local LM Studio model in a separate background worker.
+The candidate is stored separately from the extractive baseline, never enters
+the live prompt, and accepts only exact explicit source claims with current
+turn and policy provenance. Corrections and logical forgetting enqueue full
+regeneration from the effective evidence view. Invalid, unsupported, stale, or
+inferred claims are rejected before atomic replacement.
+
+Paired baseline/candidate reports are written to
+`data/memory/compact-memory-evaluation.json`; the candidate defaults to
+`data/memory/compact-memory-model-candidate.json`. Both paths are configurable.
+Deterministic drift regression runs at 25, 50, 100, and 200 updates:
+
+```powershell
+.\.venv\Scripts\python.exe -m pytest tests\test_compact_memory_drift.py -q
+```
+
+This implements the shadow evaluation machinery but does not close Phase 5A.
+A real-model benchmark, agreed thresholds, and the human review corpus remain
+required by
 [docs/compact-memory-closure-gate.md](docs/compact-memory-closure-gate.md).
 
 ## Tests and Acceptance
