@@ -6,8 +6,8 @@
   "phase_status": "CLOSED_WITH_KNOWN_LIMITATIONS",
   "decision_scope": "Provider contract and retention quality under frozen Phase 5A evidence",
   "frozen_source_baseline_commit": "8f004a7",
-  "closure_record_commit": null,
-  "closure_record_finalization": "PENDING_EXPLICITLY_AUTHORIZED_COMMIT",
+  "closure_record_commit": "6628591a0e5d12fb1502f0350c8a5dbd960b2532",
+  "closure_record_finalization": "PINNED_BY_FOLLOWUP_COMMIT",
   "tested_conditions": {
     "local_environment": "Windows-11-10.0.26200-SP0; Python 3.13.7; AMD64 Family 25 Model 68; 31.2 GiB RAM; approximately 4 GiB dedicated VRAM",
     "local_models": ["nvidia/nemotron-3-nano@q4_k_m", "qwen/qwen3.5-9b@q4_k_m"],
@@ -64,8 +64,8 @@
     "credential_pattern_scan": "PASS_124_PUBLISHABLE_FILES_AND_10_RUNTIME_ARTIFACTS; EXPOSED_IGNORED_LOCAL_KEY_REVOKED_AND_REPLACED",
     "durable_memory_unchanged": "PASS_SHA256_85f50c5faceab67e201f89fdf3dad1d714437bb1ed4d7e2a316db28616c12c7a",
     "git_diff_check": "PASS",
-    "worktree_clean": false,
-    "worktree_state": "DIRTY_UNCOMMITTED_CLOSURE_CANDIDATE"
+    "worktree_clean": true,
+    "worktree_state": "CLEAN_AFTER_CLOSURE_COMMIT_BEFORE_SHA_PIN"
   },
   "credential_rotation": {
     "operator_confirmed_at_utc": "2026-09-01T16:16:09.1258009Z",
@@ -86,7 +86,6 @@
     "docs/benchmarks/2026-09-01-retention-quality/final-review-manifest.json": "10a8a01588c8956317871787cbd983207d11d66a189a3e52bc549b61091b0412"
   },
   "next_phase_entry_prerequisites": [
-    "Commit the tested closure state and verify a clean worktree.",
     "Review every globally BLOCKING debt against the proposed phase scope.",
     "Resolve TD-JOI-009 before Phase 5B shadow retrieval implementation.",
     "Freeze the Phase 5B corpus, labels, numeric thresholds, dependencies, and final Phase 5A commit before execution.",

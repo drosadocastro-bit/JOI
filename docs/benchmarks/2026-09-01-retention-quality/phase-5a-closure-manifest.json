@@ -5,16 +5,17 @@
   "decision": "PASS",
   "phase_status": "CLOSED_WITH_KNOWN_LIMITATIONS",
   "frozen_source_baseline_commit": "8f004a7",
-  "closure_record_commit": null,
-  "worktree_clean": false,
+  "closure_record_commit": "6628591a0e5d12fb1502f0350c8a5dbd960b2532",
+  "closure_record_pin_strategy": "FOLLOWUP_COMMIT_REQUIRED_BECAUSE_A_COMMIT_CANNOT_CONTAIN_ITS_OWN_SHA",
+  "worktree_clean_after_closure_commit": true,
   "publication_enabled": false,
   "promotion_authorized": false,
   "algorithm": "sha256",
   "artifacts": [
     {
       "path": "../../phase-5a-closure-audit.md",
-      "sha256": "bbe7de501f9aeab6a6c0193c97972cb4d0843718ffdb440148d97c7bdaf72ead",
-      "bytes": 12409
+      "sha256": "37fcb88196163ff7a6402949e5b3f5a9155d12838872aa3a53fd79676f1f1846",
+      "bytes": 12428
     },
     {
       "path": "../../technical-debt-register.json",
@@ -23,8 +24,8 @@
     },
     {
       "path": "phase-5a-closure-record.json",
-      "sha256": "96d1168a11b3f8c31d3cb77ddea33845fd624019263b6e6b387bde7b78d95ed5",
-      "bytes": 5405
+      "sha256": "c0c81dcb54929b22479d0d50bf2628de9e5b4abe6d51de04917ff40b4a617fed",
+      "bytes": 5368
     }
   ]
 }

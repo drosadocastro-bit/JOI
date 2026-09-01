@@ -16,10 +16,11 @@ Audit time: `2026-09-01T15:44:31.5056970Z`
 - Frozen source baseline: commit `8f004a7` on `main`.
 - Commit role: last committed local-model diagnosis baseline and source baseline
   used by the cloud benchmark.
-- Closure-record commit: not yet assigned; the closure changes are uncommitted.
+- Phase 5A closure commit: `6628591a0e5d12fb1502f0350c8a5dbd960b2532`.
 - Worktree at audit start: dirty, containing the provider, benchmark, review,
   tests, and closure changes.
-- Final clean-worktree certification: pending an explicitly authorized commit.
+- Post-closure-commit worktree: clean before the administrative SHA pin update.
+- Committed regression: 174 tests passed.
 
 Primary evidence indexes and diagnoses are pinned below. The manifests contain
 the hashes of every subordinate frozen artifact.
@@ -148,9 +149,9 @@ non-empty replacement is present in the ignored local `.env`; it did not print,
 persist, hash, or use the replacement in a cloud request. The value is not
 copied into this audit.
 
-The worktree cleanliness check is recorded independently. It cannot be certified
-clean until these uncommitted closure changes are committed by explicit human
-authorization.
+The substantive closure commit was clean immediately after creation. Its SHA is
+pinned by a separate administrative follow-up because a commit cannot contain
+its own SHA. The final worktree is checked again after that pin commit.
 
 Credential lifecycle regression additionally verifies in-process revoke to
 replace to reload behavior, missing-key refusal before network access,
@@ -207,14 +208,13 @@ Phase 5A does not prove that:
 
 Before any phase enables publication, retrieval, or production reliance:
 
-1. Commit the tested closure state and rerun the clean-worktree check.
-2. Review every globally `BLOCKING` debt against the exact proposed phase.
-3. Resolve `TD-JOI-009` before Phase 5B shadow retrieval implementation.
-4. Keep `TD-JOI-006`, `TD-JOI-007`, `TD-JOI-008`, and `TD-JOI-011` blocking
+1. Review every globally `BLOCKING` debt against the exact proposed phase.
+2. Resolve `TD-JOI-009` before Phase 5B shadow retrieval implementation.
+3. Keep `TD-JOI-006`, `TD-JOI-007`, `TD-JOI-008`, and `TD-JOI-011` blocking
   for operational provider use, publication, or schema evolution.
-5. Freeze the Phase 5B corpus, labels, numeric thresholds, dependencies, and
+4. Freeze the Phase 5B corpus, labels, numeric thresholds, dependencies, and
   final Phase 5A commit before executing the preregistered experiment.
-6. Obtain a separate explicit human authorization record before publication,
+5. Obtain a separate explicit human authorization record before publication,
   prompt injection, retrieval activation, or production reliance.
 
 The next architecture/evaluation gate is preregistered in
