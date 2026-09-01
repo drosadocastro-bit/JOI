@@ -21,11 +21,13 @@ itself. JOI is a modular architecture, not a single chatbot.
 
 ## Current Status
 
-**Phase 2: Local Voice**
+**Phase 5A: Compact Memory evaluation closed with known limitations**
 
-Phase 1 established a stable local text core. The current build adds opt-in,
-offline speech through Kokoro-82M ONNX while preserving text replies when voice
-is unavailable.
+JOI now has a stable local text and voice core, append-only episodic memory,
+inspectable correction and forgetting, and provider-independent Compact Memory
+evaluation. Phase 5A passed its frozen provider-contract and retention-quality
+gates. Model-backed Compact Memory remains shadow-only: publication, retrieval,
+live prompt injection, and production reliance are not authorized.
 
 Implemented:
 
@@ -46,18 +48,26 @@ Implemented:
 - feature-flagged, append-only episodic conversation storage
 - inspectable correction, supersession, and logical-forgetting records
 - feature-flagged Compact Memory in extractive shadow mode
-- feature-flagged local model Compact Memory candidate with structured claims
+- feature-flagged local or OpenAI Compact Memory candidates with strict
+	structured claims
+- provider boundary that leaves memory authority, validation, and persistence
+	with JOI
+- explicit call-time cloud authorization, trusted HTTPS endpoint enforcement,
+	credential redaction, and fail-closed provider behavior
 - policy-aware candidate regeneration and machine-readable shadow evaluation
-- 144 passing tests
+- Luna provider-contract PASS at 25, 50, 100, and 200 updates
+- preregistered Retention Quality PASS with completed human adjudication
+- 174 passing tests at the Phase 5A closure baseline
 
 Not implemented yet:
 
 - associative long-term memory retrieval
 - speech recognition or push-to-talk
 - active vision
-- cloud reasoning
+- general-purpose cloud reasoning
 - runtime voice-mode switching
 - streaming LLM tokens into interruptible speech
+- production publication or live prompt use of model-backed Compact Memory
 
 ## Quick Start
 
@@ -160,13 +170,18 @@ Spanish voice also passed a live human listening test.
 	log messages and tracebacks.
 - ElevenLabs credentials may be sent only to the documented HTTPS production
 	and residency hosts under `/v1`.
+- OpenAI Compact Memory credentials may be sent only to the official HTTPS
+	OpenAI `/v1` endpoint and require both startup configuration and call-time
+	CLOUD authorization.
 - Redirects are refused so the credential-bearing header cannot be forwarded to
 	another host.
 - Local voice mode does not validate or contact the configured cloud endpoint.
 
-The local `.env` file is still plaintext on disk. Use a restricted ElevenLabs
-key, set a conservative service quota, rotate it after suspected exposure, and
-never paste it into source, logs, issues, commits, or chat.
+The local `.env` file is still plaintext on disk. Use restricted provider keys,
+set conservative service quotas, rotate credentials after suspected exposure,
+and never paste them into source, logs, issues, commits, or chat. OpenAI
+rotation and recovery are documented in
+[docs/openai-key-rotation-recovery.md](docs/openai-key-rotation-recovery.md).
 
 ## Runtime Privacy State
 
@@ -228,14 +243,18 @@ The optional model-backed candidate additionally requires:
 
 ```dotenv
 ENABLE_MODEL_COMPACT_MEMORY=true
+COMPACT_MEMORY_PROVIDER=local
 ```
 
-It uses the configured local LM Studio model in a separate background worker.
-The candidate is stored separately from the extractive baseline, never enters
-the live prompt, and accepts only exact explicit source claims with current
-turn and policy provenance. Corrections and logical forgetting enqueue full
-regeneration from the effective evidence view. Invalid, unsupported, stale, or
-inferred claims are rejected before atomic replacement.
+`COMPACT_MEMORY_PROVIDER` supports `local` and `openai`. OpenAI additionally
+requires `CLOUD_ENABLED=true` and a local `OPENAI_API_KEY`; CLOUD is checked
+again at call time. Providers generate candidates and telemetry only. JOI owns
+validation, memory state, and persistence. The candidate is stored separately
+from the extractive baseline, never enters the live prompt, and accepts only
+exact explicit source claims with current turn and policy provenance.
+Corrections and logical forgetting enqueue full regeneration from the effective
+evidence view. Invalid, unsupported, stale, inferred, or provider-mismatched
+claims are rejected before atomic replacement.
 
 Paired baseline/candidate reports are written to
 `data/memory/compact-memory-evaluation.json`; the candidate defaults to
@@ -275,9 +294,27 @@ at any checkpoint. Both models therefore remain rejected, model tuning is
 stopped, and the summarizer architecture or provider must be reconsidered. See
 the [reasoning-OFF diagnosis](docs/compact-memory-reasoning-off-diagnosis.md).
 
-This implements the shadow evaluation machinery but does not close Phase 5A.
-The frozen benchmark remains FAIL, and the human review corpus remains required by
-[docs/compact-memory-closure-gate.md](docs/compact-memory-closure-gate.md).
+The rejected local runs remain part of the evidence rather than being erased by
+the later cloud result. Under the same frozen 25/50/100/200 contract,
+`gpt-5.6-luna` passed with zero malformed candidates, zero unsupported claims,
+100% provenance coverage, and 100% correction and forgetting adherence. The
+separate preregistered Retention Quality benchmark retained 20 of 24 facts,
+scored 100% weighted and critical retention, and recorded zero forbidden losses
+or provenance failures. A human reviewer classified all four omitted generic
+acknowledgements as acceptable compression.
+
+Phase 5A is formally **PASS with known limitations**, pinned at closure commit
+`6628591a0e5d12fb1502f0350c8a5dbd960b2532`. This proves only the behavior under
+the frozen corpora, provider, model, schema, and one-trial checkpoint conditions.
+It does not prove production readiness, long-horizon drift resistance, broad
+human-review generalization, provider-outage recovery, or semantic continuity
+across provider switches. Publication and live prompt injection remain disabled.
+
+See the [Phase 5A closure audit](docs/phase-5a-closure-audit.md),
+[technical debt register](docs/technical-debt-register.json), and
+[final retention-quality report](docs/benchmarks/2026-09-01-retention-quality/luna/retention-quality-final.md).
+Phase 5B shadow retrieval is preregistered but has not started; `TD-JOI-009`
+must be resolved before implementation.
 
 ## Tests and Acceptance
 
