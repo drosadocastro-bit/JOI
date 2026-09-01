@@ -1,0 +1,97 @@
+{
+  "schema_version": 1,
+  "record": "JOI Phase 5A Closure",
+  "issued_at_utc": "2026-09-01T15:44:31.5056970Z",
+  "decision": "PASS",
+  "phase_status": "CLOSED_WITH_KNOWN_LIMITATIONS",
+  "decision_scope": "Provider contract and retention quality under frozen Phase 5A evidence",
+  "frozen_source_baseline_commit": "8f004a7",
+  "closure_record_commit": null,
+  "closure_record_finalization": "PENDING_EXPLICITLY_AUTHORIZED_COMMIT",
+  "tested_conditions": {
+    "local_environment": "Windows-11-10.0.26200-SP0; Python 3.13.7; AMD64 Family 25 Model 68; 31.2 GiB RAM; approximately 4 GiB dedicated VRAM",
+    "local_models": ["nvidia/nemotron-3-nano@q4_k_m", "qwen/qwen3.5-9b@q4_k_m"],
+    "local_primary_timeout_seconds": 30,
+    "cloud_provider": "openai",
+    "cloud_model": "gpt-5.6-luna",
+    "cloud_api": "Responses API",
+    "reasoning_effort": "none",
+    "checkpoints": [25, 50, 100, 200],
+    "trials_per_checkpoint": 1,
+    "max_source_characters": 2000
+  },
+  "evidence_results": {
+    "local_nemotron": "FAIL",
+    "local_qwen": "FAIL",
+    "reasoning_on_off_diagnosis": "MIXED_CAUSE",
+    "provider_abstraction_and_cloud_gating": "PASS",
+    "luna_provider_contract_25_50_100_200": "PASS",
+    "retention_quality_with_human_adjudication": "PASS",
+    "weighted_retention_score": 1.0,
+    "critical_retention_rate": 1.0,
+    "forbidden_loss_count": 0,
+    "provenance_failure_count": 0,
+    "acceptable_compression_count": 4,
+    "raw_retention_quality_coverage": 0.8333333333333334,
+    "cloud_baseline_relative_factual_coverage_range": [0.47692307692307695, 0.49230769230769234]
+  },
+  "known_limitations": [
+    "No tested local model passed the Compact Memory contract.",
+    "Cloud baseline-relative factual coverage did not match the extractive claim count.",
+    "Cloud checkpoint evidence used one trial per checkpoint.",
+    "The human-review corpus is small and synthetic.",
+    "Long-horizon drift and deep provider-switch continuity are uncharacterized.",
+    "Live outage, budget/rate-limit, credential lifecycle, partial corruption, multi-provider provenance, and schema migration evidence remain incomplete.",
+    "A key exposed from the ignored local .env to inspection tooling was revoked and replaced by the operator; the replacement remains local and was not exercised by this audit."
+  ],
+  "accepted_technical_debt": ["TD-JOI-001", "TD-JOI-002", "TD-JOI-003"],
+  "deferred_technical_debt": ["TD-JOI-004", "TD-JOI-005", "TD-JOI-010"],
+  "globally_blocking_technical_debt": ["TD-JOI-006", "TD-JOI-007", "TD-JOI-008", "TD-JOI-009", "TD-JOI-011"],
+  "phase_5b_entry_blockers": ["TD-JOI-009"],
+  "authorization_boundary": {
+    "publication_enabled": false,
+    "live_prompt_injection_enabled": false,
+    "retrieval_authorized": false,
+    "production_reliance_authorized": false,
+    "runtime_cloud_authorization_required": true,
+    "separate_human_promotion_decision_required": true
+  },
+  "closure_regression": {
+    "test_count": 174,
+    "tests": "PASS",
+    "json_validation": "PASS_34_DOCUMENTS",
+    "frozen_hash_verification": "PASS_19_ARTIFACTS",
+    "credential_pattern_scan": "PASS_124_PUBLISHABLE_FILES_AND_10_RUNTIME_ARTIFACTS; EXPOSED_IGNORED_LOCAL_KEY_REVOKED_AND_REPLACED",
+    "durable_memory_unchanged": "PASS_SHA256_85f50c5faceab67e201f89fdf3dad1d714437bb1ed4d7e2a316db28616c12c7a",
+    "git_diff_check": "PASS",
+    "worktree_clean": false,
+    "worktree_state": "DIRTY_UNCOMMITTED_CLOSURE_CANDIDATE"
+  },
+  "credential_rotation": {
+    "operator_confirmed_at_utc": "2026-09-01T16:16:09.1258009Z",
+    "exposed_key_revoked": true,
+    "replacement_created": true,
+    "replacement_present_in_ignored_local_env": true,
+    "replacement_value_recorded": false,
+    "replacement_cloud_call_performed": false,
+    "deterministic_lifecycle_tests": "PASS",
+    "provider_side_end_to_end_lifecycle_complete": false
+  },
+  "evidence_index_sha256": {
+    "docs/compact-memory-post-fail-diagnosis.md": "478316ac7e6fa5cdab6892e873d62448f1a16d0d6e2e573ad33003ab34345f0c",
+    "docs/compact-memory-reasoning-off-diagnosis.md": "b3d9b7235326fe7ef377c00e4302e3f705cce342a230a7989c7b249a9c06cd7c",
+    "docs/benchmarks/2026-08-31-openai-compact-memory/manifest.json": "a85064904f067d9ad2f390e8774ec287fe31e3517b7c3d00aed464ee3125b096",
+    "docs/benchmarks/2026-08-31-openai-compact-memory/full/baseline-freeze.json": "a5e97b0c182472fe5aeb389aa9eaf01dabfa7e17ad6a56290b2a90c6e12a4af3",
+    "docs/benchmarks/2026-09-01-retention-quality/execution-manifest.json": "cdd2b8d4bcfb52de2ec7e64bca77ca59df8edeb49473894f97f75f5f57d40cde",
+    "docs/benchmarks/2026-09-01-retention-quality/final-review-manifest.json": "10a8a01588c8956317871787cbd983207d11d66a189a3e52bc549b61091b0412"
+  },
+  "next_phase_entry_prerequisites": [
+    "Commit the tested closure state and verify a clean worktree.",
+    "Review every globally BLOCKING debt against the proposed phase scope.",
+    "Resolve TD-JOI-009 before Phase 5B shadow retrieval implementation.",
+    "Freeze the Phase 5B corpus, labels, numeric thresholds, dependencies, and final Phase 5A commit before execution.",
+    "Issue a separate explicit human authorization for any publication or runtime promotion."
+  ],
+  "next_phase_preregistration": "docs/phase-5b-shadow-retrieval-preregistration.md",
+  "production_readiness": false
+}

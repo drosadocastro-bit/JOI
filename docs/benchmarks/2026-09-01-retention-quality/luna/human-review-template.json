@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "instructions": "For each omission, set should_have_been_retained to true or false, choose one allowed adjudication, and add reviewer notes.",
+  "allowed_adjudications": [
+    "acceptable_compression",
+    "harmful_omission",
+    "redundant_information",
+    "reviewer_disagreement"
+  ],
+  "human_review_complete": false,
+  "omissions": [
+    {
+      "fact_id": "trivial-1",
+      "text": "Acknowledged your preference.",
+      "semantic_label": "trivial_or_redundant",
+      "source_turn_ids": [
+        "trivial-1"
+      ],
+      "source_policy_ids": [
+        null
+      ],
+      "should_have_been_retained": null,
+      "adjudication": null,
+      "reviewer_notes": null
+    },
+    {
+      "fact_id": "trivial-2",
+      "text": "Understood.",
+      "semantic_label": "trivial_or_redundant",
+      "source_turn_ids": [
+        "trivial-2"
+      ],
+      "source_policy_ids": [
+        null
+      ],
+      "should_have_been_retained": null,
+      "adjudication": null,
+      "reviewer_notes": null
+    },
+    {
+      "fact_id": "trivial-3",
+      "text": "I will keep that in mind.",
+      "semantic_label": "trivial_or_redundant",
+      "source_turn_ids": [
+        "trivial-3"
+      ],
+      "source_policy_ids": [
+        null
+      ],
+      "should_have_been_retained": null,
+      "adjudication": null,
+      "reviewer_notes": null
+    },
+    {
+      "fact_id": "trivial-4",
+      "text": "Noted for this conversation.",
+      "semantic_label": "trivial_or_redundant",
+      "source_turn_ids": [
+        "trivial-4"
+      ],
+      "source_policy_ids": [
+        null
+      ],
+      "should_have_been_retained": null,
+      "adjudication": null,
+      "reviewer_notes": null
+    }
+  ]
+}

@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "created_at_utc": "2026-08-31T17:33:15.3079633Z",
+  "status": "FULL_PASS_HUMAN_REVIEW_PENDING",
+  "blocked_reason": null,
+  "generation_requests_made": 9,
+  "health_requests_made": 11,
+  "benchmark_result_available": true,
+  "recommendation": "PASS",
+  "provider": {
+    "identifier": "openai",
+    "model": "gpt-5.6-luna",
+    "api": "Responses API",
+    "structured_outputs": true,
+    "reasoning_effort": "none",
+    "standard_short_context_input_usd_per_million_tokens": 0.2,
+    "standard_short_context_output_usd_per_million_tokens": 1.2
+  },
+  "planned_checkpoints": [
+    25,
+    50,
+    100,
+    200
+  ],
+  "smoke_result": {
+    "artifact": "smoke-5/cloud-benchmark.json",
+    "checkpoints": [1, 2, 3, 4, 5],
+    "accepted_samples": 5,
+    "failed_samples": 0,
+    "hard_failures": 0,
+    "unsupported_factual_claims": 0,
+    "provenance_coverage": 1.0,
+    "factual_coverage": 0.5,
+    "input_tokens": 2350,
+    "output_tokens": 1635,
+    "estimated_cost_usd": 0.002432,
+    "time_to_first_token_seconds": null,
+    "recommendation": "PASS"
+  },
+  "full_result": {
+    "artifact": "full/cloud-benchmark.json",
+    "checkpoints": [25, 50, 100, 200],
+    "accepted_samples": 4,
+    "failed_samples": 0,
+    "hard_failures": 0,
+    "unsupported_factual_claims": 0,
+    "provenance_coverage": 1.0,
+    "factual_coverage_range": [0.47692307692307695, 0.49230769230769234],
+    "correction_adherence": 1.0,
+    "forgetting_adherence": 1.0,
+    "input_tokens": 9274,
+    "output_tokens": 10368,
+    "estimated_cost_usd": 0.0142964,
+    "time_to_first_token_seconds": null,
+    "recommendation": "PASS"
+  },
+  "publication_enabled": false,
+  "human_review_complete": false,
+  "phase_5a_status": "OPEN",
+  "frozen_baseline": {
+    "commit": "8f004a7",
+    "algorithm": "sha256",
+    "files": [
+      {
+        "path": "compact_memory_reasoning_experiment.py",
+        "sha256": "84be2455f3db00e30920e472e16acbb14bb6265a5ecefaab094853687c500e9a"
+      },
+      {
+        "path": "docs/benchmarks/2026-08-31-compact-memory-reasoning-off/reasoning-on-off-comparison.json",
+        "sha256": "575a9b9f0f5be019fdac0d28a39e9c4af0a50ea0787e0ae196d7da3a690b280a"
+      },
+      {
+        "path": "docs/benchmarks/2026-08-31-compact-memory-reasoning-off/nemotron-30s/reasoning-off-experiment.json",
+        "sha256": "3ce94d2ffbaddb5a33adaa335070f4b63f8833af59317bdb76d62870be9498ec"
+      },
+      {
+        "path": "docs/benchmarks/2026-08-31-compact-memory-reasoning-off/nemotron-30s/reasoning-off-experiment.md",
+        "sha256": "8ad193b551db812040056038552baeba7025cf8b10da6283b0546f212cf96039"
+      },
+      {
+        "path": "docs/benchmarks/2026-08-31-compact-memory-reasoning-off/qwen-30s/reasoning-off-experiment.json",
+        "sha256": "d4f1c7954359368122e5ff1fb4a95195a734c1e18f2d82b46decf66f30c6bc7d"
+      },
+      {
+        "path": "docs/benchmarks/2026-08-31-compact-memory-reasoning-off/qwen-30s/reasoning-off-experiment.md",
+        "sha256": "56cdcff7f5ebbd8c8fd5a66ffe6de8df7ccca626e75f00adc57d00cbf6570d82"
+      }
+    ]
+  }
+}

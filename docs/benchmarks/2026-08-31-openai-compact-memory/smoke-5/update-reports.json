@@ -1,0 +1,642 @@
+[
+  {
+    "generated_at_utc": "2026-08-31T19:05:02.698577+00:00",
+    "checkpoint": 1,
+    "source_policy_revision": 0,
+    "baseline_summary_version": 1,
+    "baseline_summarizer": "extractive-v1",
+    "baseline_output": [
+      {
+        "text": "Preference 1: use option blue-1.",
+        "source_turn_ids": [
+          "user-1"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 1.",
+        "source_turn_ids": [
+          "assistant-1"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      }
+    ],
+    "candidate_output": [
+      {
+        "claim_id": "user-1",
+        "text": "Preference 1: use option blue-1.",
+        "source_turn_ids": [
+          "user-1"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-08-31T19:04:58.829443+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      }
+    ],
+    "baseline_claim_count": 2,
+    "candidate_claim_count": 1,
+    "shared_claim_count": 1,
+    "baseline_only_claim_count": 1,
+    "candidate_only_claim_count": 0,
+    "unsupported_claim_count": 0,
+    "unsupported_claim_rate": 0.0,
+    "contradiction_rate": 0.0,
+    "inferred_claim_count": 0,
+    "provenance_failure_count": 0,
+    "factual_coverage": 0.5,
+    "provenance_coverage": 1.0,
+    "compression_ratio": 0.5517241379310345,
+    "stale_claim_rate": 0.0,
+    "correction_adherence": 1.0,
+    "forgetting_adherence": 1.0,
+    "latency_seconds": 4.423401900000044,
+    "token_cost": null,
+    "storage_bytes": 483,
+    "accepted": true,
+    "rejection_reason": null
+  },
+  {
+    "generated_at_utc": "2026-08-31T19:05:07.212576+00:00",
+    "checkpoint": 2,
+    "source_policy_revision": 0,
+    "baseline_summary_version": 1,
+    "baseline_summarizer": "extractive-v1",
+    "baseline_output": [
+      {
+        "text": "Preference 1: use option blue-1.",
+        "source_turn_ids": [
+          "user-1"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 1.",
+        "source_turn_ids": [
+          "assistant-1"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 2: use option blue-2.",
+        "source_turn_ids": [
+          "user-2"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 2.",
+        "source_turn_ids": [
+          "assistant-2"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      }
+    ],
+    "candidate_output": [
+      {
+        "claim_id": "claim-1",
+        "text": "Preference 1: use option blue-1.",
+        "source_turn_ids": [
+          "user-1"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-08-31T19:05:03.351463+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "claim-2",
+        "text": "Preference 2: use option blue-2.",
+        "source_turn_ids": [
+          "user-2"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-08-31T19:05:03.351463+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      }
+    ],
+    "baseline_claim_count": 4,
+    "candidate_claim_count": 2,
+    "shared_claim_count": 2,
+    "baseline_only_claim_count": 2,
+    "candidate_only_claim_count": 0,
+    "unsupported_claim_count": 0,
+    "unsupported_claim_rate": 0.0,
+    "contradiction_rate": 0.0,
+    "inferred_claim_count": 0,
+    "provenance_failure_count": 0,
+    "factual_coverage": 0.5,
+    "provenance_coverage": 1.0,
+    "compression_ratio": 0.5517241379310345,
+    "stale_claim_rate": 0.0,
+    "correction_adherence": 1.0,
+    "forgetting_adherence": 1.0,
+    "latency_seconds": 4.501448900000014,
+    "token_cost": null,
+    "storage_bytes": 756,
+    "accepted": true,
+    "rejection_reason": null
+  },
+  {
+    "generated_at_utc": "2026-08-31T19:05:13.246825+00:00",
+    "checkpoint": 3,
+    "source_policy_revision": 0,
+    "baseline_summary_version": 1,
+    "baseline_summarizer": "extractive-v1",
+    "baseline_output": [
+      {
+        "text": "Preference 1: use option blue-1.",
+        "source_turn_ids": [
+          "user-1"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 1.",
+        "source_turn_ids": [
+          "assistant-1"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 2: use option blue-2.",
+        "source_turn_ids": [
+          "user-2"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 2.",
+        "source_turn_ids": [
+          "assistant-2"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 3: use option blue-3.",
+        "source_turn_ids": [
+          "user-3"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 3.",
+        "source_turn_ids": [
+          "assistant-3"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      }
+    ],
+    "candidate_output": [
+      {
+        "claim_id": "user-1",
+        "text": "Preference 1: use option blue-1.",
+        "source_turn_ids": [
+          "user-1"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-08-31T19:05:08.708754+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-2",
+        "text": "Preference 2: use option blue-2.",
+        "source_turn_ids": [
+          "user-2"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-08-31T19:05:08.708754+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-3",
+        "text": "Preference 3: use option blue-3.",
+        "source_turn_ids": [
+          "user-3"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-08-31T19:05:08.708754+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      }
+    ],
+    "baseline_claim_count": 6,
+    "candidate_claim_count": 3,
+    "shared_claim_count": 3,
+    "baseline_only_claim_count": 3,
+    "candidate_only_claim_count": 0,
+    "unsupported_claim_count": 0,
+    "unsupported_claim_rate": 0.0,
+    "contradiction_rate": 0.0,
+    "inferred_claim_count": 0,
+    "provenance_failure_count": 0,
+    "factual_coverage": 0.5,
+    "provenance_coverage": 1.0,
+    "compression_ratio": 0.5517241379310345,
+    "stale_claim_rate": 0.0,
+    "correction_adherence": 1.0,
+    "forgetting_adherence": 1.0,
+    "latency_seconds": 6.005396699999892,
+    "token_cost": null,
+    "storage_bytes": 1025,
+    "accepted": true,
+    "rejection_reason": null
+  },
+  {
+    "generated_at_utc": "2026-08-31T19:05:18.570015+00:00",
+    "checkpoint": 4,
+    "source_policy_revision": 0,
+    "baseline_summary_version": 1,
+    "baseline_summarizer": "extractive-v1",
+    "baseline_output": [
+      {
+        "text": "Preference 1: use option blue-1.",
+        "source_turn_ids": [
+          "user-1"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 1.",
+        "source_turn_ids": [
+          "assistant-1"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 2: use option blue-2.",
+        "source_turn_ids": [
+          "user-2"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 2.",
+        "source_turn_ids": [
+          "assistant-2"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 3: use option blue-3.",
+        "source_turn_ids": [
+          "user-3"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 3.",
+        "source_turn_ids": [
+          "assistant-3"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 4: use option blue-4.",
+        "source_turn_ids": [
+          "user-4"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 4.",
+        "source_turn_ids": [
+          "assistant-4"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      }
+    ],
+    "candidate_output": [
+      {
+        "claim_id": "user-1",
+        "text": "Preference 1: use option blue-1.",
+        "source_turn_ids": [
+          "user-1"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-08-31T19:05:14.035735+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-2",
+        "text": "Preference 2: use option blue-2.",
+        "source_turn_ids": [
+          "user-2"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-08-31T19:05:14.035735+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-3",
+        "text": "Preference 3: use option blue-3.",
+        "source_turn_ids": [
+          "user-3"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-08-31T19:05:14.035735+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-4",
+        "text": "Preference 4: use option blue-4.",
+        "source_turn_ids": [
+          "user-4"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-08-31T19:05:14.035735+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      }
+    ],
+    "baseline_claim_count": 8,
+    "candidate_claim_count": 4,
+    "shared_claim_count": 4,
+    "baseline_only_claim_count": 4,
+    "candidate_only_claim_count": 0,
+    "unsupported_claim_count": 0,
+    "unsupported_claim_rate": 0.0,
+    "contradiction_rate": 0.0,
+    "inferred_claim_count": 0,
+    "provenance_failure_count": 0,
+    "factual_coverage": 0.5,
+    "provenance_coverage": 1.0,
+    "compression_ratio": 0.5517241379310345,
+    "stale_claim_rate": 0.0,
+    "correction_adherence": 1.0,
+    "forgetting_adherence": 1.0,
+    "latency_seconds": 5.28941999999995,
+    "token_cost": null,
+    "storage_bytes": 1296,
+    "accepted": true,
+    "rejection_reason": null
+  },
+  {
+    "generated_at_utc": "2026-08-31T19:05:25.104447+00:00",
+    "checkpoint": 5,
+    "source_policy_revision": 0,
+    "baseline_summary_version": 1,
+    "baseline_summarizer": "extractive-v1",
+    "baseline_output": [
+      {
+        "text": "Preference 1: use option blue-1.",
+        "source_turn_ids": [
+          "user-1"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 1.",
+        "source_turn_ids": [
+          "assistant-1"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 2: use option blue-2.",
+        "source_turn_ids": [
+          "user-2"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 2.",
+        "source_turn_ids": [
+          "assistant-2"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 3: use option blue-3.",
+        "source_turn_ids": [
+          "user-3"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 3.",
+        "source_turn_ids": [
+          "assistant-3"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 4: use option blue-4.",
+        "source_turn_ids": [
+          "user-4"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 4.",
+        "source_turn_ids": [
+          "assistant-4"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 5: use option blue-5.",
+        "source_turn_ids": [
+          "user-5"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 5.",
+        "source_turn_ids": [
+          "assistant-5"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      }
+    ],
+    "candidate_output": [
+      {
+        "claim_id": "user-1",
+        "text": "Preference 1: use option blue-1.",
+        "source_turn_ids": [
+          "user-1"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-08-31T19:05:20.444157+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-2",
+        "text": "Preference 2: use option blue-2.",
+        "source_turn_ids": [
+          "user-2"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-08-31T19:05:20.444157+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-3",
+        "text": "Preference 3: use option blue-3.",
+        "source_turn_ids": [
+          "user-3"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-08-31T19:05:20.444157+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-4",
+        "text": "Preference 4: use option blue-4.",
+        "source_turn_ids": [
+          "user-4"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-08-31T19:05:20.444157+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-5",
+        "text": "Preference 5: use option blue-5.",
+        "source_turn_ids": [
+          "user-5"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-08-31T19:05:20.444157+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      }
+    ],
+    "baseline_claim_count": 10,
+    "candidate_claim_count": 5,
+    "shared_claim_count": 5,
+    "baseline_only_claim_count": 5,
+    "candidate_only_claim_count": 0,
+    "unsupported_claim_count": 0,
+    "unsupported_claim_rate": 0.0,
+    "contradiction_rate": 0.0,
+    "inferred_claim_count": 0,
+    "provenance_failure_count": 0,
+    "factual_coverage": 0.5,
+    "provenance_coverage": 1.0,
+    "compression_ratio": 0.5517241379310345,
+    "stale_claim_rate": 0.0,
+    "correction_adherence": 1.0,
+    "forgetting_adherence": 1.0,
+    "latency_seconds": 6.499768000000017,
+    "token_cost": null,
+    "storage_bytes": 1567,
+    "accepted": true,
+    "rejection_reason": null
+  }
+]

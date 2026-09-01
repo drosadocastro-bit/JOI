@@ -38,6 +38,11 @@ def _settings():
         model_compact_memory_enabled=False,
         model_compact_memory_path='compact-memory-model-candidate.json',
         compact_memory_evaluation_path='compact-memory-evaluation.json',
+        compact_memory_provider='local',
+        openai_api_key='',
+        openai_model='gpt-5.6-luna',
+        openai_base_url='https://api.openai.com/v1',
+        openai_timeout_seconds=60,
     )
 
 
@@ -541,3 +546,32 @@ def test_close_flushes_model_compact_memory_worker(monkeypatch):
     JoiOrchestrator(settings, 'system', Mock()).close()
 
     model_worker.close.assert_called_once_with()
+
+
+def test_openai_compact_provider_uses_runtime_cloud_authorization(monkeypatch):
+    settings = _settings()
+    settings.memory_mode = 'persistent'
+    settings.persistent_memory_enabled = True
+    settings.compact_memory_enabled = True
+    settings.model_compact_memory_enabled = True
+    settings.compact_memory_provider = 'openai'
+    settings.cloud_enabled = True
+    settings.openai_api_key = 'sk-test-secret'
+    provider = Mock()
+    provider.provider_id = 'openai'
+    provider.model_id = 'gpt-5.6-luna'
+    provider_factory = Mock(return_value=provider)
+    monkeypatch.setattr(orchestrator_module, 'OpenAICompactSummarizerProvider', provider_factory)
+    monkeypatch.setattr(orchestrator_module, 'LocalLMStudioBrain', Mock())
+    monkeypatch.setattr(orchestrator_module, 'EpisodicMemoryStore', Mock())
+    monkeypatch.setattr(orchestrator_module, 'CompactMemoryStore', Mock())
+    monkeypatch.setattr(orchestrator_module, 'CompactMemoryManager', Mock())
+    monkeypatch.setattr(orchestrator_module, 'CompactMemoryWorker', Mock())
+    monkeypatch.setattr(orchestrator_module, 'ModelCompactMemoryWorker', Mock())
+
+    joi = JoiOrchestrator(settings, 'system', Mock())
+    cloud_authorized = provider_factory.call_args.kwargs['cloud_authorized']
+
+    assert cloud_authorized() is True
+    joi.set_runtime_state('cloud', 'off')
+    assert cloud_authorized() is False

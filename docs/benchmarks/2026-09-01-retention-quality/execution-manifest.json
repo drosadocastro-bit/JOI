@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "executed_at_utc": "2026-09-01T15:12:00.138232+00:00",
+  "benchmark": "joi-retention-quality-v1",
+  "provider": "openai",
+  "model": "gpt-5.6-luna",
+  "candidate_generation_count": 1,
+  "prompt_or_schema_changed_after_opening_results": false,
+  "automatic_result": {
+    "decision": "INCONCLUSIVE",
+    "reason": "human review is incomplete",
+    "raw_factual_coverage_secondary": 0.8333333333333334,
+    "weighted_retention_score_primary": 1.0,
+    "critical_retention_rate": 1.0,
+    "forbidden_loss_count": 0,
+    "provenance_failure_count": 0,
+    "retained_fact_count": 20,
+    "omitted_fact_count": 4,
+    "omitted_categories": {
+      "trivial_or_redundant": 4
+    },
+    "unreviewed_omission_count": 4
+  },
+  "provider_telemetry": {
+    "input_tokens": 1117,
+    "output_tokens": 1803,
+    "estimated_cost_usd": 0.002387,
+    "total_latency_seconds": 14.105609099999128,
+    "time_to_first_token_seconds": null
+  },
+  "publication_enabled": false,
+  "human_review_complete": false,
+  "phase_5a_status": "OPEN",
+  "algorithm": "sha256",
+  "artifacts": [
+    {
+      "path": "preregistration.json",
+      "sha256": "42af88fd0e803fe1b075382263c7b83e2ce26720eb34257f01b187b406902a1a",
+      "bytes": 3148
+    },
+    {
+      "path": "reference-labels.json",
+      "sha256": "0ac9208028a5fab4d65a68ce7dbb8b128a03f8f8414f0025f91d189ea74cebdb",
+      "bytes": 10632
+    },
+    {
+      "path": "luna/model-candidate.json",
+      "sha256": "0bfba1791d2c547bd7b00bc7f697e853cbae142dbbfdb6a9e81709168de5190e",
+      "bytes": 7883
+    },
+    {
+      "path": "luna/retention-quality-report.json",
+      "sha256": "878d63c7fc61a4de62b4d8375b15f713d1dad23a756ec7ab3db597ad17220ccd",
+      "bytes": 5540
+    },
+    {
+      "path": "luna/retention-quality-report.md",
+      "sha256": "938914d00483923ac1d4a486043bc5884f372bdd35f469ca7f31e27e4759595e",
+      "bytes": 955
+    },
+    {
+      "path": "luna/human-review-template.json",
+      "sha256": "8a834fccc0109101d1ad38a17c7980325edf6840d86f3108db1693f3f41ca0a0",
+      "bytes": 1789
+    }
+  ]
+}

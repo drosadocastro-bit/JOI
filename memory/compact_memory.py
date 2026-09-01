@@ -4,12 +4,13 @@ import queue
 import threading
 import time
 from collections.abc import Callable, Sequence
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, replace
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Protocol
 
 from memory.memory_store import EffectiveMemorySnapshot, EpisodicTurn
+from memory.summarizer_provider import SummarizerProviderError
 
 
 COMPACT_MEMORY_SCHEMA_VERSION = 1
@@ -63,6 +64,8 @@ class ModelCompactMemoryCandidate:
     summarizer: str
     source_policy_revision: int
     claims: tuple[CompactClaim, ...]
+    provider: str | None = None
+    model: str | None = None
 
 
 class CompactSummarizer(Protocol):
@@ -91,11 +94,22 @@ def _require_utc_timestamp(value: str) -> None:
 def parse_model_candidate(raw: str) -> ModelCompactMemoryCandidate:
     try:
         payload = json.loads(raw)
-        if set(payload) != {
+        legacy_fields = {
             'summary_version', 'generated_at_utc', 'summarizer',
             'source_policy_revision', 'claims',
-        }:
+        }
+        candidate_fields = legacy_fields | {'provider', 'model'}
+        if frozenset(payload) not in {frozenset(legacy_fields), frozenset(candidate_fields)}:
             raise CompactMemoryError('model candidate is malformed')
+        provider = payload.get('provider')
+        model = payload.get('model')
+        if (provider is None) != (model is None):
+            raise CompactMemoryError('model candidate provenance is malformed')
+        if provider is not None and (
+            not isinstance(provider, str) or not provider
+            or not isinstance(model, str) or not model
+        ):
+            raise CompactMemoryError('model candidate provenance is malformed')
         if payload['summary_version'] != 1:
             raise CompactMemoryError('model candidate is malformed')
         if not isinstance(payload['summarizer'], str) or not payload['summarizer']:
@@ -125,6 +139,8 @@ def parse_model_candidate(raw: str) -> ModelCompactMemoryCandidate:
             summarizer=payload['summarizer'],
             source_policy_revision=payload['source_policy_revision'],
             claims=claims,
+            provider=provider,
+            model=model,
         )
     except CompactMemoryError:
         raise
@@ -324,7 +340,119 @@ class ModelCompactSummarizer:
                 'content': json.dumps(request, ensure_ascii=True, sort_keys=True),
             },
         ]
-        return parse_model_candidate(self.brain.chat(messages))
+        return replace(
+            parse_model_candidate(self.brain.chat(messages)),
+            provider='local',
+            model=self.model,
+        )
+
+
+class ProviderBackedCompactSummarizer(ModelCompactSummarizer):
+    def __init__(self, provider, clock: Callable[[], datetime] | None = None):
+        super().__init__(provider, provider.model_id, clock)
+        self.provider = provider
+        self.version = f'model-v2:{provider.provider_id}:{provider.model_id}'
+        self.last_generation = None
+
+    def __call__(
+        self,
+        snapshot: EffectiveMemorySnapshot,
+    ) -> ModelCompactMemoryCandidate:
+        self.last_generation = None
+        health = self.provider.health()
+        if not health.get('ok'):
+            raise SummarizerProviderError(
+                f'provider unavailable: {health.get("error", "health check failed")}'
+            )
+        messages, schema = self._request(snapshot)
+        generation = self.provider.generate(messages, schema)
+        self.last_generation = generation
+        if (
+            generation.provider != self.provider.provider_id
+            or generation.model != self.provider.model_id
+        ):
+            raise CompactMemoryError('provider identity mismatch')
+        candidate = parse_model_candidate(generation.content)
+        if candidate.summarizer != self.version:
+            raise CompactMemoryError('candidate summarizer provenance is stale')
+        return replace(
+            candidate,
+            provider=generation.provider,
+            model=generation.model,
+        )
+
+    def _request(self, snapshot: EffectiveMemorySnapshot) -> tuple[list[dict], dict]:
+        effective_turns = [
+            {
+                'turn_id': turn.turn_id,
+                'role': turn.role,
+                'content': turn.content,
+                'source_policy_id': turn.source_policy_id,
+            }
+            for turn in snapshot.turns
+            if not turn.forgotten and turn.content is not None
+        ]
+        generated_at = self.clock()
+        if generated_at.tzinfo is None:
+            raise CompactMemoryError('model summarizer clock must be timezone-aware')
+        request = {
+            'generated_at_utc': generated_at.astimezone(timezone.utc).isoformat(),
+            'source_policy_revision': snapshot.policy_revision,
+            'summarizer': self.version,
+            'effective_turns': effective_turns,
+        }
+        messages = [
+            {
+                'role': 'system',
+                'content': (
+                    'Extract only explicit claims by copying their complete source '
+                    'content exactly. Never infer, combine, or paraphrase. Use the '
+                    'supplied metadata. Return an empty claims array when no explicit '
+                    'claim is suitable.'
+                ),
+            },
+            {'role': 'user', 'content': json.dumps(request, ensure_ascii=True, sort_keys=True)},
+        ]
+        return messages, _model_candidate_json_schema()
+
+
+def _model_candidate_json_schema() -> dict:
+    claim = {
+        'type': 'object',
+        'properties': {
+            'claim_id': {'type': 'string'},
+            'text': {'type': 'string'},
+            'source_turn_ids': {'type': 'array', 'items': {'type': 'string'}},
+            'source_policy_ids': {
+                'type': 'array',
+                'items': {'type': ['string', 'null']},
+            },
+            'confidence': {'type': 'number', 'minimum': 0, 'maximum': 1},
+            'status': {'type': 'string', 'enum': ['explicit']},
+            'generated_at_utc': {'type': 'string'},
+            'summarizer': {'type': 'string'},
+        },
+        'required': [
+            'claim_id', 'text', 'source_turn_ids', 'source_policy_ids',
+            'confidence', 'status', 'generated_at_utc', 'summarizer',
+        ],
+        'additionalProperties': False,
+    }
+    return {
+        'type': 'object',
+        'properties': {
+            'summary_version': {'type': 'integer', 'enum': [1]},
+            'generated_at_utc': {'type': 'string'},
+            'summarizer': {'type': 'string'},
+            'source_policy_revision': {'type': 'integer', 'minimum': 0},
+            'claims': {'type': 'array', 'items': claim},
+        },
+        'required': [
+            'summary_version', 'generated_at_utc', 'summarizer',
+            'source_policy_revision', 'claims',
+        ],
+        'additionalProperties': False,
+    }
 
 
 @dataclass(frozen=True)

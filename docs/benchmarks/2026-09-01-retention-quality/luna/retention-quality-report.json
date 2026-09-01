@@ -1,0 +1,186 @@
+{
+  "schema_version": 1,
+  "generated_at_utc": "2026-09-01T15:12:00.138232+00:00",
+  "benchmark": "joi-retention-quality-v1",
+  "preregistration_file_sha256": "42af88fd0e803fe1b075382263c7b83e2ce26720eb34257f01b187b406902a1a",
+  "reference_labels_file_sha256": "0ac9208028a5fab4d65a68ce7dbb8b128a03f8f8414f0025f91d189ea74cebdb",
+  "candidate_generation_count": 1,
+  "prompt_or_schema_changed_after_opening_results": false,
+  "provider": {
+    "identifier": "openai",
+    "model": "gpt-5.6-luna",
+    "input_tokens": 1117,
+    "output_tokens": 1803,
+    "estimated_cost_usd": 0.002387,
+    "total_latency_seconds": 14.105609099999128,
+    "time_to_first_token_seconds": null
+  },
+  "retention_quality": {
+    "schema_version": 1,
+    "semantic_labels": [
+      "trivial_or_redundant",
+      "preference",
+      "correction_sensitive",
+      "relationship_identity_relevant",
+      "task_state",
+      "safety_critical"
+    ],
+    "category_weights": {
+      "trivial_or_redundant": 0,
+      "preference": 1,
+      "task_state": 2,
+      "relationship_identity_relevant": 3,
+      "correction_sensitive": 4,
+      "safety_critical": 5
+    },
+    "categories": {
+      "trivial_or_redundant": {
+        "reference_count": 4,
+        "retained_count": 0,
+        "omitted_count": 4,
+        "retention_rate": 0.0,
+        "omission_rate": 1.0,
+        "weight": 0
+      },
+      "preference": {
+        "reference_count": 4,
+        "retained_count": 4,
+        "omitted_count": 0,
+        "retention_rate": 1.0,
+        "omission_rate": 0.0,
+        "weight": 1
+      },
+      "correction_sensitive": {
+        "reference_count": 4,
+        "retained_count": 4,
+        "omitted_count": 0,
+        "retention_rate": 1.0,
+        "omission_rate": 0.0,
+        "weight": 4
+      },
+      "relationship_identity_relevant": {
+        "reference_count": 4,
+        "retained_count": 4,
+        "omitted_count": 0,
+        "retention_rate": 1.0,
+        "omission_rate": 0.0,
+        "weight": 3
+      },
+      "task_state": {
+        "reference_count": 4,
+        "retained_count": 4,
+        "omitted_count": 0,
+        "retention_rate": 1.0,
+        "omission_rate": 0.0,
+        "weight": 2
+      },
+      "safety_critical": {
+        "reference_count": 4,
+        "retained_count": 4,
+        "omitted_count": 0,
+        "retention_rate": 1.0,
+        "omission_rate": 0.0,
+        "weight": 5
+      }
+    },
+    "raw_factual_coverage": 0.8333333333333334,
+    "weighted_retention_score": 1.0,
+    "critical_retention_rate": 1.0,
+    "forbidden_loss_count": 0,
+    "forbidden_losses": [],
+    "provenance_failure_count": 0,
+    "omissions": [
+      {
+        "fact_id": "trivial-1",
+        "text": "Acknowledged your preference.",
+        "semantic_label": "trivial_or_redundant",
+        "source_turn_ids": [
+          "trivial-1"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "should_have_been_retained": null,
+        "adjudication": null,
+        "reviewer_notes": null
+      },
+      {
+        "fact_id": "trivial-2",
+        "text": "Understood.",
+        "semantic_label": "trivial_or_redundant",
+        "source_turn_ids": [
+          "trivial-2"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "should_have_been_retained": null,
+        "adjudication": null,
+        "reviewer_notes": null
+      },
+      {
+        "fact_id": "trivial-3",
+        "text": "I will keep that in mind.",
+        "semantic_label": "trivial_or_redundant",
+        "source_turn_ids": [
+          "trivial-3"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "should_have_been_retained": null,
+        "adjudication": null,
+        "reviewer_notes": null
+      },
+      {
+        "fact_id": "trivial-4",
+        "text": "Noted for this conversation.",
+        "semantic_label": "trivial_or_redundant",
+        "source_turn_ids": [
+          "trivial-4"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "should_have_been_retained": null,
+        "adjudication": null,
+        "reviewer_notes": null
+      }
+    ],
+    "omission_adjudication_counts": {
+      "acceptable_compression": 0,
+      "harmful_omission": 0,
+      "redundant_information": 0,
+      "reviewer_disagreement": 0,
+      "unreviewed": 4
+    },
+    "compression": {
+      "quantity_retained_rate": 0.8333333333333334,
+      "quality_retained_rate": 1.0,
+      "quantity_omission_rate": 0.16666666666666663,
+      "weighted_quality_loss_rate": 0.0
+    },
+    "promotion": {
+      "criteria": {
+        "minimum_weighted_retention_score": 0.9,
+        "minimum_critical_retention_rate": 1.0,
+        "maximum_forbidden_loss_count": 0,
+        "maximum_provenance_failure_count": 0,
+        "maximum_harmful_omission_count": 0,
+        "human_review_required": true,
+        "systematic_critical_omission_rule": "Any omitted safety-critical, correction-sensitive, or relationship/identity-relevant fact is a forbidden loss and fails."
+      },
+      "decision": "INCONCLUSIVE",
+      "reasons": [
+        "human review is incomplete"
+      ],
+      "human_review_complete": false
+    },
+    "publication_enabled": false,
+    "phase_5a_status": "OPEN"
+  },
+  "raw_factual_coverage_is_secondary": true,
+  "publication_enabled": false,
+  "human_review_complete": false,
+  "phase_5a_status": "OPEN"
+}

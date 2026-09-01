@@ -1,0 +1,3937 @@
+[
+  {
+    "generated_at_utc": "2026-09-01T10:17:00.091307+00:00",
+    "checkpoint": 25,
+    "source_policy_revision": 2,
+    "baseline_summary_version": 1,
+    "baseline_summarizer": "extractive-v1",
+    "baseline_output": [
+      {
+        "text": "Preference 1: use option blue-1.",
+        "source_turn_ids": [
+          "user-1"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 1.",
+        "source_turn_ids": [
+          "assistant-1"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 2: use option blue-2.",
+        "source_turn_ids": [
+          "user-2"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 2.",
+        "source_turn_ids": [
+          "assistant-2"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 3: use option blue-3.",
+        "source_turn_ids": [
+          "user-3"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 3.",
+        "source_turn_ids": [
+          "assistant-3"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 4: use option blue-4.",
+        "source_turn_ids": [
+          "user-4"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 4.",
+        "source_turn_ids": [
+          "assistant-4"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 5: use option blue-5.",
+        "source_turn_ids": [
+          "user-5"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 5.",
+        "source_turn_ids": [
+          "assistant-5"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 6: use option blue-6.",
+        "source_turn_ids": [
+          "user-6"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 6.",
+        "source_turn_ids": [
+          "assistant-6"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 7: use option blue-7.",
+        "source_turn_ids": [
+          "user-7"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 7.",
+        "source_turn_ids": [
+          "assistant-7"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 8: use option blue-8.",
+        "source_turn_ids": [
+          "user-8"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 8.",
+        "source_turn_ids": [
+          "assistant-8"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 9: use option blue-9.",
+        "source_turn_ids": [
+          "user-9"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 9.",
+        "source_turn_ids": [
+          "assistant-9"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 10: use option blue-10.",
+        "source_turn_ids": [
+          "user-10"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 10.",
+        "source_turn_ids": [
+          "assistant-10"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 11: use option blue-11.",
+        "source_turn_ids": [
+          "user-11"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 11.",
+        "source_turn_ids": [
+          "assistant-11"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 12: use option blue-12.",
+        "source_turn_ids": [
+          "user-12"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 12.",
+        "source_turn_ids": [
+          "assistant-12"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 13: use option blue-13.",
+        "source_turn_ids": [
+          "user-13"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 13.",
+        "source_turn_ids": [
+          "assistant-13"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 14: use option blue-14.",
+        "source_turn_ids": [
+          "user-14"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 14.",
+        "source_turn_ids": [
+          "assistant-14"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 15: use option blue-15.",
+        "source_turn_ids": [
+          "user-15"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 15.",
+        "source_turn_ids": [
+          "assistant-15"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 16: use option blue-16.",
+        "source_turn_ids": [
+          "user-16"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 16.",
+        "source_turn_ids": [
+          "assistant-16"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 17: use option blue-17.",
+        "source_turn_ids": [
+          "user-17"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 17.",
+        "source_turn_ids": [
+          "assistant-17"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 18 corrected: use option green-18.",
+        "source_turn_ids": [
+          "user-18"
+        ],
+        "source_policy_ids": [
+          "policy-correct-20"
+        ]
+      },
+      {
+        "text": "Acknowledged preference 18.",
+        "source_turn_ids": [
+          "assistant-18"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 19.",
+        "source_turn_ids": [
+          "assistant-19"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 20: use option blue-20.",
+        "source_turn_ids": [
+          "user-20"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 20.",
+        "source_turn_ids": [
+          "assistant-20"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 21: use option blue-21.",
+        "source_turn_ids": [
+          "user-21"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 21.",
+        "source_turn_ids": [
+          "assistant-21"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 22: use option blue-22.",
+        "source_turn_ids": [
+          "user-22"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 22.",
+        "source_turn_ids": [
+          "assistant-22"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 23: use option blue-23.",
+        "source_turn_ids": [
+          "user-23"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 23.",
+        "source_turn_ids": [
+          "assistant-23"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 24: use option blue-24.",
+        "source_turn_ids": [
+          "user-24"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 24.",
+        "source_turn_ids": [
+          "assistant-24"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 25: use option blue-25.",
+        "source_turn_ids": [
+          "user-25"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 25.",
+        "source_turn_ids": [
+          "assistant-25"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      }
+    ],
+    "candidate_output": [
+      {
+        "claim_id": "user-1",
+        "text": "Preference 1: use option blue-1.",
+        "source_turn_ids": [
+          "user-1"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:16:45.102742+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-2",
+        "text": "Preference 2: use option blue-2.",
+        "source_turn_ids": [
+          "user-2"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:16:45.102742+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-3",
+        "text": "Preference 3: use option blue-3.",
+        "source_turn_ids": [
+          "user-3"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:16:45.102742+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-4",
+        "text": "Preference 4: use option blue-4.",
+        "source_turn_ids": [
+          "user-4"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:16:45.102742+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-5",
+        "text": "Preference 5: use option blue-5.",
+        "source_turn_ids": [
+          "user-5"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:16:45.102742+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-6",
+        "text": "Preference 6: use option blue-6.",
+        "source_turn_ids": [
+          "user-6"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:16:45.102742+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-7",
+        "text": "Preference 7: use option blue-7.",
+        "source_turn_ids": [
+          "user-7"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:16:45.102742+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-8",
+        "text": "Preference 8: use option blue-8.",
+        "source_turn_ids": [
+          "user-8"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:16:45.102742+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-9",
+        "text": "Preference 9: use option blue-9.",
+        "source_turn_ids": [
+          "user-9"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:16:45.102742+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-10",
+        "text": "Preference 10: use option blue-10.",
+        "source_turn_ids": [
+          "user-10"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:16:45.102742+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-11",
+        "text": "Preference 11: use option blue-11.",
+        "source_turn_ids": [
+          "user-11"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:16:45.102742+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-12",
+        "text": "Preference 12: use option blue-12.",
+        "source_turn_ids": [
+          "user-12"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:16:45.102742+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-13",
+        "text": "Preference 13: use option blue-13.",
+        "source_turn_ids": [
+          "user-13"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:16:45.102742+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-14",
+        "text": "Preference 14: use option blue-14.",
+        "source_turn_ids": [
+          "user-14"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:16:45.102742+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-15",
+        "text": "Preference 15: use option blue-15.",
+        "source_turn_ids": [
+          "user-15"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:16:45.102742+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-16",
+        "text": "Preference 16: use option blue-16.",
+        "source_turn_ids": [
+          "user-16"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:16:45.102742+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-17",
+        "text": "Preference 17: use option blue-17.",
+        "source_turn_ids": [
+          "user-17"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:16:45.102742+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-18",
+        "text": "Preference 18 corrected: use option green-18.",
+        "source_turn_ids": [
+          "user-18"
+        ],
+        "source_policy_ids": [
+          "policy-correct-20"
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:16:45.102742+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-20",
+        "text": "Preference 20: use option blue-20.",
+        "source_turn_ids": [
+          "user-20"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:16:45.102742+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-21",
+        "text": "Preference 21: use option blue-21.",
+        "source_turn_ids": [
+          "user-21"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:16:45.102742+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-22",
+        "text": "Preference 22: use option blue-22.",
+        "source_turn_ids": [
+          "user-22"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:16:45.102742+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-23",
+        "text": "Preference 23: use option blue-23.",
+        "source_turn_ids": [
+          "user-23"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:16:45.102742+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-24",
+        "text": "Preference 24: use option blue-24.",
+        "source_turn_ids": [
+          "user-24"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:16:45.102742+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-25",
+        "text": "Preference 25: use option blue-25.",
+        "source_turn_ids": [
+          "user-25"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:16:45.102742+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      }
+    ],
+    "baseline_claim_count": 49,
+    "candidate_claim_count": 24,
+    "shared_claim_count": 24,
+    "baseline_only_claim_count": 25,
+    "candidate_only_claim_count": 0,
+    "unsupported_claim_count": 0,
+    "unsupported_claim_rate": 0.0,
+    "contradiction_rate": 0.0,
+    "inferred_claim_count": 0,
+    "provenance_failure_count": 0,
+    "factual_coverage": 0.4897959183673469,
+    "provenance_coverage": 1.0,
+    "compression_ratio": 0.5484745762711865,
+    "stale_claim_rate": 0.0,
+    "correction_adherence": 1.0,
+    "forgetting_adherence": 1.0,
+    "latency_seconds": 15.727792799999975,
+    "token_cost": null,
+    "storage_bytes": 6802,
+    "accepted": true,
+    "rejection_reason": null
+  },
+  {
+    "generated_at_utc": "2026-09-01T10:17:17.262196+00:00",
+    "checkpoint": 50,
+    "source_policy_revision": 4,
+    "baseline_summary_version": 1,
+    "baseline_summarizer": "extractive-v1",
+    "baseline_output": [
+      {
+        "text": "Acknowledged preference 17.",
+        "source_turn_ids": [
+          "assistant-17"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 18 corrected: use option green-18.",
+        "source_turn_ids": [
+          "user-18"
+        ],
+        "source_policy_ids": [
+          "policy-correct-20"
+        ]
+      },
+      {
+        "text": "Acknowledged preference 18.",
+        "source_turn_ids": [
+          "assistant-18"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 19.",
+        "source_turn_ids": [
+          "assistant-19"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 20: use option blue-20.",
+        "source_turn_ids": [
+          "user-20"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 20.",
+        "source_turn_ids": [
+          "assistant-20"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 21: use option blue-21.",
+        "source_turn_ids": [
+          "user-21"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 21.",
+        "source_turn_ids": [
+          "assistant-21"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 22: use option blue-22.",
+        "source_turn_ids": [
+          "user-22"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 22.",
+        "source_turn_ids": [
+          "assistant-22"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 23: use option blue-23.",
+        "source_turn_ids": [
+          "user-23"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 23.",
+        "source_turn_ids": [
+          "assistant-23"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 24: use option blue-24.",
+        "source_turn_ids": [
+          "user-24"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 24.",
+        "source_turn_ids": [
+          "assistant-24"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 25: use option blue-25.",
+        "source_turn_ids": [
+          "user-25"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 25.",
+        "source_turn_ids": [
+          "assistant-25"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 26: use option blue-26.",
+        "source_turn_ids": [
+          "user-26"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 26.",
+        "source_turn_ids": [
+          "assistant-26"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 27: use option blue-27.",
+        "source_turn_ids": [
+          "user-27"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 27.",
+        "source_turn_ids": [
+          "assistant-27"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 28: use option blue-28.",
+        "source_turn_ids": [
+          "user-28"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 28.",
+        "source_turn_ids": [
+          "assistant-28"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 29: use option blue-29.",
+        "source_turn_ids": [
+          "user-29"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 29.",
+        "source_turn_ids": [
+          "assistant-29"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 30: use option blue-30.",
+        "source_turn_ids": [
+          "user-30"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 30.",
+        "source_turn_ids": [
+          "assistant-30"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 31: use option blue-31.",
+        "source_turn_ids": [
+          "user-31"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 31.",
+        "source_turn_ids": [
+          "assistant-31"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 32: use option blue-32.",
+        "source_turn_ids": [
+          "user-32"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 32.",
+        "source_turn_ids": [
+          "assistant-32"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 33: use option blue-33.",
+        "source_turn_ids": [
+          "user-33"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 33.",
+        "source_turn_ids": [
+          "assistant-33"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 34: use option blue-34.",
+        "source_turn_ids": [
+          "user-34"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 34.",
+        "source_turn_ids": [
+          "assistant-34"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 35: use option blue-35.",
+        "source_turn_ids": [
+          "user-35"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 35.",
+        "source_turn_ids": [
+          "assistant-35"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 36: use option blue-36.",
+        "source_turn_ids": [
+          "user-36"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 36.",
+        "source_turn_ids": [
+          "assistant-36"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 37: use option blue-37.",
+        "source_turn_ids": [
+          "user-37"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 37.",
+        "source_turn_ids": [
+          "assistant-37"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 38: use option blue-38.",
+        "source_turn_ids": [
+          "user-38"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 38.",
+        "source_turn_ids": [
+          "assistant-38"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 39: use option blue-39.",
+        "source_turn_ids": [
+          "user-39"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 39.",
+        "source_turn_ids": [
+          "assistant-39"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 40: use option blue-40.",
+        "source_turn_ids": [
+          "user-40"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 40.",
+        "source_turn_ids": [
+          "assistant-40"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 41: use option blue-41.",
+        "source_turn_ids": [
+          "user-41"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 41.",
+        "source_turn_ids": [
+          "assistant-41"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 42: use option blue-42.",
+        "source_turn_ids": [
+          "user-42"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 42.",
+        "source_turn_ids": [
+          "assistant-42"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 43 corrected: use option green-43.",
+        "source_turn_ids": [
+          "user-43"
+        ],
+        "source_policy_ids": [
+          "policy-correct-45"
+        ]
+      },
+      {
+        "text": "Acknowledged preference 43.",
+        "source_turn_ids": [
+          "assistant-43"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 44.",
+        "source_turn_ids": [
+          "assistant-44"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 45: use option blue-45.",
+        "source_turn_ids": [
+          "user-45"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 45.",
+        "source_turn_ids": [
+          "assistant-45"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 46: use option blue-46.",
+        "source_turn_ids": [
+          "user-46"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 46.",
+        "source_turn_ids": [
+          "assistant-46"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 47: use option blue-47.",
+        "source_turn_ids": [
+          "user-47"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 47.",
+        "source_turn_ids": [
+          "assistant-47"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 48: use option blue-48.",
+        "source_turn_ids": [
+          "user-48"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 48.",
+        "source_turn_ids": [
+          "assistant-48"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 49: use option blue-49.",
+        "source_turn_ids": [
+          "user-49"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 49.",
+        "source_turn_ids": [
+          "assistant-49"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 50: use option blue-50.",
+        "source_turn_ids": [
+          "user-50"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 50.",
+        "source_turn_ids": [
+          "assistant-50"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      }
+    ],
+    "candidate_output": [
+      {
+        "claim_id": "user-18",
+        "text": "Preference 18 corrected: use option green-18.",
+        "source_turn_ids": [
+          "user-18"
+        ],
+        "source_policy_ids": [
+          "policy-correct-20"
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:00.731682+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-20",
+        "text": "Preference 20: use option blue-20.",
+        "source_turn_ids": [
+          "user-20"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:00.731682+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-21",
+        "text": "Preference 21: use option blue-21.",
+        "source_turn_ids": [
+          "user-21"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:00.731682+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-22",
+        "text": "Preference 22: use option blue-22.",
+        "source_turn_ids": [
+          "user-22"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:00.731682+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-23",
+        "text": "Preference 23: use option blue-23.",
+        "source_turn_ids": [
+          "user-23"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:00.731682+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-24",
+        "text": "Preference 24: use option blue-24.",
+        "source_turn_ids": [
+          "user-24"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:00.731682+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-25",
+        "text": "Preference 25: use option blue-25.",
+        "source_turn_ids": [
+          "user-25"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:00.731682+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-26",
+        "text": "Preference 26: use option blue-26.",
+        "source_turn_ids": [
+          "user-26"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:00.731682+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-27",
+        "text": "Preference 27: use option blue-27.",
+        "source_turn_ids": [
+          "user-27"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:00.731682+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-28",
+        "text": "Preference 28: use option blue-28.",
+        "source_turn_ids": [
+          "user-28"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:00.731682+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-29",
+        "text": "Preference 29: use option blue-29.",
+        "source_turn_ids": [
+          "user-29"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:00.731682+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-30",
+        "text": "Preference 30: use option blue-30.",
+        "source_turn_ids": [
+          "user-30"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:00.731682+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-31",
+        "text": "Preference 31: use option blue-31.",
+        "source_turn_ids": [
+          "user-31"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:00.731682+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-32",
+        "text": "Preference 32: use option blue-32.",
+        "source_turn_ids": [
+          "user-32"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:00.731682+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-33",
+        "text": "Preference 33: use option blue-33.",
+        "source_turn_ids": [
+          "user-33"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:00.731682+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-34",
+        "text": "Preference 34: use option blue-34.",
+        "source_turn_ids": [
+          "user-34"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:00.731682+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-35",
+        "text": "Preference 35: use option blue-35.",
+        "source_turn_ids": [
+          "user-35"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:00.731682+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-36",
+        "text": "Preference 36: use option blue-36.",
+        "source_turn_ids": [
+          "user-36"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:00.731682+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-37",
+        "text": "Preference 37: use option blue-37.",
+        "source_turn_ids": [
+          "user-37"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:00.731682+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-38",
+        "text": "Preference 38: use option blue-38.",
+        "source_turn_ids": [
+          "user-38"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:00.731682+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-39",
+        "text": "Preference 39: use option blue-39.",
+        "source_turn_ids": [
+          "user-39"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:00.731682+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-40",
+        "text": "Preference 40: use option blue-40.",
+        "source_turn_ids": [
+          "user-40"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:00.731682+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-41",
+        "text": "Preference 41: use option blue-41.",
+        "source_turn_ids": [
+          "user-41"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:00.731682+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-42",
+        "text": "Preference 42: use option blue-42.",
+        "source_turn_ids": [
+          "user-42"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:00.731682+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-43",
+        "text": "Preference 43 corrected: use option green-43.",
+        "source_turn_ids": [
+          "user-43"
+        ],
+        "source_policy_ids": [
+          "policy-correct-45"
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:00.731682+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-45",
+        "text": "Preference 45: use option blue-45.",
+        "source_turn_ids": [
+          "user-45"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:00.731682+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-46",
+        "text": "Preference 46: use option blue-46.",
+        "source_turn_ids": [
+          "user-46"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:00.731682+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-47",
+        "text": "Preference 47: use option blue-47.",
+        "source_turn_ids": [
+          "user-47"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:00.731682+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-48",
+        "text": "Preference 48: use option blue-48.",
+        "source_turn_ids": [
+          "user-48"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:00.731682+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-49",
+        "text": "Preference 49: use option blue-49.",
+        "source_turn_ids": [
+          "user-49"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:00.731682+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-50",
+        "text": "Preference 50: use option blue-50.",
+        "source_turn_ids": [
+          "user-50"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:00.731682+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      }
+    ],
+    "baseline_claim_count": 65,
+    "candidate_claim_count": 31,
+    "shared_claim_count": 31,
+    "baseline_only_claim_count": 34,
+    "candidate_only_claim_count": 0,
+    "unsupported_claim_count": 0,
+    "unsupported_claim_rate": 0.0,
+    "contradiction_rate": 0.0,
+    "inferred_claim_count": 0,
+    "provenance_failure_count": 0,
+    "factual_coverage": 0.47692307692307695,
+    "provenance_coverage": 1.0,
+    "compression_ratio": 0.5396188565697091,
+    "stale_claim_rate": 0.0,
+    "correction_adherence": 1.0,
+    "forgetting_adherence": 1.0,
+    "latency_seconds": 17.149809300000015,
+    "token_cost": null,
+    "storage_bytes": 8789,
+    "accepted": true,
+    "rejection_reason": null
+  },
+  {
+    "generated_at_utc": "2026-09-01T10:17:37.374891+00:00",
+    "checkpoint": 100,
+    "source_policy_revision": 6,
+    "baseline_summary_version": 1,
+    "baseline_summarizer": "extractive-v1",
+    "baseline_output": [
+      {
+        "text": "Preference 68: use option blue-68.",
+        "source_turn_ids": [
+          "user-68"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 68.",
+        "source_turn_ids": [
+          "assistant-68"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 69: use option blue-69.",
+        "source_turn_ids": [
+          "user-69"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 69.",
+        "source_turn_ids": [
+          "assistant-69"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 70: use option blue-70.",
+        "source_turn_ids": [
+          "user-70"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 70.",
+        "source_turn_ids": [
+          "assistant-70"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 71: use option blue-71.",
+        "source_turn_ids": [
+          "user-71"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 71.",
+        "source_turn_ids": [
+          "assistant-71"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 72: use option blue-72.",
+        "source_turn_ids": [
+          "user-72"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 72.",
+        "source_turn_ids": [
+          "assistant-72"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 73: use option blue-73.",
+        "source_turn_ids": [
+          "user-73"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 73.",
+        "source_turn_ids": [
+          "assistant-73"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 74: use option blue-74.",
+        "source_turn_ids": [
+          "user-74"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 74.",
+        "source_turn_ids": [
+          "assistant-74"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 75: use option blue-75.",
+        "source_turn_ids": [
+          "user-75"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 75.",
+        "source_turn_ids": [
+          "assistant-75"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 76: use option blue-76.",
+        "source_turn_ids": [
+          "user-76"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 76.",
+        "source_turn_ids": [
+          "assistant-76"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 77: use option blue-77.",
+        "source_turn_ids": [
+          "user-77"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 77.",
+        "source_turn_ids": [
+          "assistant-77"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 78: use option blue-78.",
+        "source_turn_ids": [
+          "user-78"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 78.",
+        "source_turn_ids": [
+          "assistant-78"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 79: use option blue-79.",
+        "source_turn_ids": [
+          "user-79"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 79.",
+        "source_turn_ids": [
+          "assistant-79"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 80: use option blue-80.",
+        "source_turn_ids": [
+          "user-80"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 80.",
+        "source_turn_ids": [
+          "assistant-80"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 81: use option blue-81.",
+        "source_turn_ids": [
+          "user-81"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 81.",
+        "source_turn_ids": [
+          "assistant-81"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 82: use option blue-82.",
+        "source_turn_ids": [
+          "user-82"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 82.",
+        "source_turn_ids": [
+          "assistant-82"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 83: use option blue-83.",
+        "source_turn_ids": [
+          "user-83"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 83.",
+        "source_turn_ids": [
+          "assistant-83"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 84: use option blue-84.",
+        "source_turn_ids": [
+          "user-84"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 84.",
+        "source_turn_ids": [
+          "assistant-84"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 85: use option blue-85.",
+        "source_turn_ids": [
+          "user-85"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 85.",
+        "source_turn_ids": [
+          "assistant-85"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 86: use option blue-86.",
+        "source_turn_ids": [
+          "user-86"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 86.",
+        "source_turn_ids": [
+          "assistant-86"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 87: use option blue-87.",
+        "source_turn_ids": [
+          "user-87"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 87.",
+        "source_turn_ids": [
+          "assistant-87"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 88: use option blue-88.",
+        "source_turn_ids": [
+          "user-88"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 88.",
+        "source_turn_ids": [
+          "assistant-88"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 89: use option blue-89.",
+        "source_turn_ids": [
+          "user-89"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 89.",
+        "source_turn_ids": [
+          "assistant-89"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 90: use option blue-90.",
+        "source_turn_ids": [
+          "user-90"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 90.",
+        "source_turn_ids": [
+          "assistant-90"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 91: use option blue-91.",
+        "source_turn_ids": [
+          "user-91"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 91.",
+        "source_turn_ids": [
+          "assistant-91"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 92: use option blue-92.",
+        "source_turn_ids": [
+          "user-92"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 92.",
+        "source_turn_ids": [
+          "assistant-92"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 93 corrected: use option green-93.",
+        "source_turn_ids": [
+          "user-93"
+        ],
+        "source_policy_ids": [
+          "policy-correct-95"
+        ]
+      },
+      {
+        "text": "Acknowledged preference 93.",
+        "source_turn_ids": [
+          "assistant-93"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 94.",
+        "source_turn_ids": [
+          "assistant-94"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 95: use option blue-95.",
+        "source_turn_ids": [
+          "user-95"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 95.",
+        "source_turn_ids": [
+          "assistant-95"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 96: use option blue-96.",
+        "source_turn_ids": [
+          "user-96"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 96.",
+        "source_turn_ids": [
+          "assistant-96"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 97: use option blue-97.",
+        "source_turn_ids": [
+          "user-97"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 97.",
+        "source_turn_ids": [
+          "assistant-97"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 98: use option blue-98.",
+        "source_turn_ids": [
+          "user-98"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 98.",
+        "source_turn_ids": [
+          "assistant-98"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 99: use option blue-99.",
+        "source_turn_ids": [
+          "user-99"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 99.",
+        "source_turn_ids": [
+          "assistant-99"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 100: use option blue-100.",
+        "source_turn_ids": [
+          "user-100"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 100.",
+        "source_turn_ids": [
+          "assistant-100"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      }
+    ],
+    "candidate_output": [
+      {
+        "claim_id": "user-68",
+        "text": "Preference 68: use option blue-68.",
+        "source_turn_ids": [
+          "user-68"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:18.602027+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-69",
+        "text": "Preference 69: use option blue-69.",
+        "source_turn_ids": [
+          "user-69"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:18.602027+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-70",
+        "text": "Preference 70: use option blue-70.",
+        "source_turn_ids": [
+          "user-70"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:18.602027+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-71",
+        "text": "Preference 71: use option blue-71.",
+        "source_turn_ids": [
+          "user-71"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:18.602027+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-72",
+        "text": "Preference 72: use option blue-72.",
+        "source_turn_ids": [
+          "user-72"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:18.602027+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-73",
+        "text": "Preference 73: use option blue-73.",
+        "source_turn_ids": [
+          "user-73"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:18.602027+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-74",
+        "text": "Preference 74: use option blue-74.",
+        "source_turn_ids": [
+          "user-74"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:18.602027+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-75",
+        "text": "Preference 75: use option blue-75.",
+        "source_turn_ids": [
+          "user-75"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:18.602027+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-76",
+        "text": "Preference 76: use option blue-76.",
+        "source_turn_ids": [
+          "user-76"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:18.602027+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-77",
+        "text": "Preference 77: use option blue-77.",
+        "source_turn_ids": [
+          "user-77"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:18.602027+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-78",
+        "text": "Preference 78: use option blue-78.",
+        "source_turn_ids": [
+          "user-78"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:18.602027+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-79",
+        "text": "Preference 79: use option blue-79.",
+        "source_turn_ids": [
+          "user-79"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:18.602027+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-80",
+        "text": "Preference 80: use option blue-80.",
+        "source_turn_ids": [
+          "user-80"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:18.602027+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-81",
+        "text": "Preference 81: use option blue-81.",
+        "source_turn_ids": [
+          "user-81"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:18.602027+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-82",
+        "text": "Preference 82: use option blue-82.",
+        "source_turn_ids": [
+          "user-82"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:18.602027+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-83",
+        "text": "Preference 83: use option blue-83.",
+        "source_turn_ids": [
+          "user-83"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:18.602027+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-84",
+        "text": "Preference 84: use option blue-84.",
+        "source_turn_ids": [
+          "user-84"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:18.602027+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-85",
+        "text": "Preference 85: use option blue-85.",
+        "source_turn_ids": [
+          "user-85"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:18.602027+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-86",
+        "text": "Preference 86: use option blue-86.",
+        "source_turn_ids": [
+          "user-86"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:18.602027+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-87",
+        "text": "Preference 87: use option blue-87.",
+        "source_turn_ids": [
+          "user-87"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:18.602027+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-88",
+        "text": "Preference 88: use option blue-88.",
+        "source_turn_ids": [
+          "user-88"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:18.602027+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-89",
+        "text": "Preference 89: use option blue-89.",
+        "source_turn_ids": [
+          "user-89"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:18.602027+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-90",
+        "text": "Preference 90: use option blue-90.",
+        "source_turn_ids": [
+          "user-90"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:18.602027+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-91",
+        "text": "Preference 91: use option blue-91.",
+        "source_turn_ids": [
+          "user-91"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:18.602027+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-92",
+        "text": "Preference 92: use option blue-92.",
+        "source_turn_ids": [
+          "user-92"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:18.602027+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-93",
+        "text": "Preference 93 corrected: use option green-93.",
+        "source_turn_ids": [
+          "user-93"
+        ],
+        "source_policy_ids": [
+          "policy-correct-95"
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:18.602027+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-95",
+        "text": "Preference 95: use option blue-95.",
+        "source_turn_ids": [
+          "user-95"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:18.602027+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-96",
+        "text": "Preference 96: use option blue-96.",
+        "source_turn_ids": [
+          "user-96"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:18.602027+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-97",
+        "text": "Preference 97: use option blue-97.",
+        "source_turn_ids": [
+          "user-97"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:18.602027+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-98",
+        "text": "Preference 98: use option blue-98.",
+        "source_turn_ids": [
+          "user-98"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:18.602027+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-99",
+        "text": "Preference 99: use option blue-99.",
+        "source_turn_ids": [
+          "user-99"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:18.602027+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-100",
+        "text": "Preference 100: use option blue-100.",
+        "source_turn_ids": [
+          "user-100"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:18.602027+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      }
+    ],
+    "baseline_claim_count": 65,
+    "candidate_claim_count": 32,
+    "shared_claim_count": 32,
+    "baseline_only_claim_count": 33,
+    "candidate_only_claim_count": 0,
+    "unsupported_claim_count": 0,
+    "unsupported_claim_rate": 0.0,
+    "contradiction_rate": 0.0,
+    "inferred_claim_count": 0,
+    "provenance_failure_count": 0,
+    "factual_coverage": 0.49230769230769234,
+    "provenance_coverage": 1.0,
+    "compression_ratio": 0.5524335173105871,
+    "stale_claim_rate": 0.0,
+    "correction_adherence": 1.0,
+    "forgetting_adherence": 1.0,
+    "latency_seconds": 20.088425299999983,
+    "token_cost": null,
+    "storage_bytes": 9042,
+    "accepted": true,
+    "rejection_reason": null
+  },
+  {
+    "generated_at_utc": "2026-09-01T10:17:57.352447+00:00",
+    "checkpoint": 200,
+    "source_policy_revision": 8,
+    "baseline_summary_version": 1,
+    "baseline_summarizer": "extractive-v1",
+    "baseline_output": [
+      {
+        "text": "Acknowledged preference 169.",
+        "source_turn_ids": [
+          "assistant-169"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 170: use option blue-170.",
+        "source_turn_ids": [
+          "user-170"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 170.",
+        "source_turn_ids": [
+          "assistant-170"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 171: use option blue-171.",
+        "source_turn_ids": [
+          "user-171"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 171.",
+        "source_turn_ids": [
+          "assistant-171"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 172: use option blue-172.",
+        "source_turn_ids": [
+          "user-172"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 172.",
+        "source_turn_ids": [
+          "assistant-172"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 173: use option blue-173.",
+        "source_turn_ids": [
+          "user-173"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 173.",
+        "source_turn_ids": [
+          "assistant-173"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 174: use option blue-174.",
+        "source_turn_ids": [
+          "user-174"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 174.",
+        "source_turn_ids": [
+          "assistant-174"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 175: use option blue-175.",
+        "source_turn_ids": [
+          "user-175"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 175.",
+        "source_turn_ids": [
+          "assistant-175"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 176: use option blue-176.",
+        "source_turn_ids": [
+          "user-176"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 176.",
+        "source_turn_ids": [
+          "assistant-176"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 177: use option blue-177.",
+        "source_turn_ids": [
+          "user-177"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 177.",
+        "source_turn_ids": [
+          "assistant-177"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 178: use option blue-178.",
+        "source_turn_ids": [
+          "user-178"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 178.",
+        "source_turn_ids": [
+          "assistant-178"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 179: use option blue-179.",
+        "source_turn_ids": [
+          "user-179"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 179.",
+        "source_turn_ids": [
+          "assistant-179"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 180: use option blue-180.",
+        "source_turn_ids": [
+          "user-180"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 180.",
+        "source_turn_ids": [
+          "assistant-180"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 181: use option blue-181.",
+        "source_turn_ids": [
+          "user-181"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 181.",
+        "source_turn_ids": [
+          "assistant-181"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 182: use option blue-182.",
+        "source_turn_ids": [
+          "user-182"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 182.",
+        "source_turn_ids": [
+          "assistant-182"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 183: use option blue-183.",
+        "source_turn_ids": [
+          "user-183"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 183.",
+        "source_turn_ids": [
+          "assistant-183"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 184: use option blue-184.",
+        "source_turn_ids": [
+          "user-184"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 184.",
+        "source_turn_ids": [
+          "assistant-184"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 185: use option blue-185.",
+        "source_turn_ids": [
+          "user-185"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 185.",
+        "source_turn_ids": [
+          "assistant-185"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 186: use option blue-186.",
+        "source_turn_ids": [
+          "user-186"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 186.",
+        "source_turn_ids": [
+          "assistant-186"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 187: use option blue-187.",
+        "source_turn_ids": [
+          "user-187"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 187.",
+        "source_turn_ids": [
+          "assistant-187"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 188: use option blue-188.",
+        "source_turn_ids": [
+          "user-188"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 188.",
+        "source_turn_ids": [
+          "assistant-188"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 189: use option blue-189.",
+        "source_turn_ids": [
+          "user-189"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 189.",
+        "source_turn_ids": [
+          "assistant-189"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 190: use option blue-190.",
+        "source_turn_ids": [
+          "user-190"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 190.",
+        "source_turn_ids": [
+          "assistant-190"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 191: use option blue-191.",
+        "source_turn_ids": [
+          "user-191"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 191.",
+        "source_turn_ids": [
+          "assistant-191"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 192: use option blue-192.",
+        "source_turn_ids": [
+          "user-192"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 192.",
+        "source_turn_ids": [
+          "assistant-192"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 193 corrected: use option green-193.",
+        "source_turn_ids": [
+          "user-193"
+        ],
+        "source_policy_ids": [
+          "policy-correct-195"
+        ]
+      },
+      {
+        "text": "Acknowledged preference 193.",
+        "source_turn_ids": [
+          "assistant-193"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 194.",
+        "source_turn_ids": [
+          "assistant-194"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 195: use option blue-195.",
+        "source_turn_ids": [
+          "user-195"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 195.",
+        "source_turn_ids": [
+          "assistant-195"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 196: use option blue-196.",
+        "source_turn_ids": [
+          "user-196"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 196.",
+        "source_turn_ids": [
+          "assistant-196"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 197: use option blue-197.",
+        "source_turn_ids": [
+          "user-197"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 197.",
+        "source_turn_ids": [
+          "assistant-197"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 198: use option blue-198.",
+        "source_turn_ids": [
+          "user-198"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 198.",
+        "source_turn_ids": [
+          "assistant-198"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 199: use option blue-199.",
+        "source_turn_ids": [
+          "user-199"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 199.",
+        "source_turn_ids": [
+          "assistant-199"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Preference 200: use option blue-200.",
+        "source_turn_ids": [
+          "user-200"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      },
+      {
+        "text": "Acknowledged preference 200.",
+        "source_turn_ids": [
+          "assistant-200"
+        ],
+        "source_policy_ids": [
+          null
+        ]
+      }
+    ],
+    "candidate_output": [
+      {
+        "claim_id": "user-170",
+        "text": "Preference 170: use option blue-170.",
+        "source_turn_ids": [
+          "user-170"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:38.142789+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-171",
+        "text": "Preference 171: use option blue-171.",
+        "source_turn_ids": [
+          "user-171"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:38.142789+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-172",
+        "text": "Preference 172: use option blue-172.",
+        "source_turn_ids": [
+          "user-172"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:38.142789+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-173",
+        "text": "Preference 173: use option blue-173.",
+        "source_turn_ids": [
+          "user-173"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:38.142789+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-174",
+        "text": "Preference 174: use option blue-174.",
+        "source_turn_ids": [
+          "user-174"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:38.142789+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-175",
+        "text": "Preference 175: use option blue-175.",
+        "source_turn_ids": [
+          "user-175"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:38.142789+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-176",
+        "text": "Preference 176: use option blue-176.",
+        "source_turn_ids": [
+          "user-176"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:38.142789+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-177",
+        "text": "Preference 177: use option blue-177.",
+        "source_turn_ids": [
+          "user-177"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:38.142789+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-178",
+        "text": "Preference 178: use option blue-178.",
+        "source_turn_ids": [
+          "user-178"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:38.142789+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-179",
+        "text": "Preference 179: use option blue-179.",
+        "source_turn_ids": [
+          "user-179"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:38.142789+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-180",
+        "text": "Preference 180: use option blue-180.",
+        "source_turn_ids": [
+          "user-180"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:38.142789+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-181",
+        "text": "Preference 181: use option blue-181.",
+        "source_turn_ids": [
+          "user-181"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:38.142789+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-182",
+        "text": "Preference 182: use option blue-182.",
+        "source_turn_ids": [
+          "user-182"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:38.142789+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-183",
+        "text": "Preference 183: use option blue-183.",
+        "source_turn_ids": [
+          "user-183"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:38.142789+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-184",
+        "text": "Preference 184: use option blue-184.",
+        "source_turn_ids": [
+          "user-184"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:38.142789+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-185",
+        "text": "Preference 185: use option blue-185.",
+        "source_turn_ids": [
+          "user-185"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:38.142789+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-186",
+        "text": "Preference 186: use option blue-186.",
+        "source_turn_ids": [
+          "user-186"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:38.142789+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-187",
+        "text": "Preference 187: use option blue-187.",
+        "source_turn_ids": [
+          "user-187"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:38.142789+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-188",
+        "text": "Preference 188: use option blue-188.",
+        "source_turn_ids": [
+          "user-188"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:38.142789+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-189",
+        "text": "Preference 189: use option blue-189.",
+        "source_turn_ids": [
+          "user-189"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:38.142789+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-190",
+        "text": "Preference 190: use option blue-190.",
+        "source_turn_ids": [
+          "user-190"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:38.142789+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-191",
+        "text": "Preference 191: use option blue-191.",
+        "source_turn_ids": [
+          "user-191"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:38.142789+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-192",
+        "text": "Preference 192: use option blue-192.",
+        "source_turn_ids": [
+          "user-192"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:38.142789+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-193",
+        "text": "Preference 193 corrected: use option green-193.",
+        "source_turn_ids": [
+          "user-193"
+        ],
+        "source_policy_ids": [
+          "policy-correct-195"
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:38.142789+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-195",
+        "text": "Preference 195: use option blue-195.",
+        "source_turn_ids": [
+          "user-195"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:38.142789+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-196",
+        "text": "Preference 196: use option blue-196.",
+        "source_turn_ids": [
+          "user-196"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:38.142789+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-197",
+        "text": "Preference 197: use option blue-197.",
+        "source_turn_ids": [
+          "user-197"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:38.142789+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-198",
+        "text": "Preference 198: use option blue-198.",
+        "source_turn_ids": [
+          "user-198"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:38.142789+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-199",
+        "text": "Preference 199: use option blue-199.",
+        "source_turn_ids": [
+          "user-199"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:38.142789+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      },
+      {
+        "claim_id": "user-200",
+        "text": "Preference 200: use option blue-200.",
+        "source_turn_ids": [
+          "user-200"
+        ],
+        "source_policy_ids": [
+          null
+        ],
+        "confidence": 1.0,
+        "status": "explicit",
+        "generated_at_utc": "2026-09-01T10:17:38.142789+00:00",
+        "summarizer": "model-v2:openai:gpt-5.6-luna"
+      }
+    ],
+    "baseline_claim_count": 62,
+    "candidate_claim_count": 30,
+    "shared_claim_count": 30,
+    "baseline_only_claim_count": 32,
+    "candidate_only_claim_count": 0,
+    "unsupported_claim_count": 0,
+    "unsupported_claim_rate": 0.0,
+    "contradiction_rate": 0.0,
+    "inferred_claim_count": 0,
+    "provenance_failure_count": 0,
+    "factual_coverage": 0.4838709677419355,
+    "provenance_coverage": 1.0,
+    "compression_ratio": 0.5490689481630598,
+    "stale_claim_rate": 0.0,
+    "correction_adherence": 1.0,
+    "forgetting_adherence": 1.0,
+    "latency_seconds": 19.95124800000002,
+    "token_cost": null,
+    "storage_bytes": 8609,
+    "accepted": true,
+    "rejection_reason": null
+  }
+]

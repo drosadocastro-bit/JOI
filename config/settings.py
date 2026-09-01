@@ -70,6 +70,26 @@ def _elevenlabs_base_url_env(required: bool) -> str:
     return value
 
 
+def _openai_base_url_env(required: bool) -> str:
+    value = os.getenv('OPENAI_BASE_URL', 'https://api.openai.com/v1').rstrip('/')
+    if not required:
+        return value
+    parsed = urllib.parse.urlsplit(value)
+    trusted = (
+        parsed.scheme == 'https'
+        and parsed.hostname == 'api.openai.com'
+        and parsed.port in {None, 443}
+        and parsed.path == '/v1'
+        and not parsed.username
+        and not parsed.password
+        and not parsed.query
+        and not parsed.fragment
+    )
+    if not trusted:
+        raise ValueError('OPENAI_BASE_URL must be the official HTTPS OpenAI endpoint')
+    return value
+
+
 @dataclass(frozen=True)
 class Settings:
     app_name: str
@@ -103,6 +123,11 @@ class Settings:
     model_compact_memory_enabled: bool
     model_compact_memory_path: str
     compact_memory_evaluation_path: str
+    compact_memory_provider: str
+    openai_api_key: str = field(repr=False)
+    openai_model: str
+    openai_base_url: str
+    openai_timeout_seconds: int
 
     @classmethod
     def load(cls):
@@ -125,6 +150,20 @@ class Settings:
             raise ValueError(
                 'model compact memory requires ENABLE_COMPACT_MEMORY=true'
             )
+        compact_memory_provider = _choice_env(
+            'COMPACT_MEMORY_PROVIDER',
+            'local',
+            {'local', 'openai'},
+        )
+        openai_compact_enabled = (
+            model_compact_memory_enabled and compact_memory_provider == 'openai'
+        )
+        openai_api_key = os.getenv('OPENAI_API_KEY', '')
+        if openai_compact_enabled:
+            if not cloud_enabled:
+                raise ValueError('OpenAI compact memory requires CLOUD_ENABLED=true')
+            if not openai_api_key:
+                raise ValueError('OpenAI compact memory requires OPENAI_API_KEY')
         compact_memory_max_characters = _positive_int_env(
             'COMPACT_MEMORY_MAX_CHARACTERS',
             2000,
@@ -207,4 +246,9 @@ class Settings:
                 'COMPACT_MEMORY_EVALUATION_PATH',
                 str(root / 'data' / 'memory' / 'compact-memory-evaluation.json'),
             ),
+            compact_memory_provider=compact_memory_provider,
+            openai_api_key=openai_api_key,
+            openai_model=os.getenv('OPENAI_MODEL', 'gpt-5.6-luna'),
+            openai_base_url=_openai_base_url_env(openai_compact_enabled),
+            openai_timeout_seconds=_positive_int_env('OPENAI_TIMEOUT_SECONDS', 60),
         )

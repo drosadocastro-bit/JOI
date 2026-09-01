@@ -1,4 +1,5 @@
 from brain.local_llm import LocalLMStudioBrain
+from brain.openai_compact_provider import OpenAICompactSummarizerProvider
 from core.router import BrainRouter
 from core.state import JoiState
 from memory.compact_memory import (
@@ -12,6 +13,7 @@ from memory.compact_memory import (
     ModelCompactMemoryStore,
     ModelCompactMemoryWorker,
     ModelCompactSummarizer,
+    ProviderBackedCompactSummarizer,
 )
 from memory.memory_store import EpisodicMemoryStore
 from memory.session_memory import SessionMemory
@@ -68,14 +70,28 @@ class JoiOrchestrator:
             and self.memory_store is not None
         ):
             try:
-                model_brain = LocalLMStudioBrain(
-                    settings.lmstudio_base_url,
-                    settings.local_model,
-                    settings.request_timeout_seconds,
-                )
+                if getattr(settings, 'compact_memory_provider', 'local') == 'openai':
+                    provider = OpenAICompactSummarizerProvider(
+                        api_key=settings.openai_api_key,
+                        model=settings.openai_model,
+                        cloud_authorized=lambda: self.state.cloud_enabled,
+                        base_url=settings.openai_base_url,
+                        timeout_seconds=settings.openai_timeout_seconds,
+                    )
+                    summarizer = ProviderBackedCompactSummarizer(provider)
+                else:
+                    model_brain = LocalLMStudioBrain(
+                        settings.lmstudio_base_url,
+                        settings.local_model,
+                        settings.request_timeout_seconds,
+                    )
+                    summarizer = ModelCompactSummarizer(
+                        model_brain,
+                        settings.local_model,
+                    )
                 model_manager = ModelCompactMemoryManager(
                     store=ModelCompactMemoryStore(settings.model_compact_memory_path),
-                    summarizer=ModelCompactSummarizer(model_brain, settings.local_model),
+                    summarizer=summarizer,
                     policy_revision_reader=lambda: (
                         self.memory_store.effective_snapshot().policy_revision
                     ),

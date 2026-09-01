@@ -1,0 +1,80 @@
+{
+  "summary_version": 1,
+  "generated_at_utc": "2026-08-31T19:05:20.444157+00:00",
+  "summarizer": "model-v2:openai:gpt-5.6-luna",
+  "source_policy_revision": 0,
+  "claims": [
+    {
+      "claim_id": "user-1",
+      "text": "Preference 1: use option blue-1.",
+      "source_turn_ids": [
+        "user-1"
+      ],
+      "source_policy_ids": [
+        null
+      ],
+      "confidence": 1.0,
+      "status": "explicit",
+      "generated_at_utc": "2026-08-31T19:05:20.444157+00:00",
+      "summarizer": "model-v2:openai:gpt-5.6-luna"
+    },
+    {
+      "claim_id": "user-2",
+      "text": "Preference 2: use option blue-2.",
+      "source_turn_ids": [
+        "user-2"
+      ],
+      "source_policy_ids": [
+        null
+      ],
+      "confidence": 1.0,
+      "status": "explicit",
+      "generated_at_utc": "2026-08-31T19:05:20.444157+00:00",
+      "summarizer": "model-v2:openai:gpt-5.6-luna"
+    },
+    {
+      "claim_id": "user-3",
+      "text": "Preference 3: use option blue-3.",
+      "source_turn_ids": [
+        "user-3"
+      ],
+      "source_policy_ids": [
+        null
+      ],
+      "confidence": 1.0,
+      "status": "explicit",
+      "generated_at_utc": "2026-08-31T19:05:20.444157+00:00",
+      "summarizer": "model-v2:openai:gpt-5.6-luna"
+    },
+    {
+      "claim_id": "user-4",
+      "text": "Preference 4: use option blue-4.",
+      "source_turn_ids": [
+        "user-4"
+      ],
+      "source_policy_ids": [
+        null
+      ],
+      "confidence": 1.0,
+      "status": "explicit",
+      "generated_at_utc": "2026-08-31T19:05:20.444157+00:00",
+      "summarizer": "model-v2:openai:gpt-5.6-luna"
+    },
+    {
+      "claim_id": "user-5",
+      "text": "Preference 5: use option blue-5.",
+      "source_turn_ids": [
+        "user-5"
+      ],
+      "source_policy_ids": [
+        null
+      ],
+      "confidence": 1.0,
+      "status": "explicit",
+      "generated_at_utc": "2026-08-31T19:05:20.444157+00:00",
+      "summarizer": "model-v2:openai:gpt-5.6-luna"
+    }
+  ],
+  "provider": "openai",
+  "model": "gpt-5.6-luna"
+}

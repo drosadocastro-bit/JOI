@@ -1,0 +1,290 @@
+{
+  "summary_version": 1,
+  "generated_at_utc": "2026-09-01T15:11:46.002430+00:00",
+  "summarizer": "model-v2:openai:gpt-5.6-luna",
+  "source_policy_revision": 4,
+  "claims": [
+    {
+      "claim_id": "preference-1",
+      "text": "I prefer concise answers.",
+      "source_turn_ids": [
+        "preference-1"
+      ],
+      "source_policy_ids": [
+        null
+      ],
+      "confidence": 1.0,
+      "status": "explicit",
+      "generated_at_utc": "2026-09-01T15:11:46.002430+00:00",
+      "summarizer": "model-v2:openai:gpt-5.6-luna"
+    },
+    {
+      "claim_id": "preference-2",
+      "text": "Use metric units when giving measurements.",
+      "source_turn_ids": [
+        "preference-2"
+      ],
+      "source_policy_ids": [
+        null
+      ],
+      "confidence": 1.0,
+      "status": "explicit",
+      "generated_at_utc": "2026-09-01T15:11:46.002430+00:00",
+      "summarizer": "model-v2:openai:gpt-5.6-luna"
+    },
+    {
+      "claim_id": "preference-3",
+      "text": "I prefer Python examples over Java examples.",
+      "source_turn_ids": [
+        "preference-3"
+      ],
+      "source_policy_ids": [
+        null
+      ],
+      "confidence": 1.0,
+      "status": "explicit",
+      "generated_at_utc": "2026-09-01T15:11:46.002430+00:00",
+      "summarizer": "model-v2:openai:gpt-5.6-luna"
+    },
+    {
+      "claim_id": "preference-4",
+      "text": "Call me Dani.",
+      "source_turn_ids": [
+        "preference-4"
+      ],
+      "source_policy_ids": [
+        null
+      ],
+      "confidence": 1.0,
+      "status": "explicit",
+      "generated_at_utc": "2026-09-01T15:11:46.002430+00:00",
+      "summarizer": "model-v2:openai:gpt-5.6-luna"
+    },
+    {
+      "claim_id": "correction-1",
+      "text": "Correction: my timezone is America/New_York.",
+      "source_turn_ids": [
+        "correction-1"
+      ],
+      "source_policy_ids": [
+        "policy-correct-1"
+      ],
+      "confidence": 1.0,
+      "status": "explicit",
+      "generated_at_utc": "2026-09-01T15:11:46.002430+00:00",
+      "summarizer": "model-v2:openai:gpt-5.6-luna"
+    },
+    {
+      "claim_id": "correction-2",
+      "text": "Correction: the project codename is JOI, not Nova.",
+      "source_turn_ids": [
+        "correction-2"
+      ],
+      "source_policy_ids": [
+        "policy-correct-2"
+      ],
+      "confidence": 1.0,
+      "status": "explicit",
+      "generated_at_utc": "2026-09-01T15:11:46.002430+00:00",
+      "summarizer": "model-v2:openai:gpt-5.6-luna"
+    },
+    {
+      "claim_id": "correction-3",
+      "text": "Correction: the deployment target is Windows 11.",
+      "source_turn_ids": [
+        "correction-3"
+      ],
+      "source_policy_ids": [
+        "policy-correct-3"
+      ],
+      "confidence": 1.0,
+      "status": "explicit",
+      "generated_at_utc": "2026-09-01T15:11:46.002430+00:00",
+      "summarizer": "model-v2:openai:gpt-5.6-luna"
+    },
+    {
+      "claim_id": "correction-4",
+      "text": "Correction: use the green configuration, not blue.",
+      "source_turn_ids": [
+        "correction-4"
+      ],
+      "source_policy_ids": [
+        "policy-correct-4"
+      ],
+      "confidence": 1.0,
+      "status": "explicit",
+      "generated_at_utc": "2026-09-01T15:11:46.002430+00:00",
+      "summarizer": "model-v2:openai:gpt-5.6-luna"
+    },
+    {
+      "claim_id": "relationship-1",
+      "text": "My sister is named Ana.",
+      "source_turn_ids": [
+        "relationship-1"
+      ],
+      "source_policy_ids": [
+        null
+      ],
+      "confidence": 1.0,
+      "status": "explicit",
+      "generated_at_utc": "2026-09-01T15:11:46.002430+00:00",
+      "summarizer": "model-v2:openai:gpt-5.6-luna"
+    },
+    {
+      "claim_id": "relationship-2",
+      "text": "Morgan is my emergency contact.",
+      "source_turn_ids": [
+        "relationship-2"
+      ],
+      "source_policy_ids": [
+        null
+      ],
+      "confidence": 1.0,
+      "status": "explicit",
+      "generated_at_utc": "2026-09-01T15:11:46.002430+00:00",
+      "summarizer": "model-v2:openai:gpt-5.6-luna"
+    },
+    {
+      "claim_id": "relationship-3",
+      "text": "I am the owner of the JOI repository.",
+      "source_turn_ids": [
+        "relationship-3"
+      ],
+      "source_policy_ids": [
+        null
+      ],
+      "confidence": 1.0,
+      "status": "explicit",
+      "generated_at_utc": "2026-09-01T15:11:46.002430+00:00",
+      "summarizer": "model-v2:openai:gpt-5.6-luna"
+    },
+    {
+      "claim_id": "relationship-4",
+      "text": "Dr. Lee is my primary physician.",
+      "source_turn_ids": [
+        "relationship-4"
+      ],
+      "source_policy_ids": [
+        null
+      ],
+      "confidence": 1.0,
+      "status": "explicit",
+      "generated_at_utc": "2026-09-01T15:11:46.002430+00:00",
+      "summarizer": "model-v2:openai:gpt-5.6-luna"
+    },
+    {
+      "claim_id": "task-1",
+      "text": "The database migration is awaiting human approval.",
+      "source_turn_ids": [
+        "task-1"
+      ],
+      "source_policy_ids": [
+        null
+      ],
+      "confidence": 1.0,
+      "status": "explicit",
+      "generated_at_utc": "2026-09-01T15:11:46.002430+00:00",
+      "summarizer": "model-v2:openai:gpt-5.6-luna"
+    },
+    {
+      "claim_id": "task-2",
+      "text": "The current release candidate is build 42.",
+      "source_turn_ids": [
+        "task-2"
+      ],
+      "source_policy_ids": [
+        null
+      ],
+      "confidence": 1.0,
+      "status": "explicit",
+      "generated_at_utc": "2026-09-01T15:11:46.002430+00:00",
+      "summarizer": "model-v2:openai:gpt-5.6-luna"
+    },
+    {
+      "claim_id": "task-3",
+      "text": "The backup verification remains incomplete.",
+      "source_turn_ids": [
+        "task-3"
+      ],
+      "source_policy_ids": [
+        null
+      ],
+      "confidence": 1.0,
+      "status": "explicit",
+      "generated_at_utc": "2026-09-01T15:11:46.002430+00:00",
+      "summarizer": "model-v2:openai:gpt-5.6-luna"
+    },
+    {
+      "claim_id": "task-4",
+      "text": "The next task is to review the retention report.",
+      "source_turn_ids": [
+        "task-4"
+      ],
+      "source_policy_ids": [
+        null
+      ],
+      "confidence": 1.0,
+      "status": "explicit",
+      "generated_at_utc": "2026-09-01T15:11:46.002430+00:00",
+      "summarizer": "model-v2:openai:gpt-5.6-luna"
+    },
+    {
+      "claim_id": "safety-1",
+      "text": "I have a severe penicillin allergy.",
+      "source_turn_ids": [
+        "safety-1"
+      ],
+      "source_policy_ids": [
+        null
+      ],
+      "confidence": 1.0,
+      "status": "explicit",
+      "generated_at_utc": "2026-09-01T15:11:46.002430+00:00",
+      "summarizer": "model-v2:openai:gpt-5.6-luna"
+    },
+    {
+      "claim_id": "safety-2",
+      "text": "Never execute real-world actions without my confirmation.",
+      "source_turn_ids": [
+        "safety-2"
+      ],
+      "source_policy_ids": [
+        null
+      ],
+      "confidence": 1.0,
+      "status": "explicit",
+      "generated_at_utc": "2026-09-01T15:11:46.002430+00:00",
+      "summarizer": "model-v2:openai:gpt-5.6-luna"
+    },
+    {
+      "claim_id": "safety-3",
+      "text": "Do not send private memory to cloud providers unless CLOUD is ON.",
+      "source_turn_ids": [
+        "safety-3"
+      ],
+      "source_policy_ids": [
+        null
+      ],
+      "confidence": 1.0,
+      "status": "explicit",
+      "generated_at_utc": "2026-09-01T15:11:46.002430+00:00",
+      "summarizer": "model-v2:openai:gpt-5.6-luna"
+    },
+    {
+      "claim_id": "safety-4",
+      "text": "Stop immediately if a command could delete production data.",
+      "source_turn_ids": [
+        "safety-4"
+      ],
+      "source_policy_ids": [
+        null
+      ],
+      "confidence": 1.0,
+      "status": "explicit",
+      "generated_at_utc": "2026-09-01T15:11:46.002430+00:00",
+      "summarizer": "model-v2:openai:gpt-5.6-luna"
+    }
+  ],
+  "provider": "openai",
+  "model": "gpt-5.6-luna"
+}

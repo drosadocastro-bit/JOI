@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "benchmark": "joi-retention-quality-v1",
+  "human_review_complete": true,
+  "human_review_supplied_by_user": true,
+  "final_decision": "PASS",
+  "decision_basis": {
+    "raw_factual_coverage_secondary": 0.8333333333333334,
+    "weighted_retention_score_primary": 1.0,
+    "critical_retention_rate": 1.0,
+    "forbidden_loss_count": 0,
+    "provenance_failure_count": 0,
+    "acceptable_compression_count": 4,
+    "harmful_omission_count": 0,
+    "reviewer_disagreement_count": 0,
+    "unreviewed_omission_count": 0
+  },
+  "publication_enabled": false,
+  "phase_5a_status": "OPEN",
+  "promotion_requires_explicit_human_authorization": true,
+  "provider_calls_during_finalization": 0,
+  "algorithm": "sha256",
+  "artifacts": [
+    {
+      "path": "luna/human-review.json",
+      "sha256": "161773b2527bbe6146062f51c89f299dca6bed87e4087dc3b74e1fd32087121e",
+      "bytes": 2284
+    },
+    {
+      "path": "luna/retention-quality-final.json",
+      "sha256": "7f0554fb6e133fd50b5af2be2d954d96be3eb79989b7da6ae8b318d9afb1d825",
+      "bytes": 6140
+    },
+    {
+      "path": "luna/retention-quality-final.md",
+      "sha256": "d25e705d7b4f0105fd8d70f32b37bf3672026280fa09817ac6b8b77fc85d5b26",
+      "bytes": 918
+    }
+  ]
+}

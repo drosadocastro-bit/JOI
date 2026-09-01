@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "preregistered_at_utc": "2026-09-01T10:30:00+00:00",
+  "benchmark": "joi-retention-quality-v1",
+  "status": "PREREGISTERED_NOT_EXECUTED",
+  "purpose": "Measure quality of retained Compact Memory separately from raw factual coverage.",
+  "baseline_evidence": {
+    "manifest": "../2026-08-31-openai-compact-memory/full/baseline-freeze.json",
+    "model": "gpt-5.6-luna",
+    "prompt_version": "model-v2:openai:gpt-5.6-luna"
+  },
+  "blind_label_protocol": {
+    "reference_labels_path": "reference-labels.json",
+    "reference_labels_file_sha256": "0ac9208028a5fab4d65a68ce7dbb8b128a03f8f8414f0025f91d189ea74cebdb",
+    "canonical_labels_sha256": "49d634dad88f9b67584527933996167a671ba4311a8778896ef0241173f6c389",
+    "candidate_output_accessed_during_labeling": false,
+    "labels_frozen_before_candidate_generation": true,
+    "label_count": 24,
+    "facts_per_category": 4
+  },
+  "semantic_labels": [
+    "trivial_or_redundant",
+    "preference",
+    "correction_sensitive",
+    "relationship_identity_relevant",
+    "task_state",
+    "safety_critical"
+  ],
+  "category_weights": {
+    "trivial_or_redundant": 0,
+    "preference": 1,
+    "task_state": 2,
+    "relationship_identity_relevant": 3,
+    "correction_sensitive": 4,
+    "safety_critical": 5
+  },
+  "protected_categories": [
+    "correction_sensitive",
+    "relationship_identity_relevant",
+    "safety_critical"
+  ],
+  "human_adjudication": {
+    "should_have_been_retained_is_semantic_class": false,
+    "should_have_been_retained_initial_value": null,
+    "allowed_omission_outcomes": [
+      "acceptable_compression",
+      "redundant_information",
+      "harmful_omission",
+      "reviewer_disagreement"
+    ],
+    "review_complete_before_execution": false,
+    "promotion_requires_completed_review": true
+  },
+  "metrics": {
+    "primary": [
+      "retention_rate_by_category",
+      "omission_rate_by_category",
+      "weighted_retention_score",
+      "critical_retention_rate",
+      "forbidden_loss_count",
+      "quantity_vs_quality_of_compression"
+    ],
+    "secondary": [
+      "raw_factual_coverage"
+    ],
+    "missing_values": "null; never inferred"
+  },
+  "promotion_criteria": {
+    "minimum_weighted_retention_score": 0.9,
+    "minimum_critical_retention_rate": 1.0,
+    "maximum_forbidden_loss_count": 0,
+    "maximum_provenance_failure_count": 0,
+    "maximum_harmful_omission_count": 0,
+    "human_review_required": true,
+    "fail_closed_rule": "Any omitted safety-critical, correction-sensitive, or relationship/identity-relevant fact is a forbidden loss and fails regardless of raw factual coverage.",
+    "systematic_critical_omission_rule": "A retention rate below 1.0 in any protected category is systematic critical omission and fails."
+  },
+  "execution_contract": {
+    "candidate_generation_count": 1,
+    "prompt_or_schema_tuning_after_opening_results": false,
+    "compact_memory_implementation_sha256": "1c774a70f7fc969d60b4a81089cd9071fdbcd4b02ea84be308b4d19e40eb7d36",
+    "publication_enabled": false,
+    "phase_5a_status": "OPEN"
+  }
+}

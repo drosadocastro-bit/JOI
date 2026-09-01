@@ -232,3 +232,64 @@ def test_settings_loads_model_compact_memory_paths(monkeypatch, tmp_path):
     assert settings.model_compact_memory_enabled is True
     assert settings.model_compact_memory_path == str(candidate_path)
     assert settings.compact_memory_evaluation_path == str(report_path)
+
+
+def test_settings_loads_openai_compact_memory_provider(monkeypatch):
+    monkeypatch.setenv('ENABLE_PERSISTENT_MEMORY', 'true')
+    monkeypatch.setenv('ENABLE_COMPACT_MEMORY', 'true')
+    monkeypatch.setenv('ENABLE_MODEL_COMPACT_MEMORY', 'true')
+    monkeypatch.setenv('MEMORY_MODE', 'persistent')
+    monkeypatch.setenv('CLOUD_ENABLED', 'true')
+    monkeypatch.setenv('COMPACT_MEMORY_PROVIDER', 'openai')
+    monkeypatch.setenv('OPENAI_API_KEY', 'sk-test-secret')
+
+    settings = Settings.load()
+
+    assert settings.compact_memory_provider == 'openai'
+    assert settings.openai_model == 'gpt-5.6-luna'
+    assert settings.openai_api_key == 'sk-test-secret'
+    assert 'sk-test-secret' not in repr(settings)
+
+
+def test_settings_rejects_openai_provider_without_cloud_opt_in(monkeypatch):
+    monkeypatch.setenv('ENABLE_PERSISTENT_MEMORY', 'true')
+    monkeypatch.setenv('ENABLE_COMPACT_MEMORY', 'true')
+    monkeypatch.setenv('ENABLE_MODEL_COMPACT_MEMORY', 'true')
+    monkeypatch.setenv('MEMORY_MODE', 'persistent')
+    monkeypatch.setenv('COMPACT_MEMORY_PROVIDER', 'openai')
+    monkeypatch.setenv('OPENAI_API_KEY', 'sk-test-secret')
+    monkeypatch.setenv('CLOUD_ENABLED', 'false')
+
+    with pytest.raises(ValueError, match='requires CLOUD_ENABLED=true'):
+        Settings.load()
+
+
+def test_settings_rejects_openai_provider_without_key(monkeypatch):
+    monkeypatch.setenv('ENABLE_PERSISTENT_MEMORY', 'true')
+    monkeypatch.setenv('ENABLE_COMPACT_MEMORY', 'true')
+    monkeypatch.setenv('ENABLE_MODEL_COMPACT_MEMORY', 'true')
+    monkeypatch.setenv('MEMORY_MODE', 'persistent')
+    monkeypatch.setenv('COMPACT_MEMORY_PROVIDER', 'openai')
+    monkeypatch.setenv('CLOUD_ENABLED', 'true')
+    monkeypatch.setenv('OPENAI_API_KEY', '')
+
+    with pytest.raises(ValueError, match='requires OPENAI_API_KEY'):
+        Settings.load()
+
+
+@pytest.mark.parametrize(
+    'base_url',
+    ['http://api.openai.com/v1', 'https://example.com/v1', 'https://api.openai.com.evil/v1'],
+)
+def test_settings_rejects_untrusted_openai_base_url(monkeypatch, base_url):
+    monkeypatch.setenv('ENABLE_PERSISTENT_MEMORY', 'true')
+    monkeypatch.setenv('ENABLE_COMPACT_MEMORY', 'true')
+    monkeypatch.setenv('ENABLE_MODEL_COMPACT_MEMORY', 'true')
+    monkeypatch.setenv('MEMORY_MODE', 'persistent')
+    monkeypatch.setenv('COMPACT_MEMORY_PROVIDER', 'openai')
+    monkeypatch.setenv('CLOUD_ENABLED', 'true')
+    monkeypatch.setenv('OPENAI_API_KEY', 'sk-test-secret')
+    monkeypatch.setenv('OPENAI_BASE_URL', base_url)
+
+    with pytest.raises(ValueError, match='official HTTPS OpenAI endpoint'):
+        Settings.load()

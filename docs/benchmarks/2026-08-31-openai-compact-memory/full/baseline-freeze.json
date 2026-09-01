@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "frozen_at_utc": "2026-09-01T10:17:57.377899+00:00",
+  "baseline_commit": "8f004a7",
+  "provider": "openai",
+  "model": "gpt-5.6-luna",
+  "prompt_version": "model-v2:openai:gpt-5.6-luna",
+  "publication_enabled": false,
+  "phase_5a_status": "OPEN",
+  "algorithm": "sha256",
+  "artifacts": [
+    {
+      "path": "cloud-benchmark.json",
+      "sha256": "78ebbaf293c1717e5e954e0a8b0b84b34f133f33350bbe8993b4b572851689bc",
+      "bytes": 4223
+    },
+    {
+      "path": "cloud-benchmark.md",
+      "sha256": "f5abafb88680a0196d3d52c0dd3bd008de38e71d7516931110dbefcf0f370a4b",
+      "bytes": 787
+    },
+    {
+      "path": "model-candidate.json",
+      "sha256": "e1c6406cc659914d0b80215770a1021c3a23e77ba0fd09675f66c350bd431843",
+      "bytes": 11330
+    },
+    {
+      "path": "update-reports.json",
+      "sha256": "a29236123d932af656355deefdf2029f5314ec463b5f4ba5ec895886b855d5cb",
+      "bytes": 95118
+    }
+  ]
+}

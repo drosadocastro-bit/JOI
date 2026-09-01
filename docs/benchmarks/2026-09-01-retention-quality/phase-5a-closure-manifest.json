@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "manifest": "JOI Phase 5A Closure Evidence",
+  "created_at_utc": "2026-09-01T15:44:31.5056970Z",
+  "decision": "PASS",
+  "phase_status": "CLOSED_WITH_KNOWN_LIMITATIONS",
+  "frozen_source_baseline_commit": "8f004a7",
+  "closure_record_commit": null,
+  "worktree_clean": false,
+  "publication_enabled": false,
+  "promotion_authorized": false,
+  "algorithm": "sha256",
+  "artifacts": [
+    {
+      "path": "../../phase-5a-closure-audit.md",
+      "sha256": "bbe7de501f9aeab6a6c0193c97972cb4d0843718ffdb440148d97c7bdaf72ead",
+      "bytes": 12409
+    },
+    {
+      "path": "../../technical-debt-register.json",
+      "sha256": "555b079e734eb7a7c5db5b4084a3ad93af2c1b4c80d2008f42ea717cee5bbd2e",
+      "bytes": 10152
+    },
+    {
+      "path": "phase-5a-closure-record.json",
+      "sha256": "96d1168a11b3f8c31d3cb77ddea33845fd624019263b6e6b387bde7b78d95ed5",
+      "bytes": 5405
+    }
+  ]
+}
