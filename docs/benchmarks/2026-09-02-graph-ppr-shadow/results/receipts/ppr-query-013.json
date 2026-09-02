@@ -1,0 +1,36 @@
+{
+  "benchmark_query_id": "ppr-query-013",
+  "extractor_version": "explicit-patterns-v1",
+  "filtered_candidates": [],
+  "graph_snapshot_id": "ad0539cca8629ceee7f658938b0fa8bda48f6dbd2f03a277104fc7d1424d44b2",
+  "latency_seconds": 0.0008146000000124332,
+  "policy_revision": 3,
+  "ppr": {
+    "converged": true,
+    "damping_factor": 0.85,
+    "iterations": 0,
+    "max_iterations": 100,
+    "tolerance": 1e-12
+  },
+  "query_sha256": "d589a76b46ff4789f03729212e2e004dd199545da49a2101c0a6328aa71bbe8a",
+  "query_turn_id": "ppr-query-013-user",
+  "raw_ppr_candidates": [],
+  "raw_seed_entities": [
+    {
+      "canonical_label": "dentist appointment is tuesday",
+      "entity_id": "entity-c77e5176760b2c6fa7d816eb",
+      "entity_type": "fact",
+      "surface_form": "dentist appointment is Tuesday"
+    }
+  ],
+  "receipt_id": "retrieval-7de7f3db8b111129ad593fe7",
+  "rejected_candidates": [],
+  "retrieval_count": 1,
+  "retrieval_influence_count": 0,
+  "retrieval_injection_count": 0,
+  "schema_version": 1,
+  "seed_entity_ids": [],
+  "unresolved_surface_forms": [
+    "dentist appointment is Tuesday"
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "benchmark_query_id": "ppr-query-018",
+  "extractor_version": "explicit-patterns-v1",
+  "filtered_candidates": [],
+  "graph_snapshot_id": "ad0539cca8629ceee7f658938b0fa8bda48f6dbd2f03a277104fc7d1424d44b2",
+  "latency_seconds": 0.0007857999999032472,
+  "policy_revision": 3,
+  "ppr": {
+    "converged": true,
+    "damping_factor": 0.85,
+    "iterations": 1,
+    "max_iterations": 100,
+    "tolerance": 1e-12
+  },
+  "query_sha256": "dceb441cd20e3ad662d62b966a74ce9de9298aed6494859b2e5695886911812f",
+  "query_turn_id": "ppr-query-018-user",
+  "raw_ppr_candidates": [
+    {
+      "node_id": "entity-eccd2538bdd32733c0dd0418",
+      "score": 1.0
+    }
+  ],
+  "raw_seed_entities": [
+    {
+      "canonical_label": "release is friday",
+      "entity_id": "entity-eccd2538bdd32733c0dd0418",
+      "entity_type": "fact",
+      "surface_form": "release is Friday"
+    }
+  ],
+  "receipt_id": "retrieval-07f383231a6d869719385be8",
+  "rejected_candidates": [
+    {
+      "node_id": "entity-eccd2538bdd32733c0dd0418",
+      "policy_ids": [],
+      "reason": "QUERY_SEED"
+    }
+  ],
+  "retrieval_count": 1,
+  "retrieval_influence_count": 0,
+  "retrieval_injection_count": 0,
+  "schema_version": 1,
+  "seed_entity_ids": [
+    "entity-eccd2538bdd32733c0dd0418"
+  ],
+  "unresolved_surface_forms": []
+}

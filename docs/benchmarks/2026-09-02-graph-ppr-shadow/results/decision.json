@@ -1,0 +1,8 @@
+{
+  "benchmark": "joi-graph-ppr-shadow-v1",
+  "decision": "FAIL",
+  "evidence": "report.json",
+  "failure_reason": "Frozen MRR threshold missed: 0.4444444444444444 < 0.75",
+  "live_retrieval_authorized": false,
+  "no_tuning_after_results_opened": true
+}

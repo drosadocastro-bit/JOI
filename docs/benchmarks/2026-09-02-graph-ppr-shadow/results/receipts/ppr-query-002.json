@@ -1,0 +1,140 @@
+{
+  "benchmark_query_id": "ppr-query-002",
+  "extractor_version": "explicit-patterns-v1",
+  "filtered_candidates": [
+    {
+      "aliases": [
+        "Project Atlas"
+      ],
+      "canonical_label": "project atlas",
+      "entity_type": "project",
+      "historical_status": "effective",
+      "node_id": "entity-ec8f559078ae93845a60253d",
+      "score": 0.280371905085275,
+      "source_refs": [
+        {
+          "exchange_id": "ppr-source-002",
+          "observed_at_utc": "2026-09-02T09:01:00+00:00",
+          "policy_ids": [
+            "ppr-policy-002"
+          ],
+          "suppressed": false,
+          "turn_ids": [
+            "ppr-source-002-user"
+          ]
+        },
+        {
+          "exchange_id": "ppr-source-014",
+          "observed_at_utc": "2026-09-02T09:13:00+00:00",
+          "policy_ids": [
+            null
+          ],
+          "suppressed": false,
+          "turn_ids": [
+            "ppr-source-014-user"
+          ]
+        }
+      ]
+    },
+    {
+      "aliases": [
+        "review graph schema"
+      ],
+      "canonical_label": "review graph schema",
+      "entity_type": "task_topic",
+      "historical_status": "effective",
+      "node_id": "entity-c9b6b59671db1a6bf7688c08",
+      "score": 0.179087554373301,
+      "source_refs": [
+        {
+          "exchange_id": "ppr-source-003",
+          "observed_at_utc": "2026-09-02T09:02:00+00:00",
+          "policy_ids": [
+            null
+          ],
+          "suppressed": false,
+          "turn_ids": [
+            "ppr-source-003-user"
+          ]
+        }
+      ]
+    },
+    {
+      "aliases": [
+        "Lisbon"
+      ],
+      "canonical_label": "lisbon",
+      "entity_type": "place",
+      "historical_status": "effective",
+      "node_id": "entity-3cac7375e3d1c6bf0b3b48f5",
+      "score": 0.119158059661146,
+      "source_refs": [
+        {
+          "exchange_id": "ppr-source-002",
+          "observed_at_utc": "2026-09-02T09:01:00+00:00",
+          "policy_ids": [
+            "ppr-policy-002"
+          ],
+          "suppressed": false,
+          "turn_ids": [
+            "ppr-source-002-user"
+          ]
+        }
+      ]
+    }
+  ],
+  "graph_snapshot_id": "ad0539cca8629ceee7f658938b0fa8bda48f6dbd2f03a277104fc7d1424d44b2",
+  "latency_seconds": 0.0018267000000378175,
+  "policy_revision": 3,
+  "ppr": {
+    "converged": true,
+    "damping_factor": 0.85,
+    "iterations": 83,
+    "max_iterations": 100,
+    "tolerance": 1e-12
+  },
+  "query_sha256": "c8cc4bb9fe11c4c630abe9cc9607d95fd9ea59f1e85a00fc4b7ec29dbe5e48da",
+  "query_turn_id": "ppr-query-002-user",
+  "raw_ppr_candidates": [
+    {
+      "node_id": "entity-7cdf0a6a6141e79bfa52758c",
+      "score": 0.421382480878356
+    },
+    {
+      "node_id": "entity-ec8f559078ae93845a60253d",
+      "score": 0.280371905085275
+    },
+    {
+      "node_id": "entity-c9b6b59671db1a6bf7688c08",
+      "score": 0.179087554373301
+    },
+    {
+      "node_id": "entity-3cac7375e3d1c6bf0b3b48f5",
+      "score": 0.119158059661146
+    }
+  ],
+  "raw_seed_entities": [
+    {
+      "canonical_label": "source provenance",
+      "entity_id": "entity-7cdf0a6a6141e79bfa52758c",
+      "entity_type": "concept",
+      "surface_form": "source provenance"
+    }
+  ],
+  "receipt_id": "retrieval-8bcc120e4580ebab76a70cac",
+  "rejected_candidates": [
+    {
+      "node_id": "entity-7cdf0a6a6141e79bfa52758c",
+      "policy_ids": [],
+      "reason": "QUERY_SEED"
+    }
+  ],
+  "retrieval_count": 1,
+  "retrieval_influence_count": 0,
+  "retrieval_injection_count": 0,
+  "schema_version": 1,
+  "seed_entity_ids": [
+    "entity-7cdf0a6a6141e79bfa52758c"
+  ],
+  "unresolved_surface_forms": []
+}

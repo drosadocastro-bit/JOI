@@ -1,0 +1,27 @@
+{
+  "benchmark_query_id": "ppr-query-017",
+  "extractor_version": "explicit-patterns-v1",
+  "filtered_candidates": [],
+  "graph_snapshot_id": "ad0539cca8629ceee7f658938b0fa8bda48f6dbd2f03a277104fc7d1424d44b2",
+  "latency_seconds": 0.0007414000001517707,
+  "policy_revision": 3,
+  "ppr": {
+    "converged": true,
+    "damping_factor": 0.85,
+    "iterations": 0,
+    "max_iterations": 100,
+    "tolerance": 1e-12
+  },
+  "query_sha256": "3a3f13beeb17f8e1eefd924e67c57643d26cde59260f182ef7312223d5e7e173",
+  "query_turn_id": "ppr-query-017-user",
+  "raw_ppr_candidates": [],
+  "raw_seed_entities": [],
+  "receipt_id": "retrieval-89e8440bdd880897ae00e415",
+  "rejected_candidates": [],
+  "retrieval_count": 1,
+  "retrieval_influence_count": 0,
+  "retrieval_injection_count": 0,
+  "schema_version": 1,
+  "seed_entity_ids": [],
+  "unresolved_surface_forms": []
+}

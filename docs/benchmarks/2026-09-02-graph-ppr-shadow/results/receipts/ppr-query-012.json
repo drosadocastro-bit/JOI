@@ -1,0 +1,36 @@
+{
+  "benchmark_query_id": "ppr-query-012",
+  "extractor_version": "explicit-patterns-v1",
+  "filtered_candidates": [],
+  "graph_snapshot_id": "ad0539cca8629ceee7f658938b0fa8bda48f6dbd2f03a277104fc7d1424d44b2",
+  "latency_seconds": 0.0034034000000247033,
+  "policy_revision": 3,
+  "ppr": {
+    "converged": true,
+    "damping_factor": 0.85,
+    "iterations": 0,
+    "max_iterations": 100,
+    "tolerance": 1e-12
+  },
+  "query_sha256": "6e97307c6378cf3cbd78476d7ce3e1e65d3120f2a1145b7274d9f0e2d0582665",
+  "query_turn_id": "ppr-query-012-user",
+  "raw_ppr_candidates": [],
+  "raw_seed_entities": [
+    {
+      "canonical_label": "project orion",
+      "entity_id": "entity-f7c71e078b14b181cc776114",
+      "entity_type": "project",
+      "surface_form": "Project Orion"
+    }
+  ],
+  "receipt_id": "retrieval-a51c56ad72b8ea7f3c015fd8",
+  "rejected_candidates": [],
+  "retrieval_count": 1,
+  "retrieval_influence_count": 0,
+  "retrieval_injection_count": 0,
+  "schema_version": 1,
+  "seed_entity_ids": [],
+  "unresolved_surface_forms": [
+    "Project Orion"
+  ]
+}

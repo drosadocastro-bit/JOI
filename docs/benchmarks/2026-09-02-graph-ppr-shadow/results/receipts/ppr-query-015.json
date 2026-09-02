@@ -1,0 +1,44 @@
+{
+  "benchmark_query_id": "ppr-query-015",
+  "extractor_version": "explicit-patterns-v1",
+  "filtered_candidates": [],
+  "graph_snapshot_id": "ad0539cca8629ceee7f658938b0fa8bda48f6dbd2f03a277104fc7d1424d44b2",
+  "latency_seconds": 0.0007692999997743755,
+  "policy_revision": 3,
+  "ppr": {
+    "converged": true,
+    "damping_factor": 0.85,
+    "iterations": 0,
+    "max_iterations": 100,
+    "tolerance": 1e-12
+  },
+  "query_sha256": "bd6673a9e7ae28b5412dbd82cc434262c6e63cf2014d619922fd7ee1df985b21",
+  "query_turn_id": "ppr-query-015-user",
+  "raw_ppr_candidates": [],
+  "raw_seed_entities": [
+    {
+      "canonical_label": "rome",
+      "entity_id": "entity-ff6fb4428e340de264a29e23",
+      "entity_type": "place",
+      "surface_form": "Rome"
+    }
+  ],
+  "receipt_id": "retrieval-e84d4b8842121c82c6f8e310",
+  "rejected_candidates": [
+    {
+      "node_id": "entity-ff6fb4428e340de264a29e23",
+      "policy_ids": [
+        "ppr-policy-003"
+      ],
+      "reason": "SUPERSEDED_SOURCE"
+    }
+  ],
+  "retrieval_count": 1,
+  "retrieval_influence_count": 0,
+  "retrieval_injection_count": 0,
+  "schema_version": 1,
+  "seed_entity_ids": [],
+  "unresolved_surface_forms": [
+    "Rome"
+  ]
+}
