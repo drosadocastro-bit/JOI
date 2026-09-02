@@ -127,6 +127,7 @@ class Settings:
     graph_memory_path: str
     graph_retrieval_enabled: bool
     graph_retrieval_receipt_path: str
+    contextual_retrieval_enabled: bool
     openai_model: str
     openai_base_url: str
     openai_timeout_seconds: int
@@ -161,6 +162,11 @@ class Settings:
         if graph_retrieval_enabled and not graph_memory_enabled:
             raise ValueError(
                 'graph retrieval requires ENABLE_GRAPH_MEMORY=true'
+            )
+        contextual_retrieval_enabled = _bool_env('ENABLE_CONTEXTUAL_RETRIEVAL')
+        if contextual_retrieval_enabled and not graph_retrieval_enabled:
+            raise ValueError(
+                'contextual retrieval requires ENABLE_GRAPH_RETRIEVAL=true'
             )
         model_compact_memory_enabled = _bool_env('ENABLE_MODEL_COMPACT_MEMORY')
         if model_compact_memory_enabled and not compact_memory_enabled:
@@ -267,6 +273,7 @@ class Settings:
                 'GRAPH_RETRIEVAL_RECEIPT_PATH',
                 str(root / 'data' / 'memory' / 'graph-retrieval-receipts'),
             ),
+            contextual_retrieval_enabled=contextual_retrieval_enabled,
             openai_model=os.getenv('OPENAI_MODEL', 'gpt-5.6-luna'),
             openai_base_url=_openai_base_url_env(openai_compact_enabled),
             openai_timeout_seconds=_positive_int_env('OPENAI_TIMEOUT_SECONDS', 60),

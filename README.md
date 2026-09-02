@@ -71,10 +71,12 @@ Implemented:
 	behavior, prompt, retrieval, provider, or network delta
 - Phase 5B human-reviewed extraction precision PASS at 100% across 10 entities
 - 239 passing tests at the Phase 5B write-only closure checkpoint
+- Phase 5C v2 controlled contextual retrieval with explicit, one-use human
+	approval, effective-source filtering, and no action authorization
 
-Not implemented yet:
+Still not implemented:
 
-- associative long-term memory retrieval
+- autonomous or unapproved associative long-term memory retrieval
 - speech recognition or push-to-talk
 - active vision
 - general-purpose cloud reasoning

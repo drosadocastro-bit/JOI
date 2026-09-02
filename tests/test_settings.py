@@ -220,6 +220,18 @@ def test_settings_defaults_graph_retrieval_to_disabled(monkeypatch):
 
     assert Settings.load().graph_retrieval_enabled is False
 
+def test_settings_defaults_contextual_retrieval_to_disabled(monkeypatch):
+    monkeypatch.delenv('ENABLE_CONTEXTUAL_RETRIEVAL', raising=False)
+
+    assert Settings.load().contextual_retrieval_enabled is False
+
+def test_settings_requires_graph_retrieval_for_contextual_retrieval(monkeypatch):
+    monkeypatch.setenv('ENABLE_CONTEXTUAL_RETRIEVAL', 'true')
+    monkeypatch.setenv('ENABLE_GRAPH_RETRIEVAL', 'false')
+
+    with pytest.raises(ValueError, match='contextual retrieval requires ENABLE_GRAPH_RETRIEVAL=true'):
+        Settings.load()
+
 
 def test_settings_requires_graph_memory_for_graph_retrieval(monkeypatch):
     monkeypatch.setenv('ENABLE_PERSISTENT_MEMORY', 'true')

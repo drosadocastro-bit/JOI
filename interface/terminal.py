@@ -1,3 +1,6 @@
+import json
+
+
 class TerminalInterface:
     def __init__(self, joi):
         self.joi = joi
@@ -40,6 +43,9 @@ class TerminalInterface:
                 self.joi.reset(); print('Session memory reset.'); continue
             if low == '/help':
                 self._print_help(); continue
+            if low.startswith('/context '):
+                if self._handle_context_command(text):
+                    continue
             if low.startswith('/memory '):
                 if self._handle_memory_command(text):
                     continue
@@ -107,6 +113,38 @@ class TerminalInterface:
                 print(self._memory_usage())
         except (ValueError, RuntimeError) as exc:
             print(f'[MEMORY ERROR] {exc}')
+        return True
+
+    def _handle_context_command(self, text: str) -> bool:
+        parts = text.split(maxsplit=2)
+        action = parts[1].lower() if len(parts) > 1 else ''
+        try:
+            if action == 'propose' and len(parts) == 3:
+                proposal = self.joi.contextual_retrieval_propose(parts[2])
+                print(
+                    f"Context proposal: {proposal['approval_id']} | "
+                    f"candidates={len(proposal['candidates'])} | approved=NO"
+                )
+            elif action == 'inspect' and len(parts) == 3:
+                print(json.dumps(
+                    self.joi.contextual_retrieval_inspect(parts[2]),
+                    ensure_ascii=True,
+                    indent=2,
+                    sort_keys=True,
+                ))
+            elif action == 'approve' and len(parts) == 3:
+                proposal = self.joi.contextual_retrieval_approve(parts[2])
+                print(f"Context approved: {proposal['approval_id']}")
+            elif action == 'chat' and len(parts) == 3:
+                approval_id, separator, query = parts[2].partition(' ')
+                if not separator or not query:
+                    raise ValueError('usage: /context chat <approval-id> <query>')
+                reply = self.joi.chat(query, context_approval_id=approval_id)
+                print(f'\nJoi > {reply}')
+            else:
+                print(self._context_usage())
+        except (ValueError, RuntimeError) as exc:
+            print(f'[CONTEXT ERROR] {exc}')
         return True
 
     def _handle_graph_command(self, text: str) -> bool:
@@ -198,8 +236,16 @@ class TerminalInterface:
         )
 
     @staticmethod
+    def _context_usage():
+        return (
+            'Context: /context propose <query> | /context inspect <approval-id> | '
+            '/context approve <approval-id> | /context chat <approval-id> <query>'
+        )
+
+    @staticmethod
     def _print_help():
         print('Commands: /status  /reset  /help  /exit')
         print('State: /mic <on|off>  /voice <on|off>  /vision <on|off>')
         print('       /memory <off|session|persistent>  /cloud <on|off>')
+        print(TerminalInterface._context_usage())
         print(TerminalInterface._memory_usage())

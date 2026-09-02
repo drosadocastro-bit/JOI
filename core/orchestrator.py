@@ -1,3 +1,5 @@
+import hashlib
+
 from brain.local_llm import LocalLMStudioBrain
 from brain.openai_compact_provider import OpenAICompactSummarizerProvider
 from core.router import BrainRouter
@@ -14,6 +16,10 @@ from memory.compact_memory import (
     ModelCompactMemoryWorker,
     ModelCompactSummarizer,
     ProviderBackedCompactSummarizer,
+)
+from memory.contextual_retrieval import (
+    ContextualRetrievalApproval,
+    render_approved_context,
 )
 from memory.graph_memory import (
     ExplicitEntityExtractor,
@@ -64,6 +70,7 @@ class JoiOrchestrator:
         self.graph_retriever = None
         self.last_graph_retrieval_receipt = None
         self.graph_retrieval_error = None
+        self.contextual_retrieval_approval = ContextualRetrievalApproval()
         if settings.persistent_memory_enabled:
             try:
                 self.memory_store = EpisodicMemoryStore(settings.memory_store_path)
@@ -270,12 +277,15 @@ class JoiOrchestrator:
         self.memory.reset()
         self.logger.info('Session reset')
 
-    def chat(self, user_text: str):
+    def chat(self, user_text: str, context_approval_id: str | None = None):
+        context = self._consume_context_approval(user_text, context_approval_id)
         if self.state.memory_mode == 'off':
             messages = [
                 {'role': 'system', 'content': self.memory.system_prompt},
                 {'role': 'user', 'content': user_text},
             ]
+            if context is not None:
+                messages.insert(1, {'role': 'system', 'content': context})
             try:
                 return self.brain.chat(messages)
             except Exception:
@@ -284,8 +294,11 @@ class JoiOrchestrator:
 
         previous_messages = self.memory.snapshot()
         self.memory.add_user(user_text)
+        messages = self.memory.snapshot()
+        if context is not None:
+            messages.insert(1, {'role': 'system', 'content': context})
         try:
-            reply = self.brain.chat(self.memory.snapshot())
+            reply = self.brain.chat(messages)
         except Exception:
             self.memory.messages = previous_messages
             self.logger.exception('Brain request failed')
@@ -294,6 +307,51 @@ class JoiOrchestrator:
         if self.state.memory_mode == 'persistent':
             self._persist_exchange(user_text, reply)
         return reply
+
+    def contextual_retrieval_propose(self, user_text: str) -> dict:
+        if not getattr(self.settings, 'contextual_retrieval_enabled', False):
+            raise ValueError('Contextual retrieval is not enabled')
+        if self.state.memory_mode != 'persistent':
+            raise ValueError('Contextual retrieval requires persistent memory')
+        if self.graph_retriever is None or self.graph_memory_manager is None:
+            raise ValueError('Contextual retrieval is unavailable')
+        snapshot = self._require_memory_store().effective_snapshot()
+        query_turn_id = 'context-query-' + hashlib.sha256(
+            user_text.encode('utf-8')
+        ).hexdigest()[:24]
+        receipt = self.graph_retriever.retrieve(
+            query_turn_id=query_turn_id,
+            content=user_text,
+            historical_state=self.graph_memory_manager.state,
+            effective_snapshot=snapshot,
+        )
+        return self.contextual_retrieval_approval.create(receipt, snapshot)
+
+    def contextual_retrieval_inspect(self, approval_id: str) -> dict:
+        if not getattr(self.settings, 'contextual_retrieval_enabled', False):
+            raise ValueError('Contextual retrieval is not enabled')
+        return self.contextual_retrieval_approval.inspect(approval_id)
+
+    def contextual_retrieval_approve(self, approval_id: str) -> dict:
+        if not getattr(self.settings, 'contextual_retrieval_enabled', False):
+            raise ValueError('Contextual retrieval is not enabled')
+        return self.contextual_retrieval_approval.approve(approval_id)
+
+    def _consume_context_approval(
+        self,
+        user_text: str,
+        approval_id: str | None,
+    ) -> str | None:
+        if approval_id is None:
+            return None
+        if not getattr(self.settings, 'contextual_retrieval_enabled', False):
+            raise ValueError('Contextual retrieval is not enabled')
+        proposal = self.contextual_retrieval_approval.inspect(approval_id)
+        query_sha256 = hashlib.sha256(user_text.encode('utf-8')).hexdigest()
+        if proposal['query_sha256'] != query_sha256:
+            raise ValueError('context approval does not match the current query')
+        consumed = self.contextual_retrieval_approval.consume(approval_id)
+        return render_approved_context(consumed)
 
     def _persist_exchange(self, user_text: str, assistant_text: str):
         if self.memory_store is None:

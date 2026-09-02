@@ -1,4 +1,5 @@
 from types import SimpleNamespace
+import hashlib
 from unittest.mock import Mock
 
 import pytest
@@ -59,6 +60,49 @@ def test_chat_records_successful_exchange(monkeypatch):
     assert joi.memory.snapshot()[-2:] == [
         {'role': 'user', 'content': 'Hi'},
         {'role': 'assistant', 'content': 'Hello'},
+    ]
+
+
+def test_chat_uses_only_explicit_approved_context(monkeypatch):
+    brain = Mock()
+    brain.chat.return_value = 'Contextual reply'
+    monkeypatch.setattr(orchestrator_module, 'LocalLMStudioBrain', Mock(return_value=brain))
+    settings = _settings()
+    settings.contextual_retrieval_enabled = True
+    joi = JoiOrchestrator(settings, 'system', Mock())
+    query = 'What is active?'
+    proposal = {
+        'query_sha256': hashlib.sha256(query.encode('utf-8')).hexdigest(),
+        'candidates': [{
+            'entity_type': 'project',
+            'canonical_label': 'project atlas',
+            'score': 0.5,
+            'sources': [{
+                'turn_id': 'turn-1',
+                'exchange_id': 'exchange-1',
+                'content': 'Project Atlas is active.',
+            }],
+        }],
+    }
+    joi.contextual_retrieval_approval._proposals['context-1'] = {
+        'approval_id': 'context-1',
+        'receipt_id': 'receipt-1',
+        'query_turn_id': 'query-1',
+        **proposal,
+        'approved': True,
+        'consumed': False,
+    }
+
+    assert joi.chat(query, context_approval_id='context-1') == 'Contextual reply'
+    sent_messages = brain.chat.call_args.args[0]
+    assert [message['role'] for message in sent_messages] == ['system', 'system', 'user']
+    assert sent_messages[0] == {'role': 'system', 'content': 'system'}
+    assert 'tools' not in brain.chat.call_args.kwargs
+    assert '<approved_retrieved_memory>' in sent_messages[1]['content']
+    assert joi.memory.snapshot() == [
+        {'role': 'system', 'content': 'system'},
+        {'role': 'user', 'content': query},
+        {'role': 'assistant', 'content': 'Contextual reply'},
     ]
 
 
