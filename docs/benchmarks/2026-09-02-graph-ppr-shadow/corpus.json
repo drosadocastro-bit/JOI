@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "corpus": "joi-graph-ppr-shadow-v1",
+  "created_before_retrieval_implementation": true,
+  "retrieval_output_accessed_during_authoring": false,
+  "synthetic_data_only": true,
+  "source_exchanges": [
+    {"exchange_id":"ppr-source-001","created_at_utc":"2026-09-02T09:00:00+00:00","user":"My name is Luna. I prefer green tea.","assistant":"I understand."},
+    {"exchange_id":"ppr-source-002","created_at_utc":"2026-09-02T09:01:00+00:00","user":"I am working on Project Atlas. I live in Madrid.","assistant":"Noted."},
+    {"exchange_id":"ppr-source-003","created_at_utc":"2026-09-02T09:02:00+00:00","user":"We are discussing source provenance. The current task is review graph schema.","assistant":"Understood."},
+    {"exchange_id":"ppr-source-004","created_at_utc":"2026-09-02T09:03:00+00:00","user":"Remember that release is Friday.","assistant":"Recorded as your explicit statement."},
+    {"exchange_id":"ppr-source-005","created_at_utc":"2026-09-02T09:04:00+00:00","user":"My name is Jose. I prefer cafe.","assistant":"Understood."},
+    {"exchange_id":"ppr-source-006","created_at_utc":"2026-09-02T09:05:00+00:00","user":"I prefer tea. I prefer tea.","assistant":"Noted once."},
+    {"exchange_id":"ppr-source-007","created_at_utc":"2026-09-02T09:06:00+00:00","user":"I am working on Project Helios. We are discussing AI.","assistant":"Noted."},
+    {"exchange_id":"ppr-source-008","created_at_utc":"2026-09-02T09:07:00+00:00","user":"We are discussing AI. The current task is memory audit.","assistant":"Understood."},
+    {"exchange_id":"ppr-source-009","created_at_utc":"2026-09-02T09:08:00+00:00","user":"I am working on Project Borealis. We are discussing AI.","assistant":"Noted."},
+    {"exchange_id":"ppr-source-010","created_at_utc":"2026-09-02T09:09:00+00:00","user":"We are discussing AI. The current task is graph benchmark.","assistant":"Understood."},
+    {"exchange_id":"ppr-source-011","created_at_utc":"2026-09-02T09:10:00+00:00","user":"My name is Ana. I prefer coffee.","assistant":"Noted."},
+    {"exchange_id":"ppr-source-012","created_at_utc":"2026-09-02T09:11:00+00:00","user":"My name is Bruno. I prefer coffee.","assistant":"Noted."},
+    {"exchange_id":"ppr-source-013","created_at_utc":"2026-09-02T09:12:00+00:00","user":"I live in Rome.","assistant":"Noted."},
+    {"exchange_id":"ppr-source-014","created_at_utc":"2026-09-02T09:13:00+00:00","user":"I am working on Project Atlas. We are discussing source provenance.","assistant":"Noted."}
+  ],
+  "policy_records": [
+    {"policy_id":"ppr-policy-001","exchange_id":"ppr-source-001","target_role":"user","action":"forget","created_at_utc":"2026-09-02T10:00:00+00:00"},
+    {"policy_id":"ppr-policy-002","exchange_id":"ppr-source-002","target_role":"user","action":"correct","replacement_content":"I am working on Project Atlas. I live in Lisbon.","created_at_utc":"2026-09-02T10:01:00+00:00"},
+    {"policy_id":"ppr-policy-003","exchange_id":"ppr-source-013","target_role":"user","action":"correct","replacement_content":"I live in Paris.","created_at_utc":"2026-09-02T10:02:00+00:00"}
+  ],
+  "queries": [
+    {"query_id":"ppr-query-001","query_turn_id":"ppr-query-001-user","user":"My name is Jose.","case_tags":["direct_association"]},
+    {"query_id":"ppr-query-002","query_turn_id":"ppr-query-002-user","user":"We are discussing source provenance.","case_tags":["direct_association","duplicate_alias"]},
+    {"query_id":"ppr-query-003","query_turn_id":"ppr-query-003-user","user":"I am working on Project Helios.","case_tags":["one_hop","two_hop","hub"]},
+    {"query_id":"ppr-query-004","query_turn_id":"ppr-query-004-user","user":"The current task is memory audit.","case_tags":["one_hop","hub"]},
+    {"query_id":"ppr-query-005","query_turn_id":"ppr-query-005-user","user":"My name is Luna.","case_tags":["forgotten_entity","no_retrieval"]},
+    {"query_id":"ppr-query-006","query_turn_id":"ppr-query-006-user","user":"I prefer green tea.","case_tags":["forgotten_entity","no_retrieval"]},
+    {"query_id":"ppr-query-007","query_turn_id":"ppr-query-007-user","user":"I live in Madrid.","case_tags":["superseded_entity","no_retrieval"]},
+    {"query_id":"ppr-query-008","query_turn_id":"ppr-query-008-user","user":"I live in Lisbon.","case_tags":["corrected_replacement","direct_association"]},
+    {"query_id":"ppr-query-009","query_turn_id":"ppr-query-009-user","user":"I am working on Project Atlas.","case_tags":["corrected_preserved_entity","duplicate_alias"]},
+    {"query_id":"ppr-query-010","query_turn_id":"ppr-query-010-user","user":"I prefer tea.","case_tags":["repeated_entity","sparse_graph","disconnected","no_retrieval"]},
+    {"query_id":"ppr-query-011","query_turn_id":"ppr-query-011-user","user":"I prefer coffee.","case_tags":["ambiguous_seed","duplicate_alias"]},
+    {"query_id":"ppr-query-012","query_turn_id":"ppr-query-012-user","user":"I am working on Project Orion.","case_tags":["unknown_seed","no_retrieval"]},
+    {"query_id":"ppr-query-013","query_turn_id":"ppr-query-013-user","user":"Remember that dentist appointment is Tuesday.","case_tags":["unrelated_query","unknown_seed","no_retrieval"]},
+    {"query_id":"ppr-query-014","query_turn_id":"ppr-query-014-user","user":"We are discussing AI.","case_tags":["high_degree_hub","popularity_bias"]},
+    {"query_id":"ppr-query-015","query_turn_id":"ppr-query-015-user","user":"I live in Rome.","case_tags":["contradictory_history","superseded_entity","no_retrieval"]},
+    {"query_id":"ppr-query-016","query_turn_id":"ppr-query-016-user","user":"I live in Paris.","case_tags":["contradictory_history","corrected_replacement","sparse_graph","no_retrieval"]},
+    {"query_id":"ppr-query-017","query_turn_id":"ppr-query-017-user","user":"Mi nombre es Ana.","case_tags":["bilingual_unsupported_surface","zero_seed","no_retrieval"]},
+    {"query_id":"ppr-query-018","query_turn_id":"ppr-query-018-user","user":"Remember that release is Friday.","case_tags":["disconnected_seed","no_retrieval"]}
+  ],
+  "required_safety_assertions": [
+    "luna and green tea are historical-only after ppr-policy-001",
+    "madrid is historical-only after ppr-policy-002",
+    "lisbon is effective replacement evidence under ppr-policy-002",
+    "project atlas remains effective in the replacement content",
+    "rome is historical-only after ppr-policy-003",
+    "paris is effective replacement evidence under ppr-policy-003"
+  ]
+}

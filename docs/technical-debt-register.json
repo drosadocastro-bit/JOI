@@ -1,14 +1,14 @@
 {
   "schema_version": 1,
   "register": "JOI Technical Debt Register",
-  "updated_at_utc": "2026-09-01T16:16:09.1258009Z",
+  "updated_at_utc": "2026-09-02T11:59:34.9904858Z",
   "classification_values": [
     "BLOCKING",
     "ACCEPTED_NON_BLOCKING",
     "DEFERRED",
     "RESOLVED"
   ],
-  "next_phase_scope": "Phase 5B provider-free, schema-frozen shadow retrieval evaluation; no prompt injection or production reliance.",
+  "next_phase_scope": "Phase 5B provider-free, schema-frozen, write-only graph construction and inspection; no retrieval, prompt injection, or production reliance.",
   "items": [
     {
       "id": "TD-JOI-001",
@@ -106,26 +106,26 @@
       "description": "API key rotation, revocation, expiry, and post-revocation behavior have not been tested end to end. The key exposed from the ignored local .env during the closure scan was subsequently revoked and replaced.",
       "category": "credential_lifecycle",
       "severity": "CRITICAL",
-      "classification": "BLOCKING",
-      "evidence_source": ["brain/openai_compact_provider.py", "tests/test_compact_memory_providers.py", "docs/openai-key-rotation-recovery.md"],
-      "current_mitigation": "The operator confirmed revocation and replacement at 2026-09-01T16:16:09.1258009Z. Deterministic tests cover in-process replace/reload, stale-key prevention, missing and revoked rejection, no fallback, state preservation, and secret exclusion from logs and artifacts. Keys remain ignored by Git and redacted from errors.",
+      "classification": "RESOLVED",
+      "evidence_source": ["security/credential_provider.py", "brain/openai_compact_provider.py", "voice/voice_router.py", "tests/test_credential_provider.py", "tests/test_compact_memory_providers.py", "tests/test_voice_router.py", "docs/td-joi-012-migration-checkpoint.json", "docs/decisions/ADR-007-os-backed-provider-credentials.md"],
+      "current_mitigation": "Provider-specific restricted replacements are stored as user-scoped Windows DPAPI records outside the repository. Settings and core are credential-blind; adapters retrieve only their own credential after CLOUD and official-endpoint validation, deny redirects, suppress secret-bearing exception chains, and emit content-free access audits. The former keys were revoked/deleted, both replacements passed one-request identity checks, and both dashboards showed no unexpected activity, usage, or cost.",
       "blocks_next_phase": false,
       "exit_criteria": "Rotation and revocation tests prove no secret persistence, fail-closed calls, operator-visible status, safe recovery with a replacement key, and auditability.",
       "owner": "Security owner",
-      "status": "OPEN_BLOCKING"
+      "status": "CLOSED_RESOLVED"
     },
     {
       "id": "TD-JOI-009",
       "description": "Partial corruption and recovery of candidate, report, manifest, and durable Compact Memory artifacts need adversarial validation.",
       "category": "data_integrity_and_recovery",
       "severity": "CRITICAL",
-      "classification": "BLOCKING",
-      "evidence_source": ["docs/compact-memory-closure-gate.md", "docs/benchmarks/2026-09-01-retention-quality/execution-manifest.json"],
-      "current_mitigation": "Frozen artifacts are SHA-256 pinned; candidate publication is atomic and previous valid state is preserved on validation failure.",
-      "blocks_next_phase": true,
+      "classification": "RESOLVED",
+      "evidence_source": ["tests/test_compact_memory_artifact_recovery.py", "tests/test_artifact_integrity.py", "tests/test_orchestrator.py", "docs/phase-5b-entry-authorization.json"],
+      "current_mitigation": "Malformed, stale, invalid-UTF-8, and interrupted runtime Compact Memory artifacts are uniquely quarantined with content-free SHA-256 receipts; restart recovers to empty derived state. Frozen manifests are verified read-only by path, size, and SHA-256 and are never repaired or moved.",
+      "blocks_next_phase": false,
       "exit_criteria": "Adversarial truncation, bit-flip, missing-file, mismatched-manifest, interrupted-write, quarantine, restore, and restart tests pass without silent recovery or partial publication.",
       "owner": "Memory storage owner",
-      "status": "OPEN_BLOCKING"
+      "status": "CLOSED_RESOLVED"
     },
     {
       "id": "TD-JOI-010",
@@ -152,6 +152,19 @@
       "exit_criteria": "A documented migration contract with fixtures and tests proves forward upgrade, backward compatibility boundaries, rollback, interrupted migration recovery, provenance preservation, and audit logs.",
       "owner": "Memory architecture owner",
       "status": "OPEN_BLOCKING"
+    },
+    {
+      "id": "TD-JOI-012",
+      "description": "Provider credentials excluded from Git were stored as plaintext in an ignored project-tree .env that remained readable by local tooling and processes.",
+      "category": "credential_storage_and_tooling_exposure",
+      "severity": "CRITICAL",
+      "classification": "RESOLVED",
+      "evidence_source": ["security/credential_provider.py", "tests/test_credential_provider.py", "docs/decisions/ADR-007-os-backed-provider-credentials.md"],
+      "current_mitigation": "The plaintext project-tree .env was removed. Recursive workspace, environment, and shell-history scans found no live credentials. Separate restricted OpenAI and ElevenLabs replacements are stored in user-scoped DPAPI records outside the repository and resolve only through CredentialProvider at authorized call time. Both former keys were revoked/deleted; both replacements passed identity checks; dashboards showed no unexpected activity, usage, or cost.",
+      "blocks_next_phase": false,
+      "exit_criteria": "No provider credential exists as plaintext inside the project tree; recursive workspace and publishable scans pass; settings, exceptions, timeouts, redirects, subprocess failures, diagnostics, and memory artifacts contain no key; CLOUD OFF performs no credential access; DPAPI set/get/delete/restart and controlled provider smoke tests pass; old credentials are confirmed revoked; new restricted credentials work only through CredentialProvider; full regression, JSON validation, diff hygiene, and durable-state checks pass.",
+      "owner": "Security owner",
+      "status": "CLOSED_RESOLVED"
     }
   ]
 }

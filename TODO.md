@@ -97,10 +97,17 @@
 - [x] Stop model tuning after Nemotron and Qwen reasoning-OFF failures
 - [ ] Reconsider Compact Memory summarizer architecture or provider
 - [ ] Resolve model summarizer latency/structured-output benchmark failure
-- [ ] Create and pass the human-review corpus
-- [ ] Pass Compact Memory closure gate at 25/50/100/200 updates
-- [ ] Evaluate model-backed summarization against extractive baseline
-- [ ] NIC graph integration in write-only mode
+- [x] Create and pass the Compact Memory human-review corpus
+- [x] Pass Compact Memory closure gate at 25/50/100/200 updates
+- [x] Evaluate model-backed summarization against extractive baseline
+- [x] Close `TD-JOI-009` artifact recovery entry blocker
+- [x] Freeze Phase 5B graph schema and write-only authority contract
+- [x] Implement provider-free, default-off graph construction and inspection
+- [x] Preserve correction/forgetting lineage without destructive cleanup
+- [x] Pass frozen automatic graph-write gates with zero behavior/prompt delta
+- [x] Complete independent human review of graph extraction precision
+- [x] Close Phase 5B write-only evaluation with the bounded exit claim
+- [ ] Compare graph primitives to an authoritative versioned NIC contract
 - [ ] Source-linked vector storage
 - [ ] Shadow retrieval and evaluation harness
 - [ ] Retrieval relevance, false-recall, and provenance metrics
@@ -161,6 +168,26 @@ promotion criteria: `docs/compact-memory-closure-gate.md`.
 - [ ] CLOUD OFF/ON
 - [ ] MEMORY OFF/SESSION/PERSISTENT
 - [ ] VOICE OFF/LOCAL/ONLINE/HYBRID
+
+## Credential Security — TD-JOI-012
+- [x] Remove provider secrets and `.env` from the project tree
+- [x] Add separate user-scoped Windows DPAPI records
+- [x] Remove credentials from Settings and core state
+- [x] Fetch provider credentials only after CLOUD and endpoint validation
+- [x] Deny redirects and suppress secret-bearing exception chains
+- [x] Add content-free credential access audit events
+- [x] Add interactive hidden-input credential administration
+- [x] Add non-Git tooling deny rules for private runtime paths
+- [x] Pass DPAPI set/get/delete/restart and mock-provider migration tests
+- [x] Confirm no project/workspace `.env` or global credential environment value
+- [x] Human: revoke both former provider credentials
+- [x] Human: create restricted replacement credentials
+- [x] Human: store replacements directly through `credential_admin.py`
+- [x] Human: authorize one OpenAI and one ElevenLabs service-identity smoke test
+- [x] Confirm former credentials are rejected by each provider
+- [x] Confirm provider dashboards show no unexpected activity, usage, or cost
+- [x] Complete final closure audit and resolve `TD-JOI-012`
+- [ ] Preregister an isolated provider-broker IPC contract before implementation
 
 ## Phase 11 — Resilience
 - [ ] Internet loss

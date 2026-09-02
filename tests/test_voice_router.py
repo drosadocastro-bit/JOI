@@ -124,13 +124,16 @@ def test_voice_router_hybrid_mode_falls_back_to_local():
 
 
 def _elevenlabs_provider(tmp_path, opener):
+    credential_provider = Mock()
+    credential_provider.get_elevenlabs_credential.return_value = 'test-credential'
     return ElevenLabsVoiceProvider(
-        api_key='secret-key',
+        credential_provider=credential_provider,
         voice_id='voice-id',
         model_id='eleven_multilingual_v2',
         base_url='https://api.elevenlabs.io/v1',
         output_path=tmp_path / 'elevenlabs.wav',
         timeout_seconds=15,
+        cloud_authorized=lambda: True,
         opener=opener,
     )
 
@@ -205,3 +208,70 @@ def test_elevenlabs_redirects_are_refused():
     handler = NoRedirectHandler()
 
     assert handler.redirect_request(None, None, 302, 'Found', {}, 'https://example.com') is None
+
+
+def test_elevenlabs_cloud_off_never_requests_credential(tmp_path):
+    credential_provider = Mock()
+    opener = Mock()
+    provider = ElevenLabsVoiceProvider(
+        credential_provider=credential_provider,
+        voice_id='voice-id',
+        model_id='eleven_multilingual_v2',
+        base_url='https://api.elevenlabs.io/v1',
+        output_path=tmp_path / 'elevenlabs.wav',
+        timeout_seconds=15,
+        cloud_authorized=lambda: False,
+        opener=opener,
+    )
+
+    with pytest.raises(RuntimeError, match='CLOUD is OFF'):
+        provider.speak('Hello')
+
+    credential_provider.get_elevenlabs_credential.assert_not_called()
+    opener.assert_not_called()
+
+
+def test_elevenlabs_error_has_no_credential_or_chained_cause(tmp_path):
+    credential = 'test-sensitive-credential'
+    credential_provider = Mock()
+    credential_provider.get_elevenlabs_credential.return_value = credential
+    provider = ElevenLabsVoiceProvider(
+        credential_provider=credential_provider,
+        voice_id='voice-id',
+        model_id='eleven_multilingual_v2',
+        base_url='https://api.elevenlabs.io/v1',
+        output_path=tmp_path / 'elevenlabs.wav',
+        timeout_seconds=15,
+        cloud_authorized=lambda: True,
+        opener=Mock(side_effect=RuntimeError(f'header contained {credential}')),
+    )
+
+    with pytest.raises(RuntimeError) as error:
+        provider.speak('Hello')
+
+    assert credential not in str(error.value)
+    assert error.value.__suppress_context__ is True
+
+
+def test_elevenlabs_health_returns_no_account_or_credential_data(tmp_path):
+    credential_provider = Mock()
+    credential_provider.get_elevenlabs_credential.return_value = 'test-credential'
+    response = Mock()
+    response.__enter__ = Mock(return_value=response)
+    response.__exit__ = Mock(return_value=False)
+    response.read.return_value = b'{"subscription":{"tier":"private"}}'
+    opener = Mock(return_value=response)
+    provider = ElevenLabsVoiceProvider(
+        credential_provider=credential_provider,
+        voice_id='voice-id',
+        model_id='eleven_multilingual_v2',
+        base_url='https://api.elevenlabs.io/v1',
+        output_path=tmp_path / 'elevenlabs.wav',
+        timeout_seconds=15,
+        cloud_authorized=lambda: True,
+        opener=opener,
+    )
+
+    assert provider.health() == {'ok': True, 'provider': 'elevenlabs'}
+    request = opener.call_args.args[0]
+    assert request.full_url == 'https://api.elevenlabs.io/v1/user'

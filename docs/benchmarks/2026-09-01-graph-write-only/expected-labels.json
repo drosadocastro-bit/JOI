@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "corpus": "joi-graph-write-only-v1",
+  "frozen_before_execution": true,
+  "expected_entities": [
+    {"exchange_id": "graph-eval-001", "entity_type": "person", "canonical_label": "luna", "surface_form": "Luna"},
+    {"exchange_id": "graph-eval-001", "entity_type": "preference", "canonical_label": "green tea", "surface_form": "green tea"},
+    {"exchange_id": "graph-eval-002", "entity_type": "project", "canonical_label": "project atlas", "surface_form": "Project Atlas"},
+    {"exchange_id": "graph-eval-002", "entity_type": "place", "canonical_label": "madrid", "surface_form": "Madrid"},
+    {"exchange_id": "graph-eval-003", "entity_type": "concept", "canonical_label": "source provenance", "surface_form": "source provenance"},
+    {"exchange_id": "graph-eval-003", "entity_type": "task_topic", "canonical_label": "review graph schema", "surface_form": "review graph schema"},
+    {"exchange_id": "graph-eval-004", "entity_type": "fact", "canonical_label": "release is friday", "surface_form": "release is Friday"},
+    {"exchange_id": "graph-eval-007", "entity_type": "person", "canonical_label": "jose", "surface_form": "Jose"},
+    {"exchange_id": "graph-eval-007", "entity_type": "preference", "canonical_label": "cafe", "surface_form": "cafe"},
+    {"exchange_id": "graph-eval-008", "entity_type": "preference", "canonical_label": "tea", "surface_form": "tea"}
+  ],
+  "expected_edges": [
+    {"exchange_id": "graph-eval-001", "entities": ["person:luna", "preference:green tea"], "relation": "co_occurs"},
+    {"exchange_id": "graph-eval-002", "entities": ["place:madrid", "project:project atlas"], "relation": "co_occurs"},
+    {"exchange_id": "graph-eval-003", "entities": ["concept:source provenance", "task_topic:review graph schema"], "relation": "co_occurs"},
+    {"exchange_id": "graph-eval-007", "entities": ["person:jose", "preference:cafe"], "relation": "co_occurs"}
+  ],
+  "zero_entity_exchange_ids": [
+    "graph-eval-005",
+    "graph-eval-006"
+  ],
+  "negative_controls": [
+    {
+      "exchange_id": "graph-eval-005",
+      "prohibited_candidates": ["emotion", "mental_state", "sad", "exhausted"],
+      "reason": "hidden emotional-state inference is prohibited"
+    },
+    {
+      "exchange_id": "graph-eval-006",
+      "prohibited_candidates": ["punctuation"],
+      "reason": "punctuation does not establish an entity"
+    }
+  ],
+  "policy_expectations": [
+    {"policy_id": "graph-policy-001", "matching_sources_suppressed": true, "lineage_preserved": true},
+    {"policy_id": "graph-policy-002", "matching_sources_suppressed": true, "lineage_preserved": true, "replacement_auto_extracted": false}
+  ]
+}

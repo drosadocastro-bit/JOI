@@ -1,0 +1,181 @@
+{
+  "benchmark": "joi-graph-write-only-v1",
+  "entities": [
+    {
+      "canonical_label": "luna",
+      "entity_id": "entity-ce7bdf93a3dda4b08181a345",
+      "entity_type": "person",
+      "exchange_id": "graph-eval-001",
+      "extractor_version": "explicit-patterns-v1",
+      "policy_ids": [
+        null
+      ],
+      "reviewer_notes": "Explicitly supported by graph-eval-001: 'My name is Luna.' Source extraction is correct. The source exchange is later subject to graph-policy-001 forget, so this entity must not be treated as currently retrievable or effective memory.",
+      "status": "explicit",
+      "supported": true,
+      "surface_form": "Luna",
+      "turn_ids": [
+        "graph-eval-001-user"
+      ]
+    },
+    {
+      "canonical_label": "green tea",
+      "entity_id": "entity-89de9d108b679b7805f848ad",
+      "entity_type": "preference",
+      "exchange_id": "graph-eval-001",
+      "extractor_version": "explicit-patterns-v1",
+      "policy_ids": [
+        null
+      ],
+      "reviewer_notes": "Explicitly supported by graph-eval-001: 'I prefer green tea.' Correct preference extraction. The source exchange is later forgotten by graph-policy-001; provenance may remain for audit, but effective use must be suppressed.",
+      "status": "explicit",
+      "supported": true,
+      "surface_form": "green tea",
+      "turn_ids": [
+        "graph-eval-001-user"
+      ]
+    },
+    {
+      "canonical_label": "madrid",
+      "entity_id": "entity-f028432fb71e295fe902e614",
+      "entity_type": "place",
+      "exchange_id": "graph-eval-002",
+      "extractor_version": "explicit-patterns-v1",
+      "policy_ids": [
+        null
+      ],
+      "reviewer_notes": "Explicitly supported by the original graph-eval-002 source: 'I live in Madrid.' However, graph-policy-002 later corrects the exchange to 'I live in Lisbon.' Madrid is historically source-supported but superseded and must not represent current effective memory.",
+      "status": "explicit",
+      "supported": true,
+      "surface_form": "Madrid",
+      "turn_ids": [
+        "graph-eval-002-user"
+      ]
+    },
+    {
+      "canonical_label": "project atlas",
+      "entity_id": "entity-ec8f559078ae93845a60253d",
+      "entity_type": "project",
+      "exchange_id": "graph-eval-002",
+      "extractor_version": "explicit-patterns-v1",
+      "policy_ids": [
+        null
+      ],
+      "reviewer_notes": "Explicitly supported by graph-eval-002: 'I am working on Project Atlas.' The later correction changes Madrid to Lisbon but preserves Project Atlas, so this entity remains supported in the corrected effective content.",
+      "status": "explicit",
+      "supported": true,
+      "surface_form": "Project Atlas",
+      "turn_ids": [
+        "graph-eval-002-user"
+      ]
+    },
+    {
+      "canonical_label": "source provenance",
+      "entity_id": "entity-7cdf0a6a6141e79bfa52758c",
+      "entity_type": "concept",
+      "exchange_id": "graph-eval-003",
+      "extractor_version": "explicit-patterns-v1",
+      "policy_ids": [
+        null
+      ],
+      "reviewer_notes": "Directly stated in graph-eval-003: 'We are discussing source provenance.' Correct concept extraction with no unsupported inference.",
+      "status": "explicit",
+      "supported": true,
+      "surface_form": "source provenance",
+      "turn_ids": [
+        "graph-eval-003-user"
+      ]
+    },
+    {
+      "canonical_label": "review graph schema",
+      "entity_id": "entity-c9b6b59671db1a6bf7688c08",
+      "entity_type": "task_topic",
+      "exchange_id": "graph-eval-003",
+      "extractor_version": "explicit-patterns-v1",
+      "policy_ids": [
+        null
+      ],
+      "reviewer_notes": "Directly stated in graph-eval-003: 'The current task is review graph schema.' Correct task/topic extraction.",
+      "status": "explicit",
+      "supported": true,
+      "surface_form": "review graph schema",
+      "turn_ids": [
+        "graph-eval-003-user"
+      ]
+    },
+    {
+      "canonical_label": "release is friday",
+      "entity_id": "entity-eccd2538bdd32733c0dd0418",
+      "entity_type": "fact",
+      "exchange_id": "graph-eval-004",
+      "extractor_version": "explicit-patterns-v1",
+      "policy_ids": [
+        null
+      ],
+      "reviewer_notes": "Explicitly stated in graph-eval-004: 'Remember that release is Friday.' Supported as an explicit user-provided fact. It remains scoped as user-stated information, not independently verified truth.",
+      "status": "explicit",
+      "supported": true,
+      "surface_form": "release is Friday",
+      "turn_ids": [
+        "graph-eval-004-user"
+      ]
+    },
+    {
+      "canonical_label": "jose",
+      "entity_id": "entity-732ace9462159238e63d95aa",
+      "entity_type": "person",
+      "exchange_id": "graph-eval-007",
+      "extractor_version": "explicit-patterns-v1",
+      "policy_ids": [
+        null
+      ],
+      "reviewer_notes": "Explicitly supported by graph-eval-007: 'My name is Jose.' Correct person extraction.",
+      "status": "explicit",
+      "supported": true,
+      "surface_form": "Jose",
+      "turn_ids": [
+        "graph-eval-007-user"
+      ]
+    },
+    {
+      "canonical_label": "cafe",
+      "entity_id": "entity-a225092bdcb82591f94683ec",
+      "entity_type": "preference",
+      "exchange_id": "graph-eval-007",
+      "extractor_version": "explicit-patterns-v1",
+      "policy_ids": [
+        null
+      ],
+      "reviewer_notes": "Explicitly supported by graph-eval-007: 'I prefer cafe.' Correct preference extraction; normalization preserves the actual source wording.",
+      "status": "explicit",
+      "supported": true,
+      "surface_form": "cafe",
+      "turn_ids": [
+        "graph-eval-007-user"
+      ]
+    },
+    {
+      "canonical_label": "tea",
+      "entity_id": "entity-d0a46c5af0a53c06a97783d1",
+      "entity_type": "preference",
+      "exchange_id": "graph-eval-008",
+      "extractor_version": "explicit-patterns-v1",
+      "policy_ids": [
+        null
+      ],
+      "reviewer_notes": "Explicitly supported by graph-eval-008. The preference is repeated twice in the same exchange, but extraction correctly represents it once; duplicate replay must not increase semantic authority or edge weight beyond the defined idempotent policy.",
+      "status": "explicit",
+      "supported": true,
+      "surface_form": "tea",
+      "turn_ids": [
+        "graph-eval-008-user"
+      ]
+    }
+  ],
+  "human_review_complete": true,
+  "instructions": "An independent human reviewer must inspect each extracted entity against the frozen source exchange, mark supported true or false, and provide non-empty notes. Do not alter corpus or expected labels after opening results.",
+  "review_scope_note": "Source support and effective-memory eligibility are distinct. graph-eval-001 is later forgotten, and the Madrid assertion in graph-eval-002 is superseded by Lisbon. Those entities remain historically source-supported for provenance and audit purposes but must not be interpreted as currently active memory.",
+  "reviewed_at_utc": "2026-09-02T13:04:07.4578169Z",
+  "reviewer": "drosadocastro-bit (repository operator)",
+  "schema_version": 1
+}

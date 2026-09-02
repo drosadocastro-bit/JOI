@@ -62,21 +62,19 @@ def test_settings_rejects_online_voice_without_cloud_opt_in(monkeypatch):
     monkeypatch.setenv('VOICE_ENABLED', 'true')
     monkeypatch.setenv('VOICE_MODE', 'online')
     monkeypatch.setenv('CLOUD_ENABLED', 'false')
-    monkeypatch.setenv('ELEVENLABS_API_KEY', 'local-secret')
     monkeypatch.setenv('ELEVENLABS_VOICE_ID', 'voice-id')
 
     with pytest.raises(ValueError, match='requires CLOUD_ENABLED=true'):
         Settings.load()
 
 
-def test_settings_rejects_online_voice_without_credentials(monkeypatch):
+def test_settings_rejects_online_voice_without_voice_id(monkeypatch):
     monkeypatch.setenv('VOICE_ENABLED', 'true')
     monkeypatch.setenv('VOICE_MODE', 'hybrid')
     monkeypatch.setenv('CLOUD_ENABLED', 'true')
-    monkeypatch.setenv('ELEVENLABS_API_KEY', '')
     monkeypatch.setenv('ELEVENLABS_VOICE_ID', '')
 
-    with pytest.raises(ValueError, match='requires ELEVENLABS_API_KEY'):
+    with pytest.raises(ValueError, match='requires ELEVENLABS_VOICE_ID'):
         Settings.load()
 
 
@@ -85,7 +83,6 @@ def test_settings_selects_spanish_elevenlabs_voice(monkeypatch):
     monkeypatch.setenv('VOICE_MODE', 'online')
     monkeypatch.setenv('CLOUD_ENABLED', 'true')
     monkeypatch.setenv('TTS_LANGUAGE', 'es')
-    monkeypatch.setenv('ELEVENLABS_API_KEY', 'local-secret')
     monkeypatch.setenv('ELEVENLABS_VOICE_ID', 'english-voice')
     monkeypatch.setenv('ELEVENLABS_SPANISH_VOICE_ID', 'spanish-voice')
 
@@ -99,7 +96,6 @@ def test_settings_requires_spanish_voice_for_spanish_online_mode(monkeypatch):
     monkeypatch.setenv('VOICE_MODE', 'online')
     monkeypatch.setenv('CLOUD_ENABLED', 'true')
     monkeypatch.setenv('TTS_LANGUAGE', 'es')
-    monkeypatch.setenv('ELEVENLABS_API_KEY', 'local-secret')
     monkeypatch.setenv('ELEVENLABS_VOICE_ID', 'english-voice')
     monkeypatch.setenv('ELEVENLABS_SPANISH_VOICE_ID', '')
 
@@ -119,7 +115,6 @@ def test_settings_rejects_untrusted_elevenlabs_base_url(monkeypatch, base_url):
     monkeypatch.setenv('VOICE_ENABLED', 'true')
     monkeypatch.setenv('VOICE_MODE', 'online')
     monkeypatch.setenv('CLOUD_ENABLED', 'true')
-    monkeypatch.setenv('ELEVENLABS_API_KEY', 'local-secret')
     monkeypatch.setenv('ELEVENLABS_VOICE_ID', 'voice-id')
     monkeypatch.setenv('ELEVENLABS_BASE_URL', base_url)
 
@@ -192,6 +187,64 @@ def test_settings_loads_compact_memory_configuration(monkeypatch, tmp_path):
     assert settings.compact_memory_max_characters == 1500
 
 
+def test_settings_defaults_graph_memory_to_disabled(monkeypatch):
+    monkeypatch.delenv('ENABLE_GRAPH_MEMORY', raising=False)
+
+    assert Settings.load().graph_memory_enabled is False
+
+
+def test_settings_requires_persistent_mode_for_graph_memory(monkeypatch):
+    monkeypatch.setenv('ENABLE_PERSISTENT_MEMORY', 'true')
+    monkeypatch.setenv('ENABLE_GRAPH_MEMORY', 'true')
+    monkeypatch.setenv('MEMORY_MODE', 'session')
+
+    with pytest.raises(ValueError, match='graph memory requires MEMORY_MODE=persistent'):
+        Settings.load()
+
+
+def test_settings_loads_graph_memory_path(monkeypatch, tmp_path):
+    path = tmp_path / 'graph-memory.json'
+    monkeypatch.setenv('ENABLE_PERSISTENT_MEMORY', 'true')
+    monkeypatch.setenv('ENABLE_GRAPH_MEMORY', 'true')
+    monkeypatch.setenv('MEMORY_MODE', 'persistent')
+    monkeypatch.setenv('GRAPH_MEMORY_PATH', str(path))
+
+    settings = Settings.load()
+
+    assert settings.graph_memory_enabled is True
+    assert settings.graph_memory_path == str(path)
+
+
+def test_settings_defaults_graph_retrieval_to_disabled(monkeypatch):
+    monkeypatch.delenv('ENABLE_GRAPH_RETRIEVAL', raising=False)
+
+    assert Settings.load().graph_retrieval_enabled is False
+
+
+def test_settings_requires_graph_memory_for_graph_retrieval(monkeypatch):
+    monkeypatch.setenv('ENABLE_PERSISTENT_MEMORY', 'true')
+    monkeypatch.setenv('MEMORY_MODE', 'persistent')
+    monkeypatch.setenv('ENABLE_GRAPH_RETRIEVAL', 'true')
+    monkeypatch.setenv('ENABLE_GRAPH_MEMORY', 'false')
+
+    with pytest.raises(ValueError, match='graph retrieval requires ENABLE_GRAPH_MEMORY=true'):
+        Settings.load()
+
+
+def test_settings_loads_graph_retrieval_receipt_path(monkeypatch, tmp_path):
+    path = tmp_path / 'retrieval-receipts'
+    monkeypatch.setenv('ENABLE_PERSISTENT_MEMORY', 'true')
+    monkeypatch.setenv('MEMORY_MODE', 'persistent')
+    monkeypatch.setenv('ENABLE_GRAPH_MEMORY', 'true')
+    monkeypatch.setenv('ENABLE_GRAPH_RETRIEVAL', 'true')
+    monkeypatch.setenv('GRAPH_RETRIEVAL_RECEIPT_PATH', str(path))
+
+    settings = Settings.load()
+
+    assert settings.graph_retrieval_enabled is True
+    assert settings.graph_retrieval_receipt_path == str(path)
+
+
 def test_settings_rejects_too_small_compact_memory_limit(monkeypatch):
     monkeypatch.setenv('COMPACT_MEMORY_MAX_CHARACTERS', '99')
 
@@ -241,14 +294,12 @@ def test_settings_loads_openai_compact_memory_provider(monkeypatch):
     monkeypatch.setenv('MEMORY_MODE', 'persistent')
     monkeypatch.setenv('CLOUD_ENABLED', 'true')
     monkeypatch.setenv('COMPACT_MEMORY_PROVIDER', 'openai')
-    monkeypatch.setenv('OPENAI_API_KEY', 'sk-test-secret')
 
     settings = Settings.load()
 
     assert settings.compact_memory_provider == 'openai'
     assert settings.openai_model == 'gpt-5.6-luna'
-    assert settings.openai_api_key == 'sk-test-secret'
-    assert 'sk-test-secret' not in repr(settings)
+    assert not hasattr(settings, 'openai_api_key')
 
 
 def test_settings_rejects_openai_provider_without_cloud_opt_in(monkeypatch):
@@ -257,24 +308,25 @@ def test_settings_rejects_openai_provider_without_cloud_opt_in(monkeypatch):
     monkeypatch.setenv('ENABLE_MODEL_COMPACT_MEMORY', 'true')
     monkeypatch.setenv('MEMORY_MODE', 'persistent')
     monkeypatch.setenv('COMPACT_MEMORY_PROVIDER', 'openai')
-    monkeypatch.setenv('OPENAI_API_KEY', 'sk-test-secret')
     monkeypatch.setenv('CLOUD_ENABLED', 'false')
 
     with pytest.raises(ValueError, match='requires CLOUD_ENABLED=true'):
         Settings.load()
 
 
-def test_settings_rejects_openai_provider_without_key(monkeypatch):
+def test_settings_does_not_resolve_openai_credential_at_startup(monkeypatch):
     monkeypatch.setenv('ENABLE_PERSISTENT_MEMORY', 'true')
     monkeypatch.setenv('ENABLE_COMPACT_MEMORY', 'true')
     monkeypatch.setenv('ENABLE_MODEL_COMPACT_MEMORY', 'true')
     monkeypatch.setenv('MEMORY_MODE', 'persistent')
     monkeypatch.setenv('COMPACT_MEMORY_PROVIDER', 'openai')
     monkeypatch.setenv('CLOUD_ENABLED', 'true')
-    monkeypatch.setenv('OPENAI_API_KEY', '')
+    monkeypatch.delenv('OPENAI_API_KEY', raising=False)
 
-    with pytest.raises(ValueError, match='requires OPENAI_API_KEY'):
-        Settings.load()
+    settings = Settings.load()
+
+    assert settings.compact_memory_provider == 'openai'
+    assert not hasattr(settings, 'openai_api_key')
 
 
 @pytest.mark.parametrize(
@@ -288,7 +340,6 @@ def test_settings_rejects_untrusted_openai_base_url(monkeypatch, base_url):
     monkeypatch.setenv('MEMORY_MODE', 'persistent')
     monkeypatch.setenv('COMPACT_MEMORY_PROVIDER', 'openai')
     monkeypatch.setenv('CLOUD_ENABLED', 'true')
-    monkeypatch.setenv('OPENAI_API_KEY', 'sk-test-secret')
     monkeypatch.setenv('OPENAI_BASE_URL', base_url)
 
     with pytest.raises(ValueError, match='official HTTPS OpenAI endpoint'):

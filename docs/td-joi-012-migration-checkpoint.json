@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "record": "TD-JOI-012 Credential Storage Migration Checkpoint",
+  "recorded_at_utc": "2026-09-02T00:00:00Z",
+  "decision": "PASS",
+  "debt_classification": "RESOLVED",
+  "debt_status": "CLOSED_RESOLVED",
+  "closed_at_utc": "2026-09-02T11:59:34.9904858Z",
+  "completed_controls": {
+    "project_tree_plaintext_env_removed": true,
+    "workspace_env_file_count": 0,
+    "process_credential_environment_count": 0,
+    "user_credential_environment_count": 0,
+    "machine_credential_environment_count": 0,
+    "settings_credential_blind": true,
+    "core_credential_blind": true,
+    "provider_specific_dpapi_records": true,
+    "credential_retrieved_at_call_time": true,
+    "cloud_off_prevents_credential_access": true,
+    "endpoint_validated_before_credential_access": true,
+    "redirects_denied": true,
+    "secret_exception_chain_suppressed": true,
+    "content_free_access_audit": true,
+    "tooling_deny_rules_present": true,
+    "mock_provider_smoke_passed": true,
+    "dpapi_set_get_delete_restart_passed": true,
+    "default_dpapi_provider_count_tested": 2,
+    "default_dpapi_records_remaining_after_test": 0,
+    "powershell_history_live_pattern_count": 0
+  },
+  "pending_human_controls": {
+    "former_openai_credential_revoked": true,
+    "former_elevenlabs_credential_revoked": true,
+    "restricted_openai_replacement_created": true,
+    "restricted_elevenlabs_replacement_created": true,
+    "replacements_stored_directly_in_dpapi": true,
+    "former_credentials_confirmed_rejected": true,
+    "openai_service_identity_smoke_passed": true,
+    "elevenlabs_service_identity_smoke_passed": true,
+    "provider_cost_and_usage_verified": true
+  },
+  "isolated_provider_execution": {
+    "evaluated": true,
+    "activated": false,
+    "reason": "A broker requires a separately frozen IPC threat model and private-payload contract; adding it inside credential-storage remediation would widen this safety-critical change.",
+    "subprocess_crash_test_applicable": false,
+    "required_before_production_cloud_reliance": true
+  },
+  "closure_authorized": true,
+  "live_smoke_evidence": {
+    "openai": {
+      "request_count": 1,
+      "identity_match": true,
+      "content_generation": false
+    },
+    "elevenlabs": {
+      "request_count": 1,
+      "identity_match": true,
+      "http_status": 200,
+      "speech_synthesis": false,
+      "retry_count": 0,
+      "fallback_count": 0
+    }
+  },
+  "automated_verification": {
+    "complete_pytest_count": 233,
+    "complete_pytest_passed": true,
+    "json_documents_valid": 46,
+    "workspace_files_scanned": 23091,
+    "workspace_plaintext_env_count": 0,
+    "workspace_live_credential_pattern_count": 0,
+    "durable_state_unchanged": true,
+    "git_diff_check_passed": true,
+    "phase_5a_evidence_index_verified": true,
+    "phase_5b_evidence_index_verified": true
+  },
+  "evidence": [
+    "security/credential_provider.py",
+    "credential_admin.py",
+    "tests/test_credential_provider.py",
+    "tests/test_compact_memory_providers.py",
+    "tests/test_voice_router.py",
+    "docs/decisions/ADR-007-os-backed-provider-credentials.md",
+    "docs/tooling-data-deny-policy.md"
+  ],
+  "principles": [
+    "A secret excluded from Git is not necessarily a protected secret.",
+    "JOI components request capabilities; they do not own credentials."
+  ]
+}

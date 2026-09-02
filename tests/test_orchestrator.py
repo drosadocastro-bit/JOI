@@ -22,7 +22,6 @@ def _settings():
         tts_language='en-us',
         tts_output_path='reply.wav',
         tts_timeout_seconds=30,
-        elevenlabs_api_key='',
         elevenlabs_voice_id='',
         elevenlabs_model_id='eleven_multilingual_v2',
         elevenlabs_base_url='https://api.elevenlabs.io/v1',
@@ -39,10 +38,14 @@ def _settings():
         model_compact_memory_path='compact-memory-model-candidate.json',
         compact_memory_evaluation_path='compact-memory-evaluation.json',
         compact_memory_provider='local',
-        openai_api_key='',
+        graph_memory_enabled=False,
+        graph_memory_path='graph-memory.json',
+        graph_retrieval_enabled=False,
+        graph_retrieval_receipt_path='graph-retrieval-receipts',
         openai_model='gpt-5.6-luna',
         openai_base_url='https://api.openai.com/v1',
         openai_timeout_seconds=60,
+        credential_audit_path='credential-access.jsonl',
     )
 
 
@@ -124,7 +127,6 @@ def test_hybrid_voice_fallback_preserves_session(monkeypatch, tmp_path):
     settings.voice_enabled = True
     settings.voice_mode = 'hybrid'
     settings.cloud_enabled = True
-    settings.elevenlabs_api_key = 'local-secret'
     settings.elevenlabs_voice_id = 'voice-id'
     settings.tts_output_path = str(tmp_path / 'reply.wav')
     local_voice = Mock()
@@ -182,7 +184,6 @@ def test_cloud_off_routes_hybrid_voice_locally(monkeypatch):
     settings.voice_enabled = True
     settings.voice_mode = 'hybrid'
     settings.cloud_enabled = True
-    settings.elevenlabs_api_key = 'local-secret'
     settings.elevenlabs_voice_id = 'voice-id'
     local_voice = Mock()
     online_voice = Mock()
@@ -208,7 +209,6 @@ def test_cloud_off_disables_online_only_voice(monkeypatch):
     settings.voice_enabled = True
     settings.voice_mode = 'online'
     settings.cloud_enabled = True
-    settings.elevenlabs_api_key = 'local-secret'
     settings.elevenlabs_voice_id = 'voice-id'
     online_voice = Mock()
     monkeypatch.setattr(
@@ -496,6 +496,251 @@ def test_model_compact_shadow_receives_effective_snapshot_after_exchange(monkeyp
     assert brain.chat.call_count == 1
 
 
+def test_graph_on_and_off_preserve_identical_conversation_behavior(monkeypatch):
+    turns = [Mock(), Mock()]
+    graph_worker = Mock()
+    brains = []
+
+    def make_brain(*args):
+        brain = Mock()
+        brain.chat.return_value = 'Same reply'
+        brains.append(brain)
+        return brain
+
+    monkeypatch.setattr(orchestrator_module, 'LocalLMStudioBrain', make_brain)
+    monkeypatch.setattr(
+        orchestrator_module,
+        'EpisodicMemoryStore',
+        Mock(side_effect=lambda path: Mock(append_exchange=Mock(return_value=turns))),
+    )
+    monkeypatch.setattr(
+        orchestrator_module,
+        'GraphMemoryWorker',
+        Mock(return_value=graph_worker),
+    )
+    monkeypatch.setattr(orchestrator_module, 'GraphMemoryStore', Mock())
+    monkeypatch.setattr(orchestrator_module, 'GraphMemoryManager', Mock())
+
+    disabled = _settings()
+    disabled.memory_mode = 'persistent'
+    disabled.persistent_memory_enabled = True
+    enabled = _settings()
+    enabled.memory_mode = 'persistent'
+    enabled.persistent_memory_enabled = True
+    enabled.graph_memory_enabled = True
+
+    off_reply = JoiOrchestrator(disabled, 'system', Mock()).chat('Same question')
+    on_reply = JoiOrchestrator(enabled, 'system', Mock()).chat('Same question')
+
+    assert on_reply == off_reply == 'Same reply'
+    assert brains[0].chat.call_args == brains[1].chat.call_args
+    graph_worker.submit.assert_called_once_with(turns)
+
+
+def test_graph_initialization_failure_does_not_break_chat(monkeypatch):
+    settings = _settings()
+    settings.memory_mode = 'persistent'
+    settings.persistent_memory_enabled = True
+    settings.graph_memory_enabled = True
+    brain = Mock()
+    brain.chat.return_value = 'Available reply'
+    store = Mock()
+    store.append_exchange.return_value = [Mock(), Mock()]
+    logger = Mock()
+    monkeypatch.setattr(orchestrator_module, 'LocalLMStudioBrain', Mock(return_value=brain))
+    monkeypatch.setattr(orchestrator_module, 'EpisodicMemoryStore', Mock(return_value=store))
+    monkeypatch.setattr(
+        orchestrator_module,
+        'GraphMemoryStore',
+        Mock(side_effect=RuntimeError('corrupt graph')),
+    )
+
+    joi = JoiOrchestrator(settings, 'system', logger)
+
+    assert joi.chat('Question') == 'Available reply'
+    assert joi.graph_memory_worker is None
+    assert joi.graph_memory_error == 'corrupt graph'
+    logger.exception.assert_any_call('Graph memory initialization failed')
+
+
+def test_graph_policy_and_close_delegate_to_worker(monkeypatch):
+    settings = _settings()
+    settings.memory_mode = 'persistent'
+    settings.persistent_memory_enabled = True
+    settings.graph_memory_enabled = True
+    store = Mock()
+    policy = Mock()
+    store.correct_turn.return_value = policy
+    graph_worker = Mock()
+    monkeypatch.setattr(orchestrator_module, 'LocalLMStudioBrain', Mock())
+    monkeypatch.setattr(orchestrator_module, 'EpisodicMemoryStore', Mock(return_value=store))
+    monkeypatch.setattr(orchestrator_module, 'GraphMemoryStore', Mock())
+    monkeypatch.setattr(orchestrator_module, 'GraphMemoryManager', Mock())
+    monkeypatch.setattr(
+        orchestrator_module,
+        'GraphMemoryWorker',
+        Mock(return_value=graph_worker),
+    )
+    joi = JoiOrchestrator(settings, 'system', Mock())
+
+    assert joi.memory_correct('turn-1', 'Corrected') == policy
+    joi.close()
+
+    graph_worker.submit_policy.assert_called_once_with(policy)
+    graph_worker.close.assert_called_once_with()
+
+
+def test_graph_inspection_delegates_to_manager(monkeypatch):
+    settings = _settings()
+    settings.memory_mode = 'persistent'
+    settings.persistent_memory_enabled = True
+    settings.graph_memory_enabled = True
+    manager = Mock()
+    monkeypatch.setattr(orchestrator_module, 'LocalLMStudioBrain', Mock())
+    monkeypatch.setattr(orchestrator_module, 'EpisodicMemoryStore', Mock())
+    monkeypatch.setattr(orchestrator_module, 'GraphMemoryStore', Mock())
+    monkeypatch.setattr(
+        orchestrator_module,
+        'GraphMemoryManager',
+        Mock(return_value=manager),
+    )
+    monkeypatch.setattr(orchestrator_module, 'GraphMemoryWorker', Mock())
+    joi = JoiOrchestrator(settings, 'system', Mock())
+
+    assert joi.graph_memory_status() == manager.status.return_value
+    assert joi.graph_memory_recent(4) == manager.recent.return_value
+    assert joi.graph_memory_why('entity-1') == manager.why.return_value
+    manager.recent.assert_called_once_with(4)
+    manager.why.assert_called_once_with('entity-1')
+
+
+def test_graph_inspection_refuses_disabled_feature(monkeypatch):
+    monkeypatch.setattr(orchestrator_module, 'LocalLMStudioBrain', Mock())
+    joi = JoiOrchestrator(_settings(), 'system', Mock())
+
+    with pytest.raises(ValueError, match='Graph memory is not configured'):
+        joi.graph_memory_status()
+
+
+def test_graph_shadow_retrieval_has_zero_prompt_reply_or_durable_influence(monkeypatch):
+    settings_off = _settings()
+    settings_off.memory_mode = 'persistent'
+    settings_off.persistent_memory_enabled = True
+    settings_off.graph_memory_enabled = True
+    settings_on = SimpleNamespace(**vars(settings_off))
+    settings_on.graph_retrieval_enabled = True
+
+    off_brain = Mock()
+    on_brain = Mock()
+    off_brain.chat.return_value = on_brain.chat.return_value = 'Deterministic reply.'
+    off_store = Mock()
+    on_store = Mock()
+    off_turns = [SimpleNamespace(turn_id='off-user'), Mock()]
+    on_turns = [SimpleNamespace(turn_id='on-user'), Mock()]
+    off_store.append_exchange.return_value = off_turns
+    on_store.append_exchange.return_value = on_turns
+    snapshot = Mock()
+    on_store.effective_snapshot.return_value = snapshot
+    managers = [Mock(state=Mock()), Mock(state=Mock())]
+    retriever = Mock()
+    retriever.retrieve.return_value = {
+        'retrieval_injection_count': 0,
+        'retrieval_influence_count': 0,
+    }
+
+    monkeypatch.setattr(
+        orchestrator_module,
+        'LocalLMStudioBrain',
+        Mock(side_effect=[off_brain, on_brain]),
+    )
+    monkeypatch.setattr(
+        orchestrator_module,
+        'EpisodicMemoryStore',
+        Mock(side_effect=[off_store, on_store]),
+    )
+    monkeypatch.setattr(
+        orchestrator_module,
+        'GraphMemoryManager',
+        Mock(side_effect=managers),
+    )
+    monkeypatch.setattr(orchestrator_module, 'GraphMemoryStore', Mock())
+    monkeypatch.setattr(orchestrator_module, 'GraphMemoryWorker', Mock())
+    monkeypatch.setattr(orchestrator_module, 'ShadowReceiptStore', Mock())
+    monkeypatch.setattr(
+        orchestrator_module,
+        'GraphShadowRetriever',
+        Mock(return_value=retriever),
+    )
+
+    joi_off = JoiOrchestrator(settings_off, 'system', Mock())
+    joi_on = JoiOrchestrator(settings_on, 'system', Mock())
+    off_reply = joi_off.chat('My name is Jose.')
+    on_reply = joi_on.chat('My name is Jose.')
+
+    assert off_reply == on_reply == 'Deterministic reply.'
+    assert off_brain.chat.call_args == on_brain.chat.call_args
+    assert off_store.append_exchange.call_args == on_store.append_exchange.call_args
+    retriever.retrieve.assert_called_once_with(
+        query_turn_id='on-user',
+        content='My name is Jose.',
+        historical_state=managers[1].state,
+        effective_snapshot=snapshot,
+    )
+    assert joi_on.last_graph_retrieval_receipt['retrieval_influence_count'] == 0
+
+
+def test_graph_shadow_retrieval_failure_does_not_break_conversation(monkeypatch):
+    settings = _settings()
+    settings.memory_mode = 'persistent'
+    settings.persistent_memory_enabled = True
+    settings.graph_memory_enabled = True
+    settings.graph_retrieval_enabled = True
+    brain = Mock()
+    brain.chat.return_value = 'Deterministic reply.'
+    store = Mock()
+    store.effective_snapshot.return_value = Mock()
+    store.append_exchange.return_value = [
+        SimpleNamespace(turn_id='persisted-user'),
+        SimpleNamespace(turn_id='persisted-assistant'),
+    ]
+    manager = Mock(state=Mock())
+    retriever = Mock()
+    retriever.retrieve.side_effect = RuntimeError('shadow failed')
+    logger = Mock()
+    monkeypatch.setattr(
+        orchestrator_module,
+        'LocalLMStudioBrain',
+        Mock(return_value=brain),
+    )
+    monkeypatch.setattr(
+        orchestrator_module,
+        'EpisodicMemoryStore',
+        Mock(return_value=store),
+    )
+    monkeypatch.setattr(orchestrator_module, 'GraphMemoryStore', Mock())
+    monkeypatch.setattr(
+        orchestrator_module,
+        'GraphMemoryManager',
+        Mock(return_value=manager),
+    )
+    monkeypatch.setattr(orchestrator_module, 'GraphMemoryWorker', Mock())
+    monkeypatch.setattr(orchestrator_module, 'ShadowReceiptStore', Mock())
+    monkeypatch.setattr(
+        orchestrator_module,
+        'GraphShadowRetriever',
+        Mock(return_value=retriever),
+    )
+    joi = JoiOrchestrator(settings, 'system', logger)
+
+    assert joi.chat('My name is Jose.') == 'Deterministic reply.'
+    store.append_exchange.assert_called_once_with(
+        'My name is Jose.',
+        'Deterministic reply.',
+    )
+    assert joi.graph_retrieval_error == 'shadow failed'
+    logger.exception.assert_any_call('Graph shadow retrieval failed')
+
+
 def test_memory_policy_changes_trigger_model_compact_regeneration(monkeypatch):
     settings = _settings()
     settings.memory_mode = 'persistent'
@@ -556,7 +801,6 @@ def test_openai_compact_provider_uses_runtime_cloud_authorization(monkeypatch):
     settings.model_compact_memory_enabled = True
     settings.compact_memory_provider = 'openai'
     settings.cloud_enabled = True
-    settings.openai_api_key = 'sk-test-secret'
     provider = Mock()
     provider.provider_id = 'openai'
     provider.model_id = 'gpt-5.6-luna'

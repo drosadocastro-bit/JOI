@@ -20,6 +20,19 @@ from memory.compact_memory import (
 )
 from memory.summarizer_provider import ProviderGeneration, SummarizerProviderError
 from compact_memory_benchmark import DeterministicCompactCorpus
+from security.credential_provider import CredentialAccessError
+
+
+class FakeCredentialProvider:
+    def __init__(self, value):
+        self.value = value
+        self.requests = 0
+
+    def get_openai_credential(self):
+        self.requests += 1
+        if not self.value:
+            raise CredentialAccessError('openai credential is unavailable')
+        return self.value
 
 
 class FakeProvider:
@@ -122,8 +135,9 @@ def test_unhealthy_provider_is_not_executed():
 
 def test_openai_provider_refuses_cloud_off_without_opening_request():
     opener = Mock()
+    credentials = FakeCredentialProvider('test-credential')
     provider = OpenAICompactSummarizerProvider(
-        api_key='sk-test-secret',
+        credential_provider=credentials,
         model='gpt-5.6-luna',
         cloud_authorized=lambda: False,
         opener=opener,
@@ -133,6 +147,7 @@ def test_openai_provider_refuses_cloud_off_without_opening_request():
     with pytest.raises(SummarizerProviderError, match='CLOUD is OFF'):
         provider.generate([], {'type': 'object'})
     opener.assert_not_called()
+    assert credentials.requests == 0
 
 
 def test_openai_provider_redacts_key_from_http_error():
@@ -142,7 +157,7 @@ def test_openai_provider_redacts_key_from_http_error():
         raise RuntimeError(f'authorization failed for {secret}')
 
     provider = OpenAICompactSummarizerProvider(
-        api_key=secret,
+        credential_provider=FakeCredentialProvider(secret),
         model='gpt-5.6-luna',
         cloud_authorized=lambda: True,
         opener=failing_opener,
@@ -155,46 +170,46 @@ def test_openai_provider_redacts_key_from_http_error():
     assert '[REDACTED]' in str(error.value)
 
 
-def test_openai_provider_reload_replaces_key_without_restart():
+def test_openai_provider_resolves_replacement_without_restart():
     authorization_headers = []
 
     def opener(request, timeout):
         authorization_headers.append(request.get_header('Authorization'))
         return FakeResponse({'id': 'gpt-5.6-luna'})
 
+    credentials = FakeCredentialProvider('test-revoked')
     provider = OpenAICompactSummarizerProvider(
-        api_key='sk-test-revoked',
+        credential_provider=credentials,
         model='gpt-5.6-luna',
         cloud_authorized=lambda: True,
         opener=opener,
     )
 
     assert provider.health()['ok'] is True
-    provider.reload_api_key('sk-test-replacement')
+    credentials.value = 'test-replacement'
     assert provider.health()['ok'] is True
 
     assert authorization_headers == [
-        'Bearer sk-test-revoked',
-        'Bearer sk-test-replacement',
+        'Bearer test-revoked',
+        'Bearer test-replacement',
     ]
 
 
-def test_openai_provider_reload_missing_key_fails_closed():
+def test_openai_provider_missing_credential_fails_closed():
     opener = Mock(return_value=FakeResponse({'id': 'gpt-5.6-luna'}))
+    credentials = FakeCredentialProvider(None)
     provider = OpenAICompactSummarizerProvider(
-        api_key='sk-test-current',
+        credential_provider=credentials,
         model='gpt-5.6-luna',
         cloud_authorized=lambda: True,
         opener=opener,
     )
 
-    provider.reload_api_key('')
-
     assert provider.health() == {
         'ok': False,
-        'error': 'OPENAI_API_KEY is not configured',
+        'error': 'OpenAI credential is unavailable',
     }
-    with pytest.raises(SummarizerProviderError, match='is not configured'):
+    with pytest.raises(SummarizerProviderError, match='credential is unavailable'):
         provider.generate([], {'type': 'object'})
     opener.assert_not_called()
 
@@ -203,7 +218,7 @@ def test_revoked_openai_key_is_rejected_without_fallback_or_secret_leak(caplog):
     revoked_key = 'sk-test-revoked-secret'
     opener = Mock(side_effect=RuntimeError(f'401 revoked: {revoked_key}'))
     provider = OpenAICompactSummarizerProvider(
-        api_key=revoked_key,
+        credential_provider=FakeCredentialProvider(revoked_key),
         model='gpt-5.6-luna',
         cloud_authorized=lambda: True,
         opener=opener,
@@ -223,7 +238,7 @@ def test_revoked_openai_key_is_rejected_without_fallback_or_secret_leak(caplog):
 def test_revoked_key_rejects_update_without_memory_or_artifact_leak(tmp_path):
     revoked_key = 'sk-test-revoked-artifact-secret'
     provider = OpenAICompactSummarizerProvider(
-        api_key=revoked_key,
+        credential_provider=FakeCredentialProvider(revoked_key),
         model='gpt-5.6-luna',
         cloud_authorized=lambda: True,
         opener=Mock(side_effect=RuntimeError(f'401 revoked: {revoked_key}')),
@@ -268,7 +283,7 @@ def test_openai_provider_uses_strict_responses_schema_and_records_usage():
         })
 
     provider = OpenAICompactSummarizerProvider(
-        api_key='sk-test-secret',
+        credential_provider=FakeCredentialProvider('test-credential'),
         model='gpt-5.6-luna',
         cloud_authorized=lambda: True,
         timeout_seconds=17,
@@ -315,7 +330,7 @@ def test_provider_switch_does_not_change_joi_state_or_memory():
 
 def test_provider_has_no_state_or_memory_ownership():
     provider = OpenAICompactSummarizerProvider(
-        api_key='sk-test-secret',
+        credential_provider=FakeCredentialProvider('test-credential'),
         model='gpt-5.6-luna',
         cloud_authorized=lambda: True,
         opener=Mock(),
@@ -389,11 +404,11 @@ def test_cloud_benchmark_is_shadow_only_and_records_provider_telemetry(tmp_path)
     )
     settings = Mock(
         cloud_enabled=True,
-        openai_api_key='sk-test-secret',
         openai_model='gpt-5.6-luna',
         openai_base_url='https://api.openai.com/v1',
         openai_timeout_seconds=60,
         compact_memory_max_characters=2000,
+        credential_audit_path=str(tmp_path / 'credential-audit.jsonl'),
     )
 
     result = run_cloud_benchmark(

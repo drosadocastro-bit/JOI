@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "benchmark": "joi-graph-write-only-v1",
+  "preregistered_at_utc": "2026-09-01T17:47:20.4130916Z",
+  "status": "FROZEN_NOT_EXECUTED",
+  "question": "Can JOI construct an inspectable, provenance-linked associative graph from completed exchanges without changing conversation behavior?",
+  "inputs": {
+    "corpus": "corpus.json",
+    "expected_labels": "expected-labels.json",
+    "human_review_template": "human-review-template.json"
+  },
+  "dependency_versions": {
+    "python": "3.13.7",
+    "pytest": "9.1.1",
+    "graph_schema": 1,
+    "extractor": "explicit-patterns-v1"
+  },
+  "metric_formulas": {
+    "automatic_extraction_precision": "matched_expected_entities / extracted_entities; null when extracted_entities is zero",
+    "human_reviewed_extraction_precision": "human_confirmed_supported_entities / human_reviewed_extracted_entities; pending until an independent human completes the frozen template",
+    "unsupported_entity_rate": "unsupported_extracted_entities / extracted_entities; zero required",
+    "source_provenance_coverage": "current_entities_with_valid_source_exchange_and_turn / current_entities; one required",
+    "duplicate_replay_inflation_rate": "replay_added_observations / observations_before_replay; zero required",
+    "deterministic_replay_match": "byte_identical_fresh_replays; true required",
+    "malformed_and_write_survival": "surviving_controls / total_controls; one required",
+    "policy_lineage_preservation": "policy_cases_with_suppressed_preserved_lineage / policy_cases; one required",
+    "behavior_delta": "on_reply != off_reply; false required",
+    "prompt_delta": "on_prompt_messages != off_prompt_messages; false required",
+    "retrieval_count": "number_of_graph_reads_used_to_construct_chat_prompt_or_reply; zero required",
+    "provider_network_count": "provider_or_network_calls_during_graph_evaluation; zero required"
+  },
+  "hard_failure_conditions": [
+    "unsupported entity",
+    "provenance failure",
+    "partial transaction",
+    "forgotten content represented as current",
+    "prompt delta",
+    "behavior delta",
+    "retrieval",
+    "provider call",
+    "network call"
+  ],
+  "authorization_boundary": {
+    "graph_write_only": true,
+    "developer_inspection_only": true,
+    "retrieval_enabled": false,
+    "prompt_injection_enabled": false,
+    "provider_calls_enabled": false,
+    "network_calls_enabled": false,
+    "publication_enabled": false,
+    "production_reliance_enabled": false
+  },
+  "human_review_required_for_phase_pass": true,
+  "result_opened": false
+}

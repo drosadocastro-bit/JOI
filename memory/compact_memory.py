@@ -1,4 +1,5 @@
 import json
+import hashlib
 import os
 import queue
 import threading
@@ -18,6 +19,43 @@ COMPACT_MEMORY_SCHEMA_VERSION = 1
 
 class CompactMemoryError(RuntimeError):
     pass
+
+
+def _quarantine_artifact(path: Path, reason: str) -> Path:
+    suffix = time.time_ns()
+    quarantine_path = path.with_name(f'{path.name}.corrupt-{suffix}')
+    while quarantine_path.exists() or quarantine_path.with_name(
+        f'{quarantine_path.name}.receipt.json'
+    ).exists():
+        suffix += 1
+        quarantine_path = path.with_name(f'{path.name}.corrupt-{suffix}')
+    try:
+        digest = hashlib.sha256(path.read_bytes()).hexdigest()
+        path.replace(quarantine_path)
+        receipt_path = quarantine_path.with_name(
+            f'{quarantine_path.name}.receipt.json'
+        )
+        receipt = {
+            'schema_version': 1,
+            'original_path': path.name,
+            'quarantined_path': quarantine_path.name,
+            'reason': reason,
+            'sha256': digest,
+            'quarantined_at_utc': datetime.now(timezone.utc).isoformat(),
+        }
+        receipt_path.write_text(
+            json.dumps(receipt, ensure_ascii=True, indent=2) + '\n',
+            encoding='utf-8',
+        )
+    except OSError as exc:
+        raise CompactMemoryError('could not quarantine corrupt memory artifact') from exc
+    return quarantine_path
+
+
+def _quarantine_interrupted_write(path: Path) -> None:
+    temporary_path = path.with_suffix(f'{path.suffix}.tmp')
+    if temporary_path.exists():
+        _quarantine_artifact(temporary_path, 'interrupted atomic write')
 
 
 @dataclass(frozen=True)
@@ -196,14 +234,30 @@ class ModelCompactMemoryStore:
     def __init__(self, path: str | Path):
         self.path = Path(path)
 
-    def load(self) -> ModelCompactMemoryCandidate | None:
+    def load(
+        self,
+        expected_policy_revision: int | None = None,
+    ) -> ModelCompactMemoryCandidate | None:
+        _quarantine_interrupted_write(self.path)
         if not self.path.exists():
             return None
         try:
-            return parse_model_candidate(self.path.read_text(encoding='utf-8'))
-        except CompactMemoryError:
-            raise
-        except OSError as exc:
+            candidate = parse_model_candidate(self.path.read_text(encoding='utf-8'))
+            if (
+                expected_policy_revision is not None
+                and candidate.source_policy_revision != expected_policy_revision
+            ):
+                raise CompactMemoryError('model candidate policy revision is stale')
+            return candidate
+        except CompactMemoryError as exc:
+            _quarantine_artifact(self.path, str(exc))
+            raise CompactMemoryError(f'{exc}; artifact quarantined') from exc
+        except (OSError, UnicodeError) as exc:
+            if self.path.exists():
+                _quarantine_artifact(self.path, 'model candidate is malformed')
+                raise CompactMemoryError(
+                    'model candidate is malformed; artifact quarantined'
+                ) from exc
             raise CompactMemoryError('could not load model compact memory') from exc
 
     def save(self, candidate: ModelCompactMemoryCandidate) -> None:
@@ -755,15 +809,22 @@ class CompactMemoryStore:
         self.path = Path(path)
 
     def load(self) -> CompactMemoryState | None:
+        _quarantine_interrupted_write(self.path)
         if not self.path.exists():
             return None
         try:
             payload = json.loads(self.path.read_text(encoding='utf-8'))
             return self._state_from_payload(payload)
-        except CompactMemoryError:
-            raise
-        except (OSError, json.JSONDecodeError, TypeError, ValueError) as exc:
-            raise CompactMemoryError('compact memory is malformed') from exc
+        except CompactMemoryError as exc:
+            _quarantine_artifact(self.path, str(exc))
+            raise CompactMemoryError(f'{exc}; artifact quarantined') from exc
+        except (OSError, UnicodeError, json.JSONDecodeError, TypeError, ValueError) as exc:
+            if self.path.exists():
+                _quarantine_artifact(self.path, 'compact memory is malformed')
+                raise CompactMemoryError(
+                    'compact memory is malformed; artifact quarantined'
+                ) from exc
+            raise CompactMemoryError('could not load compact memory') from exc
 
     def save(self, state: CompactMemoryState) -> None:
         self._validate_state(state)

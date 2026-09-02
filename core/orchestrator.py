@@ -15,8 +15,16 @@ from memory.compact_memory import (
     ModelCompactSummarizer,
     ProviderBackedCompactSummarizer,
 )
+from memory.graph_memory import (
+    ExplicitEntityExtractor,
+    GraphMemoryManager,
+    GraphMemoryStore,
+    GraphMemoryWorker,
+)
+from memory.graph_retrieval import GraphShadowRetriever, ShadowReceiptStore
 from memory.memory_store import EpisodicMemoryStore
 from memory.session_memory import SessionMemory
+from security.credential_provider import CredentialProvider, write_audit_event
 from voice.voice_router import ElevenLabsVoiceProvider, KokoroVoiceRouter, VoiceRouter
 
 
@@ -38,12 +46,24 @@ class JoiOrchestrator:
             'cloud': settings.cloud_enabled,
         }
         self.memory = SessionMemory(system_prompt)
+        self.credential_provider = CredentialProvider(
+            audit_sink=lambda event: write_audit_event(
+                settings.credential_audit_path,
+                event,
+            ),
+        )
         self.memory_store = None
         self.memory_store_error = None
         self.compact_memory_worker = None
         self.compact_memory_error = None
         self.model_compact_memory_worker = None
         self.model_compact_memory_error = None
+        self.graph_memory_manager = None
+        self.graph_memory_worker = None
+        self.graph_memory_error = None
+        self.graph_retriever = None
+        self.last_graph_retrieval_receipt = None
+        self.graph_retrieval_error = None
         if settings.persistent_memory_enabled:
             try:
                 self.memory_store = EpisodicMemoryStore(settings.memory_store_path)
@@ -62,6 +82,35 @@ class JoiOrchestrator:
             except Exception as exc:
                 self.compact_memory_error = str(exc)
                 self.logger.exception('Compact memory initialization failed')
+        if (
+            getattr(settings, 'graph_memory_enabled', False)
+            and self.memory_store is not None
+        ):
+            try:
+                self.graph_memory_manager = GraphMemoryManager(
+                    store=GraphMemoryStore(settings.graph_memory_path),
+                    extractor=ExplicitEntityExtractor(),
+                )
+                self.graph_memory_worker = GraphMemoryWorker(
+                    self.graph_memory_manager,
+                    logger,
+                )
+            except Exception as exc:
+                self.graph_memory_manager = None
+                self.graph_memory_error = str(exc)
+                self.logger.exception('Graph memory initialization failed')
+        if (
+            getattr(settings, 'graph_retrieval_enabled', False)
+            and self.graph_memory_manager is not None
+            and self.memory_store is not None
+        ):
+            try:
+                self.graph_retriever = GraphShadowRetriever(
+                    ShadowReceiptStore(settings.graph_retrieval_receipt_path)
+                )
+            except Exception as exc:
+                self.graph_retrieval_error = str(exc)
+                self.logger.exception('Graph retrieval initialization failed')
         local_brain = LocalLMStudioBrain(settings.lmstudio_base_url, settings.local_model, settings.request_timeout_seconds)
         self.brain = BrainRouter(local_brain)
         if (
@@ -72,7 +121,7 @@ class JoiOrchestrator:
             try:
                 if getattr(settings, 'compact_memory_provider', 'local') == 'openai':
                     provider = OpenAICompactSummarizerProvider(
-                        api_key=settings.openai_api_key,
+                        credential_provider=self.credential_provider,
                         model=settings.openai_model,
                         cloud_authorized=lambda: self.state.cloud_enabled,
                         base_url=settings.openai_base_url,
@@ -130,12 +179,13 @@ class JoiOrchestrator:
             online_provider = None
             if settings.voice_mode in {'online', 'hybrid'}:
                 online_provider = ElevenLabsVoiceProvider(
-                    api_key=settings.elevenlabs_api_key,
+                    credential_provider=self.credential_provider,
                     voice_id=settings.elevenlabs_voice_id,
                     model_id=settings.elevenlabs_model_id,
                     base_url=settings.elevenlabs_base_url,
                     output_path=settings.tts_output_path,
                     timeout_seconds=settings.elevenlabs_timeout_seconds,
+                    cloud_authorized=lambda: self.state.cloud_enabled,
                 )
 
             self.voice = VoiceRouter(
@@ -248,6 +298,13 @@ class JoiOrchestrator:
     def _persist_exchange(self, user_text: str, assistant_text: str):
         if self.memory_store is None:
             return
+        effective_snapshot = None
+        if self.graph_retriever is not None:
+            try:
+                effective_snapshot = self.memory_store.effective_snapshot()
+            except Exception as exc:
+                self.graph_retrieval_error = str(exc)
+                self.logger.exception('Graph retrieval snapshot failed')
         try:
             turns = self.memory_store.append_exchange(user_text, assistant_text)
         except Exception as exc:
@@ -255,8 +312,30 @@ class JoiOrchestrator:
             self.memory_store_error = str(exc)
             self.logger.exception('Persistent memory write failed')
             return
+        if (
+            self.graph_retriever is not None
+            and effective_snapshot is not None
+            and self.graph_memory_manager is not None
+            and self.graph_memory_manager.state is not None
+        ):
+            try:
+                self.last_graph_retrieval_receipt = self.graph_retriever.retrieve(
+                    query_turn_id=turns[0].turn_id,
+                    content=user_text,
+                    historical_state=self.graph_memory_manager.state,
+                    effective_snapshot=effective_snapshot,
+                )
+            except Exception as exc:
+                self.graph_retrieval_error = str(exc)
+                self.logger.exception('Graph shadow retrieval failed')
         if self.compact_memory_worker is not None:
             self.compact_memory_worker.submit(turns)
+        if self.graph_memory_worker is not None:
+            try:
+                self.graph_memory_worker.submit(turns)
+            except Exception as exc:
+                self.graph_memory_error = str(exc)
+                self.logger.exception('Graph memory submission failed')
         self._submit_model_compact_snapshot()
 
     def _submit_model_compact_snapshot(self):
@@ -290,19 +369,48 @@ class JoiOrchestrator:
             replacement_content,
             reason='explicit user correction',
         )
+        self._submit_graph_policy(policy)
         self._submit_model_compact_snapshot()
         return policy
 
     def memory_forget(self, turn_id: str, reason: str | None = None):
         policy = self._require_memory_store().forget_turn(turn_id, reason=reason)
+        self._submit_graph_policy(policy)
         self._submit_model_compact_snapshot()
         return policy
+
+    def _require_graph_memory_manager(self):
+        if self.graph_memory_manager is None:
+            if not getattr(self.settings, 'graph_memory_enabled', False):
+                raise ValueError('Graph memory is not configured')
+            raise ValueError('Graph memory is unavailable')
+        return self.graph_memory_manager
+
+    def graph_memory_status(self):
+        return self._require_graph_memory_manager().status()
+
+    def graph_memory_recent(self, limit: int = 10):
+        return self._require_graph_memory_manager().recent(limit)
+
+    def graph_memory_why(self, item_id: str):
+        return self._require_graph_memory_manager().why(item_id)
+
+    def _submit_graph_policy(self, policy):
+        if self.graph_memory_worker is None:
+            return
+        try:
+            self.graph_memory_worker.submit_policy(policy)
+        except Exception as exc:
+            self.graph_memory_error = str(exc)
+            self.logger.exception('Graph memory policy submission failed')
 
     def close(self):
         if self.compact_memory_worker is not None:
             self.compact_memory_worker.close()
         if self.model_compact_memory_worker is not None:
             self.model_compact_memory_worker.close()
+        if self.graph_memory_worker is not None:
+            self.graph_memory_worker.close()
 
     def speak(self, text: str):
         if self.voice is None or not self.state.voice_enabled:

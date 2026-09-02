@@ -17,28 +17,28 @@ to authorize a request; that credential must never enter JOI's durable memory.
 2. Revoke the old key at the provider before relying on the replacement.
 3. Create a least-privilege replacement using the provider's approved account
    and project controls.
-4. Store it only in the ignored local `.env` or an approved external secret
-   store. Do not type it into a shell command or commit it.
-5. For an active provider instance, call `reload_api_key(replacement)` through
-   an authorized local control path. Reloading an empty value deliberately
-   places the provider in fail-closed missing-credential state.
+4. Run `python credential_admin.py`, select `openai` and `set`, and enter the
+   replacement only through the hidden prompts. Never place it in `.env`, a
+   command argument, an environment variable, shell history, or the clipboard.
+5. Provider instances resolve the current DPAPI record at each authorized call;
+   there is no key reload API or retained provider key.
 6. Keep CLOUD OFF until the operator explicitly authorizes a health request.
 7. When authorized, perform one health request. Do not retry silently and do
    not fall back to another provider after authentication failure.
 8. Confirm that logs, Compact Memory state, evaluation reports, telemetry, and
    benchmark artifacts contain no key material.
 
-Editing `.env` does not mutate an already-running provider instance. The active
-instance must be reloaded explicitly or the process must be restarted. This
-prevents accidental ambiguity about which credential is in use.
+Deleting the DPAPI record makes the next request fail closed. Replacing it makes
+the next authorized request use the replacement without restarting or mutating
+settings.
 
 ## Revocation Or Suspected Exposure
 
 1. Set CLOUD OFF immediately.
 2. Revoke the exposed key at the provider.
 3. Preserve only sanitized error and audit metadata; never preserve the key.
-4. Clear the running provider with `reload_api_key("")` when an authorized
-   local control path is available, or stop the process.
+4. Run `python credential_admin.py`, select `openai` and `delete`, and verify
+   the next authorized health request fails closed without opening a request.
 5. Search tracked and non-ignored files for credential patterns.
 6. Inspect local logs and generated artifacts without printing secret values.
 7. Create and load a replacement by following Planned Rotation.
@@ -61,8 +61,8 @@ prevents accidental ambiguity about which credential is in use.
 
 Automated provider tests cover:
 
-- revoke to replace to in-process reload;
-- replacement Authorization header use without stale-key reuse;
+- call-time replacement without process restart;
+- replacement Authorization header use without stale-value reuse;
 - missing-key refusal before opening a request;
 - simulated revoked-key rejection;
 - no fallback after authentication failure;

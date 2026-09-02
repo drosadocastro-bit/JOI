@@ -21,13 +21,17 @@ itself. JOI is a modular architecture, not a single chatbot.
 
 ## Current Status
 
-**Phase 5A: Compact Memory evaluation closed with known limitations**
+**Phase 5B: Write-only graph evaluation closed with human-reviewed PASS**
 
 JOI now has a stable local text and voice core, append-only episodic memory,
 inspectable correction and forgetting, and provider-independent Compact Memory
 evaluation. Phase 5A passed its frozen provider-contract and retention-quality
 gates. Model-backed Compact Memory remains shadow-only: publication, retrieval,
 live prompt injection, and production reliance are not authorized.
+Phase 5B adds a provider-free, default-off associative graph writer and explicit
+source-linked inspection. Its frozen automatic gates and independent review of
+all 10 extracted entities passed at 100% precision. This closes only the bounded
+write-only construction and inspection scope.
 
 Implemented:
 
@@ -58,6 +62,15 @@ Implemented:
 - Luna provider-contract PASS at 25, 50, 100, and 200 updates
 - preregistered Retention Quality PASS with completed human adjudication
 - 174 passing tests at the Phase 5A closure baseline
+- default-off, write-only graph construction from completed exchanges
+- deterministic explicit entity candidates, co-occurrence edges, replay
+	idempotence, atomic storage, correction/forgetting suppression lineage, and
+	source-linked graph inspection
+- Phase 5B frozen automatic evaluation PASS with zero unsupported entities,
+	full provenance, zero replay inflation, byte-identical replay, and zero
+	behavior, prompt, retrieval, provider, or network delta
+- Phase 5B human-reviewed extraction precision PASS at 100% across 10 entities
+- 239 passing tests at the Phase 5B write-only closure checkpoint
 
 Not implemented yet:
 
@@ -141,14 +154,13 @@ memory.
 Voice routing is explicit and defaults to `local`, which uses Kokoro without a
 network request. Supported values are `local`, `online`, and `hybrid`.
 
-ElevenLabs requires deliberate cloud opt-in and credentials stored only in the
-local `.env` file:
+ElevenLabs requires deliberate cloud opt-in and a user-scoped Windows DPAPI
+credential stored outside the project tree:
 
 ```dotenv
 VOICE_ENABLED=true
 VOICE_MODE=online
 CLOUD_ENABLED=true
-ELEVENLABS_API_KEY=
 ELEVENLABS_VOICE_ID=
 ELEVENLABS_SPANISH_VOICE_ID=
 ```
@@ -162,12 +174,14 @@ network calls. The configured English voice passed a live human listening test.
 `TTS_LANGUAGE=es` selects `ELEVENLABS_SPANISH_VOICE_ID` instead. The configured
 Spanish voice also passed a live human listening test.
 
-## API Key Protection
+## Provider Credential Protection
 
-- `.env` and private `.env.*` variants are excluded from Git; only the blank
-	`.env.example` template is tracked.
-- API keys are omitted from `Settings` representations and redacted from file
-	log messages and tracebacks.
+- `.env` is non-secret configuration only. Blank legacy key placeholders in
+	`.env.example` are ignored by JOI and must never contain values.
+- OpenAI and ElevenLabs keys are separate user-scoped Windows DPAPI records
+	under `%LOCALAPPDATA%\JOI\credentials`, outside the repository.
+- Settings, core state, status, telemetry, JSON, and provider instances do not
+	own or retain API keys.
 - ElevenLabs credentials may be sent only to the documented HTTPS production
 	and residency hosts under `/v1`.
 - OpenAI Compact Memory credentials may be sent only to the official HTTPS
@@ -177,10 +191,14 @@ Spanish voice also passed a live human listening test.
 	another host.
 - Local voice mode does not validate or contact the configured cloud endpoint.
 
-The local `.env` file is still plaintext on disk. Use restricted provider keys,
-set conservative service quotas, rotate credentials after suspected exposure,
-and never paste them into source, logs, issues, commits, or chat. OpenAI
-rotation and recovery are documented in
+Manage a credential only through hidden prompts:
+
+```powershell
+.\.venv\Scripts\python.exe credential_admin.py
+```
+
+Never pass a key as an argument, environment variable, shell command, global
+machine setting, or clipboard automation. Rotation and recovery are documented in
 [docs/openai-key-rotation-recovery.md](docs/openai-key-rotation-recovery.md).
 
 ## Runtime Privacy State
@@ -314,7 +332,28 @@ See the [Phase 5A closure audit](docs/phase-5a-closure-audit.md),
 [technical debt register](docs/technical-debt-register.json), and
 [final retention-quality report](docs/benchmarks/2026-09-01-retention-quality/luna/retention-quality-final.md).
 Phase 5B shadow retrieval is preregistered but has not started; `TD-JOI-009`
-must be resolved before implementation.
+is resolved. Write-only graph construction and inspection passed their separate
+frozen automatic and human-review gates, but retrieval remains prohibited.
+
+Graph writes additionally require persistent mode and explicit opt-in:
+
+```dotenv
+ENABLE_GRAPH_MEMORY=false
+```
+
+Allowed inspection commands are `/memory graph status`, `/memory graph node
+<id>`, `/memory graph recent [limit]`, and `/memory graph why
+<node-or-edge-id>`. They do not create a graph read path for conversation.
+See the [Phase 5B preregistration](docs/phase-5b-graph-memory-preregistration.md),
+[entry authorization](docs/phase-5b-entry-authorization.json), and
+[closure record](docs/phase-5b-closure-record.json).
+
+Phase 5B proves only that JOI can construct an inspectable, provenance-linked
+associative graph from completed exchanges without changing conversation
+behavior. It proves no retrieval quality, factual truth, relational
+understanding, identity, authority, production readiness, or NIC wire
+compatibility. The graph may encode association. It does not create evidence,
+truth, identity, or authority.
 
 ## Tests and Acceptance
 

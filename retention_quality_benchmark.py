@@ -374,10 +374,16 @@ def main() -> None:
     settings = Settings.load()
     if not settings.cloud_enabled:
         raise SystemExit('CLOUD must be ON')
-    if not settings.openai_api_key:
-        raise SystemExit('OPENAI_API_KEY is required')
+    from security.credential_provider import CredentialProvider, write_audit_event
+
+    credential_provider = CredentialProvider(
+        audit_sink=lambda event: write_audit_event(
+            settings.credential_audit_path,
+            event,
+        ),
+    )
     provider = OpenAICompactSummarizerProvider(
-        api_key=settings.openai_api_key,
+        credential_provider=credential_provider,
         model=settings.openai_model,
         cloud_authorized=lambda: settings.cloud_enabled,
         base_url=settings.openai_base_url,

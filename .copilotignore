@@ -1,0 +1,12 @@
+.env*
+.credentials/
+credentials/
+secrets/
+secret-cache/
+data/memory/**
+data/snapshots/**
+data/logs/**
+*.dmp
+*.dump
+*.core
+crash-reports/

@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "corpus": "joi-graph-write-only-v1",
+  "frozen_at_utc": "2026-09-01T17:47:20.4130916Z",
+  "implementation_output_accessed_during_labeling": false,
+  "exchanges": [
+    {
+      "exchange_id": "graph-eval-001",
+      "created_at_utc": "2026-09-01T12:00:00+00:00",
+      "user": "My name is Luna. I prefer green tea.",
+      "assistant": "I understand."
+    },
+    {
+      "exchange_id": "graph-eval-002",
+      "created_at_utc": "2026-09-01T12:01:00+00:00",
+      "user": "I am working on Project Atlas. I live in Madrid.",
+      "assistant": "Noted."
+    },
+    {
+      "exchange_id": "graph-eval-003",
+      "created_at_utc": "2026-09-01T12:02:00+00:00",
+      "user": "We are discussing source provenance. The current task is review graph schema.",
+      "assistant": "Understood."
+    },
+    {
+      "exchange_id": "graph-eval-004",
+      "created_at_utc": "2026-09-01T12:03:00+00:00",
+      "user": "Remember that release is Friday.",
+      "assistant": "Recorded as your explicit statement."
+    },
+    {
+      "exchange_id": "graph-eval-005",
+      "created_at_utc": "2026-09-01T12:04:00+00:00",
+      "user": "I am exhausted and perhaps sad.",
+      "assistant": "That sounds difficult."
+    },
+    {
+      "exchange_id": "graph-eval-006",
+      "created_at_utc": "2026-09-01T12:05:00+00:00",
+      "user": "!!!",
+      "assistant": "."
+    },
+    {
+      "exchange_id": "graph-eval-007",
+      "created_at_utc": "2026-09-01T12:06:00+00:00",
+      "user": "My name is Jose. I prefer cafe.",
+      "assistant": "Understood."
+    },
+    {
+      "exchange_id": "graph-eval-008",
+      "created_at_utc": "2026-09-01T12:07:00+00:00",
+      "user": "I prefer tea. I prefer tea.",
+      "assistant": "Noted once."
+    }
+  ],
+  "replay_exchange_ids": [
+    "graph-eval-001",
+    "graph-eval-008"
+  ],
+  "policy_cases": [
+    {
+      "policy_id": "graph-policy-001",
+      "exchange_id": "graph-eval-001",
+      "target_role": "user",
+      "action": "forget",
+      "created_at_utc": "2026-09-01T12:30:00+00:00"
+    },
+    {
+      "policy_id": "graph-policy-002",
+      "exchange_id": "graph-eval-002",
+      "target_role": "user",
+      "action": "correct",
+      "replacement_content": "I am working on Project Atlas. I live in Lisbon.",
+      "created_at_utc": "2026-09-01T12:31:00+00:00"
+    }
+  ],
+  "malformed_controls": [
+    "unpaired_surrogate_source",
+    "unsupported_inferred_candidate",
+    "malformed_extractor_result",
+    "graph_store_write_failure",
+    "corrupt_graph_artifact"
+  ]
+}

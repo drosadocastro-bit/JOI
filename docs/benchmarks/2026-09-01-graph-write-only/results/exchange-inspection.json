@@ -1,0 +1,412 @@
+{
+  "benchmark": "joi-graph-write-only-v1",
+  "exchanges": [
+    {
+      "edges": [
+        {
+          "edge_id": "edge-321d2d54f411f18d0ce7d785",
+          "first_seen_utc": "2026-09-01T12:00:00+00:00",
+          "last_seen_utc": "2026-09-01T12:00:00+00:00",
+          "relation": "co_occurs",
+          "schema_version": 1,
+          "source_exchange_ids": [
+            "graph-eval-001"
+          ],
+          "source_node_id": "entity-89de9d108b679b7805f848ad",
+          "target_node_id": "entity-ce7bdf93a3dda4b08181a345",
+          "weight": 1
+        }
+      ],
+      "entities": [
+        {
+          "aliases": [
+            "green tea"
+          ],
+          "canonical_label": "green tea",
+          "entity_type": "preference",
+          "first_seen_utc": "2026-09-01T12:00:00+00:00",
+          "last_seen_utc": "2026-09-01T12:00:00+00:00",
+          "node_id": "entity-89de9d108b679b7805f848ad",
+          "observation_count": 1,
+          "schema_version": 1,
+          "source_refs": [
+            {
+              "exchange_id": "graph-eval-001",
+              "observed_at_utc": "2026-09-01T12:00:00+00:00",
+              "policy_ids": [
+                "graph-policy-001"
+              ],
+              "suppressed": true,
+              "turn_ids": [
+                "graph-eval-001-user"
+              ]
+            }
+          ]
+        },
+        {
+          "aliases": [
+            "Luna"
+          ],
+          "canonical_label": "luna",
+          "entity_type": "person",
+          "first_seen_utc": "2026-09-01T12:00:00+00:00",
+          "last_seen_utc": "2026-09-01T12:00:00+00:00",
+          "node_id": "entity-ce7bdf93a3dda4b08181a345",
+          "observation_count": 1,
+          "schema_version": 1,
+          "source_refs": [
+            {
+              "exchange_id": "graph-eval-001",
+              "observed_at_utc": "2026-09-01T12:00:00+00:00",
+              "policy_ids": [
+                "graph-policy-001"
+              ],
+              "suppressed": true,
+              "turn_ids": [
+                "graph-eval-001-user"
+              ]
+            }
+          ]
+        }
+      ],
+      "exchange_id": "graph-eval-001",
+      "policy_cases": [
+        {
+          "action": "forget",
+          "created_at_utc": "2026-09-01T12:30:00+00:00",
+          "exchange_id": "graph-eval-001",
+          "policy_id": "graph-policy-001",
+          "target_role": "user"
+        }
+      ],
+      "source": {
+        "assistant": "I understand.",
+        "created_at_utc": "2026-09-01T12:00:00+00:00",
+        "exchange_id": "graph-eval-001",
+        "user": "My name is Luna. I prefer green tea."
+      }
+    },
+    {
+      "edges": [
+        {
+          "edge_id": "edge-744cdcfc32db79c3574a90bf",
+          "first_seen_utc": "2026-09-01T12:01:00+00:00",
+          "last_seen_utc": "2026-09-01T12:01:00+00:00",
+          "relation": "co_occurs",
+          "schema_version": 1,
+          "source_exchange_ids": [
+            "graph-eval-002"
+          ],
+          "source_node_id": "entity-ec8f559078ae93845a60253d",
+          "target_node_id": "entity-f028432fb71e295fe902e614",
+          "weight": 1
+        }
+      ],
+      "entities": [
+        {
+          "aliases": [
+            "Project Atlas"
+          ],
+          "canonical_label": "project atlas",
+          "entity_type": "project",
+          "first_seen_utc": "2026-09-01T12:01:00+00:00",
+          "last_seen_utc": "2026-09-01T12:01:00+00:00",
+          "node_id": "entity-ec8f559078ae93845a60253d",
+          "observation_count": 1,
+          "schema_version": 1,
+          "source_refs": [
+            {
+              "exchange_id": "graph-eval-002",
+              "observed_at_utc": "2026-09-01T12:01:00+00:00",
+              "policy_ids": [
+                "graph-policy-002"
+              ],
+              "suppressed": true,
+              "turn_ids": [
+                "graph-eval-002-user"
+              ]
+            }
+          ]
+        },
+        {
+          "aliases": [
+            "Madrid"
+          ],
+          "canonical_label": "madrid",
+          "entity_type": "place",
+          "first_seen_utc": "2026-09-01T12:01:00+00:00",
+          "last_seen_utc": "2026-09-01T12:01:00+00:00",
+          "node_id": "entity-f028432fb71e295fe902e614",
+          "observation_count": 1,
+          "schema_version": 1,
+          "source_refs": [
+            {
+              "exchange_id": "graph-eval-002",
+              "observed_at_utc": "2026-09-01T12:01:00+00:00",
+              "policy_ids": [
+                "graph-policy-002"
+              ],
+              "suppressed": true,
+              "turn_ids": [
+                "graph-eval-002-user"
+              ]
+            }
+          ]
+        }
+      ],
+      "exchange_id": "graph-eval-002",
+      "policy_cases": [
+        {
+          "action": "correct",
+          "created_at_utc": "2026-09-01T12:31:00+00:00",
+          "exchange_id": "graph-eval-002",
+          "policy_id": "graph-policy-002",
+          "replacement_content": "I am working on Project Atlas. I live in Lisbon.",
+          "target_role": "user"
+        }
+      ],
+      "source": {
+        "assistant": "Noted.",
+        "created_at_utc": "2026-09-01T12:01:00+00:00",
+        "exchange_id": "graph-eval-002",
+        "user": "I am working on Project Atlas. I live in Madrid."
+      }
+    },
+    {
+      "edges": [
+        {
+          "edge_id": "edge-a73cd1a084ccb8517e387e60",
+          "first_seen_utc": "2026-09-01T12:02:00+00:00",
+          "last_seen_utc": "2026-09-01T12:02:00+00:00",
+          "relation": "co_occurs",
+          "schema_version": 1,
+          "source_exchange_ids": [
+            "graph-eval-003"
+          ],
+          "source_node_id": "entity-7cdf0a6a6141e79bfa52758c",
+          "target_node_id": "entity-c9b6b59671db1a6bf7688c08",
+          "weight": 1
+        }
+      ],
+      "entities": [
+        {
+          "aliases": [
+            "source provenance"
+          ],
+          "canonical_label": "source provenance",
+          "entity_type": "concept",
+          "first_seen_utc": "2026-09-01T12:02:00+00:00",
+          "last_seen_utc": "2026-09-01T12:02:00+00:00",
+          "node_id": "entity-7cdf0a6a6141e79bfa52758c",
+          "observation_count": 1,
+          "schema_version": 1,
+          "source_refs": [
+            {
+              "exchange_id": "graph-eval-003",
+              "observed_at_utc": "2026-09-01T12:02:00+00:00",
+              "policy_ids": [
+                null
+              ],
+              "suppressed": false,
+              "turn_ids": [
+                "graph-eval-003-user"
+              ]
+            }
+          ]
+        },
+        {
+          "aliases": [
+            "review graph schema"
+          ],
+          "canonical_label": "review graph schema",
+          "entity_type": "task_topic",
+          "first_seen_utc": "2026-09-01T12:02:00+00:00",
+          "last_seen_utc": "2026-09-01T12:02:00+00:00",
+          "node_id": "entity-c9b6b59671db1a6bf7688c08",
+          "observation_count": 1,
+          "schema_version": 1,
+          "source_refs": [
+            {
+              "exchange_id": "graph-eval-003",
+              "observed_at_utc": "2026-09-01T12:02:00+00:00",
+              "policy_ids": [
+                null
+              ],
+              "suppressed": false,
+              "turn_ids": [
+                "graph-eval-003-user"
+              ]
+            }
+          ]
+        }
+      ],
+      "exchange_id": "graph-eval-003",
+      "policy_cases": [],
+      "source": {
+        "assistant": "Understood.",
+        "created_at_utc": "2026-09-01T12:02:00+00:00",
+        "exchange_id": "graph-eval-003",
+        "user": "We are discussing source provenance. The current task is review graph schema."
+      }
+    },
+    {
+      "edges": [],
+      "entities": [
+        {
+          "aliases": [
+            "release is Friday"
+          ],
+          "canonical_label": "release is friday",
+          "entity_type": "fact",
+          "first_seen_utc": "2026-09-01T12:03:00+00:00",
+          "last_seen_utc": "2026-09-01T12:03:00+00:00",
+          "node_id": "entity-eccd2538bdd32733c0dd0418",
+          "observation_count": 1,
+          "schema_version": 1,
+          "source_refs": [
+            {
+              "exchange_id": "graph-eval-004",
+              "observed_at_utc": "2026-09-01T12:03:00+00:00",
+              "policy_ids": [
+                null
+              ],
+              "suppressed": false,
+              "turn_ids": [
+                "graph-eval-004-user"
+              ]
+            }
+          ]
+        }
+      ],
+      "exchange_id": "graph-eval-004",
+      "policy_cases": [],
+      "source": {
+        "assistant": "Recorded as your explicit statement.",
+        "created_at_utc": "2026-09-01T12:03:00+00:00",
+        "exchange_id": "graph-eval-004",
+        "user": "Remember that release is Friday."
+      }
+    },
+    {
+      "edges": [
+        {
+          "edge_id": "edge-11552be7e3bfa07c6f79c9eb",
+          "first_seen_utc": "2026-09-01T12:06:00+00:00",
+          "last_seen_utc": "2026-09-01T12:06:00+00:00",
+          "relation": "co_occurs",
+          "schema_version": 1,
+          "source_exchange_ids": [
+            "graph-eval-007"
+          ],
+          "source_node_id": "entity-732ace9462159238e63d95aa",
+          "target_node_id": "entity-a225092bdcb82591f94683ec",
+          "weight": 1
+        }
+      ],
+      "entities": [
+        {
+          "aliases": [
+            "Jose"
+          ],
+          "canonical_label": "jose",
+          "entity_type": "person",
+          "first_seen_utc": "2026-09-01T12:06:00+00:00",
+          "last_seen_utc": "2026-09-01T12:06:00+00:00",
+          "node_id": "entity-732ace9462159238e63d95aa",
+          "observation_count": 1,
+          "schema_version": 1,
+          "source_refs": [
+            {
+              "exchange_id": "graph-eval-007",
+              "observed_at_utc": "2026-09-01T12:06:00+00:00",
+              "policy_ids": [
+                null
+              ],
+              "suppressed": false,
+              "turn_ids": [
+                "graph-eval-007-user"
+              ]
+            }
+          ]
+        },
+        {
+          "aliases": [
+            "cafe"
+          ],
+          "canonical_label": "cafe",
+          "entity_type": "preference",
+          "first_seen_utc": "2026-09-01T12:06:00+00:00",
+          "last_seen_utc": "2026-09-01T12:06:00+00:00",
+          "node_id": "entity-a225092bdcb82591f94683ec",
+          "observation_count": 1,
+          "schema_version": 1,
+          "source_refs": [
+            {
+              "exchange_id": "graph-eval-007",
+              "observed_at_utc": "2026-09-01T12:06:00+00:00",
+              "policy_ids": [
+                null
+              ],
+              "suppressed": false,
+              "turn_ids": [
+                "graph-eval-007-user"
+              ]
+            }
+          ]
+        }
+      ],
+      "exchange_id": "graph-eval-007",
+      "policy_cases": [],
+      "source": {
+        "assistant": "Understood.",
+        "created_at_utc": "2026-09-01T12:06:00+00:00",
+        "exchange_id": "graph-eval-007",
+        "user": "My name is Jose. I prefer cafe."
+      }
+    },
+    {
+      "edges": [],
+      "entities": [
+        {
+          "aliases": [
+            "tea"
+          ],
+          "canonical_label": "tea",
+          "entity_type": "preference",
+          "first_seen_utc": "2026-09-01T12:07:00+00:00",
+          "last_seen_utc": "2026-09-01T12:07:00+00:00",
+          "node_id": "entity-d0a46c5af0a53c06a97783d1",
+          "observation_count": 1,
+          "schema_version": 1,
+          "source_refs": [
+            {
+              "exchange_id": "graph-eval-008",
+              "observed_at_utc": "2026-09-01T12:07:00+00:00",
+              "policy_ids": [
+                null
+              ],
+              "suppressed": false,
+              "turn_ids": [
+                "graph-eval-008-user"
+              ]
+            }
+          ]
+        }
+      ],
+      "exchange_id": "graph-eval-008",
+      "policy_cases": [],
+      "source": {
+        "assistant": "Noted once.",
+        "created_at_utc": "2026-09-01T12:07:00+00:00",
+        "exchange_id": "graph-eval-008",
+        "user": "I prefer tea. I prefer tea."
+      }
+    }
+  ],
+  "generated_at_utc": "2026-09-02T13:00:42.376930+00:00",
+  "human_judgments_included": false,
+  "production_readiness": false,
+  "purpose": "developer_operator_source_linked_inspection",
+  "retrieval_authorized": false,
+  "schema_version": 1
+}

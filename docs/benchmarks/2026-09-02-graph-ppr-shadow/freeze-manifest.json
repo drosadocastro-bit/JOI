@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "benchmark": "joi-graph-ppr-shadow-v1",
+  "status": "FROZEN_BEFORE_RETRIEVAL_IMPLEMENTATION_OR_OUTPUT",
+  "algorithm": "sha256",
+  "retrieval_implementation_present_at_freeze": false,
+  "retrieval_output_present_at_freeze": false,
+  "artifacts": [
+    {
+      "path_from_repository_root": "docs/phase-5c-preregistration.md",
+      "sha256": "31144fb15c87c1814526d9e9038ebf07cd46ee8759809afb66ddf0f6232b0773",
+      "bytes": 10563
+    },
+    {
+      "path": "corpus.json",
+      "sha256": "347ae899da9114604a5bada0a43caf0787c7afb23c4f40ba789a8503ac2bac6b",
+      "bytes": 6462
+    }
+  ],
+  "human_label_gate": {
+    "worksheet": "human-labels.json",
+    "initial_blank_sha256": "8e77bda5a16b3e9a227f6d6195b7ffbb72b8ed08be0cc869d8d7b29a7cd4e1c4",
+    "initial_blank_bytes": 5346,
+    "complete": false,
+    "required_before_implementation": true,
+    "completed_labels_require_separate_freeze_manifest": true
+  },
+  "claim_boundary": "This manifest freezes the Phase 5C contract and synthetic source/query corpus before retrieval implementation or output. It does not authorize implementation until completed human labels are separately frozen."
+}

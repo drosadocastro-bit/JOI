@@ -1,4 +1,4 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from pathlib import Path
 import os
 import urllib.parse
@@ -107,7 +107,6 @@ class Settings:
     tts_language: str
     tts_output_path: str
     tts_timeout_seconds: int
-    elevenlabs_api_key: str = field(repr=False)
     elevenlabs_voice_id: str
     elevenlabs_model_id: str
     elevenlabs_base_url: str
@@ -124,15 +123,25 @@ class Settings:
     model_compact_memory_path: str
     compact_memory_evaluation_path: str
     compact_memory_provider: str
-    openai_api_key: str = field(repr=False)
+    graph_memory_enabled: bool
+    graph_memory_path: str
+    graph_retrieval_enabled: bool
+    graph_retrieval_receipt_path: str
     openai_model: str
     openai_base_url: str
     openai_timeout_seconds: int
+    credential_audit_path: str
 
     @classmethod
     def load(cls):
         root = Path(__file__).resolve().parents[1]
         _load_dotenv(root / '.env')
+        for name in ('OPENAI_API_KEY', 'ELEVENLABS_API_KEY'):
+            if os.getenv(name):
+                raise ValueError(
+                    f'{name} plaintext environment credentials are prohibited; '
+                    'use credential_admin.py'
+                )
         runtime_root = root.parents[1]
         voice_enabled = os.getenv('VOICE_ENABLED', 'false').lower() == 'true'
         voice_mode = _choice_env('VOICE_MODE', 'local', {'local', 'online', 'hybrid'})
@@ -145,6 +154,14 @@ class Settings:
         compact_memory_enabled = _bool_env('ENABLE_COMPACT_MEMORY')
         if compact_memory_enabled and memory_mode != 'persistent':
             raise ValueError('compact memory requires MEMORY_MODE=persistent')
+        graph_memory_enabled = _bool_env('ENABLE_GRAPH_MEMORY')
+        if graph_memory_enabled and memory_mode != 'persistent':
+            raise ValueError('graph memory requires MEMORY_MODE=persistent')
+        graph_retrieval_enabled = _bool_env('ENABLE_GRAPH_RETRIEVAL')
+        if graph_retrieval_enabled and not graph_memory_enabled:
+            raise ValueError(
+                'graph retrieval requires ENABLE_GRAPH_MEMORY=true'
+            )
         model_compact_memory_enabled = _bool_env('ENABLE_MODEL_COMPACT_MEMORY')
         if model_compact_memory_enabled and not compact_memory_enabled:
             raise ValueError(
@@ -158,12 +175,9 @@ class Settings:
         openai_compact_enabled = (
             model_compact_memory_enabled and compact_memory_provider == 'openai'
         )
-        openai_api_key = os.getenv('OPENAI_API_KEY', '')
         if openai_compact_enabled:
             if not cloud_enabled:
                 raise ValueError('OpenAI compact memory requires CLOUD_ENABLED=true')
-            if not openai_api_key:
-                raise ValueError('OpenAI compact memory requires OPENAI_API_KEY')
         compact_memory_max_characters = _positive_int_env(
             'COMPACT_MEMORY_MAX_CHARACTERS',
             2000,
@@ -171,7 +185,6 @@ class Settings:
         if compact_memory_max_characters < 100:
             raise ValueError('COMPACT_MEMORY_MAX_CHARACTERS must be at least 100')
         tts_language = os.getenv('TTS_LANGUAGE', 'en-us').lower()
-        elevenlabs_api_key = os.getenv('ELEVENLABS_API_KEY', '')
         elevenlabs_default_voice_id = os.getenv('ELEVENLABS_VOICE_ID', '')
         elevenlabs_spanish_voice_id = os.getenv('ELEVENLABS_SPANISH_VOICE_ID', '')
         use_spanish_voice = tts_language == 'es' or tts_language.startswith('es-')
@@ -181,8 +194,6 @@ class Settings:
         if online_voice_enabled:
             if not cloud_enabled:
                 raise ValueError(f'{voice_mode} voice mode requires CLOUD_ENABLED=true')
-            if not elevenlabs_api_key:
-                raise ValueError(f'{voice_mode} voice mode requires ELEVENLABS_API_KEY')
             if not elevenlabs_voice_id:
                 variable = (
                     'ELEVENLABS_SPANISH_VOICE_ID' if use_spanish_voice
@@ -218,7 +229,6 @@ class Settings:
                 str(root / 'data' / 'tts' / 'reply.wav'),
             ),
             tts_timeout_seconds=_positive_int_env('TTS_TIMEOUT_SECONDS', 120),
-            elevenlabs_api_key=elevenlabs_api_key,
             elevenlabs_voice_id=elevenlabs_voice_id,
             elevenlabs_model_id=os.getenv('ELEVENLABS_MODEL_ID', 'eleven_multilingual_v2'),
             elevenlabs_base_url=_elevenlabs_base_url_env(online_voice_enabled),
@@ -247,8 +257,21 @@ class Settings:
                 str(root / 'data' / 'memory' / 'compact-memory-evaluation.json'),
             ),
             compact_memory_provider=compact_memory_provider,
-            openai_api_key=openai_api_key,
+            graph_memory_enabled=graph_memory_enabled,
+            graph_memory_path=os.getenv(
+                'GRAPH_MEMORY_PATH',
+                str(root / 'data' / 'memory' / 'graph-memory.json'),
+            ),
+            graph_retrieval_enabled=graph_retrieval_enabled,
+            graph_retrieval_receipt_path=os.getenv(
+                'GRAPH_RETRIEVAL_RECEIPT_PATH',
+                str(root / 'data' / 'memory' / 'graph-retrieval-receipts'),
+            ),
             openai_model=os.getenv('OPENAI_MODEL', 'gpt-5.6-luna'),
             openai_base_url=_openai_base_url_env(openai_compact_enabled),
             openai_timeout_seconds=_positive_int_env('OPENAI_TIMEOUT_SECONDS', 60),
+            credential_audit_path=os.getenv(
+                'CREDENTIAL_AUDIT_PATH',
+                str(root / 'data' / 'logs' / 'credential-access.jsonl'),
+            ),
         )

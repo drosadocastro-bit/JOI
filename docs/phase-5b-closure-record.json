@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "record": "JOI Phase 5B Write-Only Graph Closure",
+  "closed_at_utc": "2026-09-02T13:04:23.642098+00:00",
+  "decision": "PASS",
+  "phase_status": "CLOSED_BOUNDED_WRITE_ONLY_SCOPE",
+  "exit_claim_authorized": true,
+  "exit_claim": "Phase 5B proves only that JOI can construct an inspectable, provenance-linked associative graph from completed exchanges without changing conversation behavior.",
+  "human_review": {
+    "complete": true,
+    "reviewer": "drosadocastro-bit (repository operator)",
+    "reviewed_at_utc": "2026-09-02T13:04:07.4578169Z",
+    "reviewed_entity_count": 10,
+    "supported_entity_count": 10,
+    "extraction_precision": 1.0
+  },
+  "effective_memory_distinction": "Source support and effective-memory eligibility are distinct. graph-eval-001 is later forgotten, and the Madrid assertion in graph-eval-002 is superseded by Lisbon. Those entities remain historically source-supported for provenance and audit purposes but must not be interpreted as currently active memory.",
+  "automatic_results": {
+    "decision": "PASS",
+    "unsupported_entity_rate": 0.0,
+    "source_provenance_coverage": 1.0,
+    "duplicate_replay_inflation_rate": 0.0,
+    "deterministic_replay_byte_match": true,
+    "failure_control_survival_rate": 1.0,
+    "policy_lineage_preservation": 1.0,
+    "behavior_delta": false,
+    "prompt_delta": false,
+    "retrieval_count": 0,
+    "external_provider_network_count": 0
+  },
+  "evidence": {
+    "preregistration": "phase-5b-graph-memory-preregistration.md",
+    "entry_authorization": "phase-5b-entry-authorization.json",
+    "automatic_checkpoint": "phase-5b-automatic-evaluation-decision.json",
+    "freeze_manifest": "benchmarks/2026-09-01-graph-write-only/freeze-manifest.json",
+    "execution_manifest": "benchmarks/2026-09-01-graph-write-only/execution-manifest.json",
+    "automatic_report": "benchmarks/2026-09-01-graph-write-only/results/automatic-report.json",
+    "human_review": "benchmarks/2026-09-01-graph-write-only/results/human-review.json",
+    "exchange_inspection": "benchmarks/2026-09-01-graph-write-only/results/exchange-inspection.json",
+    "final_report": "benchmarks/2026-09-01-graph-write-only/results/final-report.json"
+  },
+  "authorization_boundary": {
+    "graph_default_enabled": false,
+    "graph_write_only": true,
+    "developer_inspection_authorized": true,
+    "graph_retrieval_authorized": false,
+    "live_prompt_injection_authorized": false,
+    "provider_calls_authorized": false,
+    "network_calls_authorized": false,
+    "publication_authorized": false,
+    "production_reliance_authorized": false,
+    "autonomous_actions_authorized": false
+  },
+  "remaining_work": "Shadow retrieval remains separately preregistered and has not started. Retrieval, embeddings, vector storage, PPR, prompt injection, provider or network use, publication, and production graph reliance are not authorized by this closure.",
+  "non_authority_statement": "The graph may encode association. It does not create evidence, truth, identity, or authority.",
+  "production_readiness": false
+}

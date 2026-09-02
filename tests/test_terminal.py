@@ -1,6 +1,7 @@
 from types import SimpleNamespace
 from unittest.mock import Mock
 
+from memory.graph_memory import GraphEdge, GraphEvidenceRef, GraphNode
 from memory.memory_store import EpisodicTurn, InspectedMemoryTurn, MemoryPolicyRecord
 from interface.terminal import TerminalInterface
 
@@ -196,3 +197,75 @@ def test_terminal_memory_forget_and_errors(monkeypatch, capsys):
     output = capsys.readouterr().out
     assert 'Forget policy recorded: policy-1' in output
     assert '[MEMORY ERROR] turn not found: missing' in output
+
+
+def test_terminal_graph_status_recent_node_and_why(monkeypatch, capsys):
+    commands = iter([
+        '/memory graph status',
+        '/memory graph recent 2',
+        '/memory graph node entity-1',
+        '/memory graph why edge-1',
+        '/exit',
+    ])
+    monkeypatch.setattr('builtins.input', lambda prompt: next(commands))
+    joi = Mock()
+    joi.state = SimpleNamespace(voice_enabled=False)
+    joi.status.return_value = {
+        'app_name': 'JOI',
+        'brain': {'ok': True, 'selected_model': 'model'},
+        'mic': 'OFF',
+        'voice': 'DISABLED',
+        'vision': 'OFF',
+        'memory': 'PERSISTENT',
+        'cloud': 'OFF',
+    }
+    evidence = GraphEvidenceRef(
+        exchange_id='exchange-1',
+        turn_ids=('turn-1',),
+        policy_ids=(None,),
+        observed_at_utc='2026-09-01T12:00:00+00:00',
+        suppressed=False,
+    )
+    node = GraphNode(
+        node_id='entity-1',
+        canonical_label='luna',
+        entity_type='person',
+        aliases=('Luna',),
+        source_refs=(evidence,),
+        first_seen_utc='2026-09-01T12:00:00+00:00',
+        last_seen_utc='2026-09-01T12:00:00+00:00',
+        observation_count=1,
+    )
+    edge = GraphEdge(
+        edge_id='edge-1',
+        source_node_id='entity-1',
+        target_node_id='entity-2',
+        relation='co_occurs',
+        weight=1,
+        source_exchange_ids=('exchange-1',),
+        first_seen_utc='2026-09-01T12:00:00+00:00',
+        last_seen_utc='2026-09-01T12:00:00+00:00',
+    )
+    joi.graph_memory_status.return_value = {
+        'schema_version': 1,
+        'extractor_version': 'explicit-patterns-v1',
+        'processed_exchange_count': 1,
+        'node_count': 2,
+        'edge_count': 1,
+        'suppressed_source_count': 0,
+    }
+    joi.graph_memory_recent.return_value = [node]
+    joi.graph_memory_why.side_effect = [node, edge]
+
+    TerminalInterface(joi).run()
+
+    output = capsys.readouterr().out
+    assert 'Graph memory: schema=1 extractor=explicit-patterns-v1' in output
+    assert 'entity-1 | PERSON | luna | observations=1' in output
+    assert 'exchange-1 | turns=turn-1 | policies=none | ACTIVE' in output
+    assert 'edge-1 | CO_OCCURS | entity-1 -> entity-2 | weight=1' in output
+    joi.graph_memory_recent.assert_called_once_with(2)
+    assert joi.graph_memory_why.call_args_list == [
+        (("entity-1",),),
+        (("edge-1",),),
+    ]

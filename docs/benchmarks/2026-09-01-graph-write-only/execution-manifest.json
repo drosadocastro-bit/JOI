@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "benchmark": "joi-graph-write-only-v1",
+  "automatic_decision": "PASS",
+  "decision": "PASS",
+  "human_review_complete": true,
+  "publication_enabled": false,
+  "production_readiness": false,
+  "algorithm": "sha256",
+  "source_artifacts": [
+    {
+      "path_from_repository_root": "graph_memory_benchmark.py",
+      "sha256": "94394cc5a972689b2309ecc89736718459d6af8ae610f6f0c6a9de8ad4d0d1cc",
+      "bytes": 31252
+    },
+    {
+      "path_from_repository_root": "memory/graph_memory.py",
+      "sha256": "973988f3c5b6a98d8cd74f30f4b8c6159e6d680d58158874011126a394c5e326",
+      "bytes": 32744
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "freeze-manifest.json",
+      "sha256": "2d678389da6821b7963337aa0b0ed1341870347077c4824fe7a878fa54283cd2",
+      "bytes": 1050
+    },
+    {
+      "path": "results/automatic-report.json",
+      "sha256": "df6946c06289bbd03bc3e7975a2dedb7f7daff81b4f3f247fa976d3110dfed5c",
+      "bytes": 2717
+    },
+    {
+      "path": "results/graph.json",
+      "sha256": "975efe0109ea1f335e4c48108d3601179a82af11cc1a33b6c7758ba491632f4c",
+      "bytes": 9486
+    },
+    {
+      "path": "results/human-review.json",
+      "sha256": "96b777476727b9e2623564def6411da11683e29b5c2594c7c382c86b8b9189bf",
+      "bytes": 7292
+    },
+    {
+      "path": "results/exchange-inspection.json",
+      "sha256": "240697420d6400bfc71fe03b5c50e15746d65404009c4d70721330feaf5d3b27",
+      "bytes": 12906
+    },
+    {
+      "path": "results/final-report.json",
+      "sha256": "d7e0a44aed0b9034e9f119824dfc5b4ddbb5cd06fc9d104dcf2e5736ae0a625f",
+      "bytes": 2868
+    }
+  ],
+  "claim_boundary": "Automatic gates and independent review of all 10 entities passed on the frozen corpus. This authorizes only the bounded Phase 5B write-only construction and developer/operator inspection exit claim. Retrieval, prompt injection, publication, and production reliance remain disabled."
+}

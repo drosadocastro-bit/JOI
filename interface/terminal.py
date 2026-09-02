@@ -66,6 +66,8 @@ class TerminalInterface:
                     print(f'\n[VOICE ERROR] {exc}')
 
     def _handle_memory_command(self, text: str) -> bool:
+        if text.lower().startswith('/memory graph'):
+            return self._handle_graph_command(text)
         parts = text.split(maxsplit=3)
         action = parts[1].lower() if len(parts) > 1 else ''
         if action in {'off', 'session', 'persistent'}:
@@ -107,6 +109,61 @@ class TerminalInterface:
             print(f'[MEMORY ERROR] {exc}')
         return True
 
+    def _handle_graph_command(self, text: str) -> bool:
+        parts = text.split(maxsplit=3)
+        action = parts[2].lower() if len(parts) > 2 else ''
+        try:
+            if action == 'status' and len(parts) == 3:
+                status = self.joi.graph_memory_status()
+                print(
+                    'Graph memory: '
+                    f"schema={status['schema_version']} "
+                    f"extractor={status['extractor_version']}"
+                )
+                print(
+                    f"Exchanges: {status['processed_exchange_count']} | "
+                    f"Nodes: {status['node_count']} | Edges: {status['edge_count']} | "
+                    f"Suppressed sources: {status['suppressed_source_count']}"
+                )
+            elif action == 'recent' and len(parts) in {3, 4}:
+                limit = int(parts[3]) if len(parts) == 4 else 10
+                for node in self.joi.graph_memory_recent(limit):
+                    self._print_graph_node(node, include_sources=False)
+            elif action in {'node', 'why'} and len(parts) == 4:
+                self._print_graph_item(self.joi.graph_memory_why(parts[3]))
+            else:
+                print(self._graph_usage())
+        except (ValueError, RuntimeError) as exc:
+            print(f'[MEMORY ERROR] {exc}')
+        return True
+
+    @classmethod
+    def _print_graph_item(cls, item):
+        if hasattr(item, 'source_refs'):
+            cls._print_graph_node(item, include_sources=True)
+            return
+        print(
+            f'{item.edge_id} | {item.relation.upper()} | '
+            f'{item.source_node_id} -> {item.target_node_id} | weight={item.weight}'
+        )
+        print(f"Sources: {', '.join(item.source_exchange_ids)}")
+
+    @staticmethod
+    def _print_graph_node(node, include_sources: bool):
+        print(
+            f'{node.node_id} | {node.entity_type.upper()} | '
+            f'{node.canonical_label} | observations={node.observation_count}'
+        )
+        if not include_sources:
+            return
+        for source in node.source_refs:
+            policies = ','.join(policy or 'none' for policy in source.policy_ids)
+            status = 'SUPPRESSED' if source.suppressed else 'ACTIVE'
+            print(
+                f'{source.exchange_id} | turns={",".join(source.turn_ids)} | '
+                f'policies={policies} | {status}'
+            )
+
     @staticmethod
     def _print_memory_provenance(item):
         print(f'Turn: {item.turn.turn_id}')
@@ -129,7 +186,15 @@ class TerminalInterface:
         return (
             'Memory: /memory status | /memory recent [limit] | '
             '/memory why <turn-id> | /memory correct <turn-id> <replacement> | '
-            '/memory forget <turn-id> [reason]'
+            '/memory forget <turn-id> [reason]\n'
+            f'{TerminalInterface._graph_usage()}'
+        )
+
+    @staticmethod
+    def _graph_usage():
+        return (
+            'Graph: /memory graph status | /memory graph recent [limit] | '
+            '/memory graph node <id> | /memory graph why <node-or-edge-id>'
         )
 
     @staticmethod

@@ -9,6 +9,16 @@ import wave
 from pathlib import Path
 
 from audio.playback import play_wav
+from security.credential_provider import CredentialAccessError, CredentialProvider
+
+
+ELEVENLABS_HOSTS = {
+	'api.elevenlabs.io',
+	'api.us.elevenlabs.io',
+	'api.eu.residency.elevenlabs.io',
+	'api.in.residency.elevenlabs.io',
+	'api.sg.residency.elevenlabs.io',
+}
 
 
 class NoRedirectHandler(urllib.request.HTTPRedirectHandler):
@@ -114,32 +124,56 @@ class KokoroVoiceRouter:
 class ElevenLabsVoiceProvider:
 	def __init__(
 		self,
-		api_key,
+		credential_provider: CredentialProvider,
 		voice_id,
 		model_id,
 		base_url,
 		output_path,
 		timeout_seconds,
+		cloud_authorized,
 		playback_device_index=None,
 		opener=None,
 	):
-		if not api_key:
-			raise ValueError('ElevenLabs API key is required')
 		if not voice_id:
 			raise ValueError('ElevenLabs voice ID is required')
 
-		self.api_key = api_key
+		self.base_url = self._validated_base_url(base_url)
+		self._credential_provider = credential_provider
+		self._cloud_authorized = cloud_authorized
 		self.voice_id = voice_id
 		self.model_id = model_id
-		self.base_url = base_url.rstrip('/')
 		self.output_path = Path(output_path)
 		self.timeout_seconds = timeout_seconds
 		self.playback_device_index = playback_device_index
 		self.opener = opener or urllib.request.build_opener(NoRedirectHandler()).open
 
+	@staticmethod
+	def _validated_base_url(value):
+		value = value.rstrip('/')
+		parsed = urllib.parse.urlsplit(value)
+		trusted = (
+			parsed.scheme == 'https'
+			and parsed.hostname in ELEVENLABS_HOSTS
+			and parsed.port in {None, 443}
+			and parsed.path == '/v1'
+			and not parsed.username
+			and not parsed.password
+			and not parsed.query
+			and not parsed.fragment
+		)
+		if not trusted:
+			raise ValueError('ElevenLabs base URL must be an official HTTPS endpoint')
+		return value
+
 	def speak(self, text):
 		if not text or not text.strip():
 			raise ValueError('text must not be empty')
+		if not self._cloud_authorized():
+			raise RuntimeError('CLOUD is OFF')
+		try:
+			api_key = self._credential_provider.get_elevenlabs_credential()
+		except CredentialAccessError:
+			raise RuntimeError('ElevenLabs credential is unavailable') from None
 
 		voice_id = urllib.parse.quote(self.voice_id, safe='')
 		url = f'{self.base_url}/text-to-speech/{voice_id}?output_format=wav_24000'
@@ -153,7 +187,7 @@ class ElevenLabsVoiceProvider:
 			headers={
 				'Accept': 'audio/wav',
 				'Content-Type': 'application/json',
-				'xi-api-key': self.api_key,
+				'xi-api-key': api_key,
 			},
 			method='POST',
 		)
@@ -162,8 +196,9 @@ class ElevenLabsVoiceProvider:
 			with self.opener(request, timeout=self.timeout_seconds) as response:
 				content_type = response.headers.get('Content-Type', '').lower()
 				audio_bytes = response.read()
-		except (TimeoutError, socket.timeout, urllib.error.URLError) as exc:
-			raise RuntimeError(f'ElevenLabs request failed: {exc}') from exc
+		except Exception as exc:
+			detail = str(exc).replace(api_key, '[REDACTED]')
+			raise RuntimeError(f'ElevenLabs request failed: {detail}') from None
 
 		if not (content_type.startswith('audio/') or content_type == 'application/octet-stream'):
 			raise RuntimeError('ElevenLabs returned an invalid audio response')
@@ -190,3 +225,23 @@ class ElevenLabsVoiceProvider:
 
 		play_wav(self.output_path, device_index=self.playback_device_index)
 		return self.output_path
+
+	def health(self):
+		if not self._cloud_authorized():
+			return {'ok': False, 'error': 'CLOUD is OFF'}
+		try:
+			api_key = self._credential_provider.get_elevenlabs_credential()
+		except CredentialAccessError:
+			return {'ok': False, 'error': 'ElevenLabs credential is unavailable'}
+		request = urllib.request.Request(
+			f'{self.base_url}/user',
+			headers={'Accept': 'application/json', 'xi-api-key': api_key},
+			method='GET',
+		)
+		try:
+			with self.opener(request, timeout=self.timeout_seconds) as response:
+				payload = json.loads(response.read().decode('utf-8'))
+		except Exception as exc:
+			detail = str(exc).replace(api_key, '[REDACTED]')
+			raise RuntimeError(f'ElevenLabs health check failed: {detail}') from None
+		return {'ok': isinstance(payload, dict), 'provider': 'elevenlabs'}

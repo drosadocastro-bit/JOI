@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "record": "JOI Phase 5B Entry Authorization",
+  "issued_at_utc": "2026-09-01T17:38:43.6438732Z",
+  "decision": "PASS",
+  "authorized_scope": "Provider-free, schema-v1, write-only graph construction from completed exchanges plus explicit developer/operator inspection",
+  "preregistration": "docs/phase-5b-graph-memory-preregistration.md",
+  "phase_5a_evidence": {
+    "closure_record": "docs/benchmarks/2026-09-01-retention-quality/phase-5a-closure-record.json",
+    "closure_record_commit": "6628591a0e5d12fb1502f0350c8a5dbd960b2532",
+    "source_baseline_commit": "8f004a7",
+    "frozen_manifest_verification": "PASS_9_ARTIFACTS_ACROSS_2_MANIFESTS_READ_ONLY"
+  },
+  "entry_gate": {
+    "decision": "PASS",
+    "td_joi_009": "RESOLVED",
+    "focused_artifact_and_orchestrator_tests": "PASS_38",
+    "complete_regression": "PASS_187",
+    "json_validation": "PASS_34_DOCUMENTS",
+    "credential_pattern_scan": "PASS_168_PUBLISHABLE_NON_TEST_FILES_ZERO_LIVE_FORMAT_MATCHES",
+    "patch_whitespace": "PASS",
+    "durable_runtime_file_count": 7,
+    "durable_state_sha256": "59059cc2b712612e1a26a286fee444cf22b115d99c1014ce35e61e91411a0c46"
+  },
+  "td_joi_009_exit_criteria_evidence": {
+    "truncation": "PASS",
+    "bit_flip": "PASS",
+    "missing_file": "PASS",
+    "mismatched_manifest": "PASS",
+    "interrupted_write": "PASS",
+    "quarantine": "PASS",
+    "restore_or_empty_recovery": "PASS",
+    "restart": "PASS",
+    "silent_recovery": false,
+    "partial_publication": false
+  },
+  "remaining_global_blockers": [
+    "TD-JOI-006",
+    "TD-JOI-007",
+    "TD-JOI-008",
+    "TD-JOI-011"
+  ],
+  "scope_review": {
+    "TD-JOI-006": "Does not block provider-free graph writes; no provider is called.",
+    "TD-JOI-007": "Does not block provider-free graph writes; no API budget, rate, or concurrency is consumed.",
+    "TD-JOI-008": "Does not block provider-free graph writes; no credential is loaded or used.",
+    "TD-JOI-011": "Does not block a new schema-v1 derived artifact with no migration path; it remains blocking for schema evolution, migration, rollback, or production reliance."
+  },
+  "authorization_boundary": {
+    "graph_default_enabled": false,
+    "graph_write_only": true,
+    "developer_inspection_authorized": true,
+    "graph_retrieval_authorized": false,
+    "live_prompt_injection_authorized": false,
+    "provider_calls_authorized": false,
+    "network_calls_authorized": false,
+    "publication_authorized": false,
+    "production_reliance_authorized": false,
+    "autonomous_actions_authorized": false,
+    "human_promotion_decision_required": true
+  },
+  "nic_compatibility": {
+    "authoritative_source_available": false,
+    "code_dependency_authorized": false,
+    "wire_compatibility_claimed": false,
+    "future_versioned_contract_review_required": true
+  },
+  "claim_boundary": "Entry PASS authorizes implementation and evaluation only under the frozen preregistration. It does not establish graph correctness, factual truth, retrieval quality, relational understanding, identity, authority, or production readiness.",
+  "production_readiness": false
+}

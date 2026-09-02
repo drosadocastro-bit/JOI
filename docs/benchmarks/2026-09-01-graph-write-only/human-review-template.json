@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "benchmark": "joi-graph-write-only-v1",
+  "instructions": "An independent human reviewer must inspect each extracted entity against the frozen source exchange, mark supported true or false, and provide non-empty notes. Do not alter corpus or expected labels after opening results.",
+  "human_review_complete": false,
+  "reviewer": null,
+  "reviewed_at_utc": null,
+  "entities": []
+}

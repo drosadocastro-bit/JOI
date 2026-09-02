@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "record": "JOI Phase 5C Personalized PageRank Shadow Retrieval Entry Gate",
+  "evaluated_at_utc": "2026-09-02T13:04:23.642098+00:00",
+  "decision": "PASS_IMPLEMENTATION_AUTHORIZED_SHADOW_ONLY",
+  "implementation_authorized": true,
+  "phase_5b_pin": {
+    "closure_record": {"path":"docs/phase-5b-closure-record.json","sha256":"b1697e2f13724d6b5fe7285c5771662d0afb788a1593313b5e42a287b996f992","bytes":3141},
+    "execution_manifest": {"path":"docs/benchmarks/2026-09-01-graph-write-only/execution-manifest.json","sha256":"dfe14a41f8656d3b13f146cf28a58f0d537031e0e8405b40f9aae95f8739c578","bytes":1973},
+    "final_report": {"path":"docs/benchmarks/2026-09-01-graph-write-only/results/final-report.json","sha256":"d7e0a44aed0b9034e9f119824dfc5b4ddbb5cd06fc9d104dcf2e5736ae0a625f","bytes":2868},
+    "human_review": {"path":"docs/benchmarks/2026-09-01-graph-write-only/results/human-review.json","sha256":"96b777476727b9e2623564def6411da11683e29b5c2594c7c382c86b8b9189bf","bytes":7292},
+    "graph_snapshot": {"path":"docs/benchmarks/2026-09-01-graph-write-only/results/graph.json","sha256":"975efe0109ea1f335e4c48108d3601179a82af11cc1a33b6c7758ba491632f4c","bytes":9486},
+    "execution_manifest_entries_verified": 8,
+    "closure_decision": "PASS",
+    "closure_scope": "bounded write-only construction and developer/operator inspection"
+  },
+  "baseline": {
+    "python": "3.13.7",
+    "pytest": "9.1.1",
+    "expected_test_count": 239,
+    "passed": true,
+    "head_commit": "14164dc",
+    "head_branch": "main",
+    "worktree_clean": false,
+    "limitation": "Phase 5B is exact-hash pinned but remains uncommitted in a dirty worktree. Any byte change invalidates this entry pin."
+  },
+  "runtime_boundary": {
+    "graph_memory_default_enabled": false,
+    "graph_retrieval_setting_present_before_5c": false,
+    "graph_retrieval_capability_present_before_5c": false,
+    "effective_retrieval_enabled": false,
+    "live_prompt_injection_enabled": false,
+    "production_reliance_enabled": false
+  },
+  "phase_5c_freeze": {
+    "preregistration": "docs/phase-5c-preregistration.md",
+    "benchmark_corpus": "docs/benchmarks/2026-09-02-graph-ppr-shadow/corpus.json",
+    "freeze_manifest": "docs/benchmarks/2026-09-02-graph-ppr-shadow/freeze-manifest.json",
+    "human_labels_manifest": "docs/benchmarks/2026-09-02-graph-ppr-shadow/human-labels-manifest.json",
+    "retrieval_implementation_present_at_freeze": false,
+    "retrieval_output_present_at_freeze": false,
+    "human_labels_complete": true,
+    "human_label_query_count": 18,
+    "human_label_reviewer": "Daniel E. Rosado Castro",
+    "human_labels_sha256": "c8fa1e06af34c19d7f7512170ed3f9e7f3864d89c104dd0f104ec62aea7af287",
+    "thresholds_frozen": true,
+    "ppr_parameters_frozen": true
+  },
+  "required_next_action": "Implement only the preregistered provider-free Personalized PageRank shadow retrieval contract with tests before opening frozen benchmark output. Runtime retrieval remains disabled by default and no candidate may enter prompts or responses.",
+  "non_authority_statement": "Retrieval may surface evidence. It does not create truth, authority, or permission. Graph retrieval returns candidates, not memory facts."
+}

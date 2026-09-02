@@ -21,6 +21,7 @@ from memory.compact_memory import (
     ModelCompactMemoryStore,
     ProviderBackedCompactSummarizer,
 )
+from security.credential_provider import CredentialProvider, write_audit_event
 
 
 def run_cloud_benchmark(
@@ -28,6 +29,7 @@ def run_cloud_benchmark(
     output_directory: str | Path,
     checkpoints=REQUIRED_CHECKPOINTS,
     provider=None,
+    credential_provider=None,
     progress=None,
 ):
     checkpoints = tuple(checkpoints)
@@ -37,13 +39,17 @@ def run_cloud_benchmark(
         raise ValueError('the deterministic corpus supports at most 200 updates')
     if not settings.cloud_enabled:
         raise ValueError('cloud benchmark requires CLOUD_ENABLED=true')
-    if not settings.openai_api_key:
-        raise ValueError('cloud benchmark requires OPENAI_API_KEY')
-
     output_directory = Path(output_directory)
     output_directory.mkdir(parents=True, exist_ok=True)
+    if credential_provider is None:
+        credential_provider = CredentialProvider(
+            audit_sink=lambda event: write_audit_event(
+                settings.credential_audit_path,
+                event,
+            ),
+        )
     provider = provider or OpenAICompactSummarizerProvider(
-        api_key=settings.openai_api_key,
+        credential_provider=credential_provider,
         model=settings.openai_model,
         cloud_authorized=lambda: settings.cloud_enabled,
         base_url=settings.openai_base_url,

@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "benchmark": "joi-graph-ppr-shadow-v1",
+  "status": "HUMAN_LABELS_FROZEN_BEFORE_RETRIEVAL_IMPLEMENTATION_OR_OUTPUT",
+  "algorithm": "sha256",
+  "retrieval_implementation_present_at_freeze": false,
+  "retrieval_output_present_at_freeze": false,
+  "reviewer": "Daniel E. Rosado Castro",
+  "reviewed_at_utc": "2026-09-02T13:57:00Z",
+  "query_count": 18,
+  "labeling_semantics": "Candidates not explicitly assigned to relevant, acceptable_secondary, harmful_stale, or forbidden are treated as irrelevant by default. Explicit irrelevant arrays may remain empty.",
+  "artifact": {
+    "path": "human-labels.json",
+    "sha256": "c8fa1e06af34c19d7f7512170ed3f9e7f3864d89c104dd0f104ec62aea7af287",
+    "bytes": 10407
+  },
+  "claim_boundary": "This manifest freezes human relevance labels before Personalized PageRank implementation or retrieval output. Labels define expected relevance under the synthetic corpus; they do not establish truth, authority, permission, or suitability for live prompt use."
+}

@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "benchmark": "joi-graph-write-only-v1",
+  "frozen_at_utc": "2026-09-01T17:47:20.4130916Z",
+  "status": "FROZEN_NOT_EXECUTED",
+  "algorithm": "sha256",
+  "result_artifacts_included": false,
+  "artifacts": [
+    {
+      "path": "corpus.json",
+      "sha256": "b6d78da9e065d926470f86fc083e5268e8d12c24ae5c69728c57e54c888da605",
+      "bytes": 2609
+    },
+    {
+      "path": "expected-labels.json",
+      "sha256": "35a622b4ad21d6072821ff2075dfb782671ab99bdbd332385a017527bc8f3f15",
+      "bytes": 2701
+    },
+    {
+      "path": "preregistration.json",
+      "sha256": "9b7305827de0c5b20e9a985c59f2495aca52ce3ec24634a673345cd440634cf3",
+      "bytes": 2620
+    },
+    {
+      "path": "human-review-template.json",
+      "sha256": "94b6c3d4a4d9ccd46ece5e1ce9f8ac8833af9cc224c76f16421fd6697ab9afc0",
+      "bytes": 417
+    }
+  ],
+  "claim_boundary": "This manifest proves only that evaluation inputs were byte-frozen before execution. It contains no evaluation result and no human adjudication."
+}

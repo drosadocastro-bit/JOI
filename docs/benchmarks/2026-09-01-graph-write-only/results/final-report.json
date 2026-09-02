@@ -1,0 +1,83 @@
+{
+  "authorization_boundary": {
+    "developer_inspection_only": true,
+    "graph_write_only": true,
+    "network_calls_enabled": false,
+    "production_reliance_enabled": false,
+    "prompt_injection_enabled": false,
+    "provider_calls_enabled": false,
+    "publication_enabled": false,
+    "retrieval_enabled": false
+  },
+  "automatic_decision": "PASS",
+  "automatic_gates": {
+    "automatic_extraction_precision": true,
+    "automatic_extraction_recall": true,
+    "behavior_delta": true,
+    "deterministic_replay_byte_match": true,
+    "disabled_graph_absent": true,
+    "duplicate_replay_inflation_rate": true,
+    "expected_edge_match": true,
+    "malformed_and_write_survival": true,
+    "policy_lineage_preservation": true,
+    "prompt_delta": true,
+    "provider_network_count": true,
+    "retrieval_count": true,
+    "source_provenance_coverage": true,
+    "unsupported_entity_rate": true
+  },
+  "behavior_metrics": {
+    "behavior_delta": false,
+    "deterministic_fake_brain_calls": 2,
+    "disabled_graph_absent": true,
+    "enabled_graph_written": true,
+    "external_provider_network_count": 0,
+    "off_reply": "Deterministic reply.",
+    "on_reply": "Deterministic reply.",
+    "prompt_delta": false,
+    "retrieval_count": 0
+  },
+  "benchmark": "joi-graph-write-only-v1",
+  "decision": "PASS",
+  "executed_at_utc": "2026-09-02T11:23:27.977911+00:00",
+  "exit_claim_authorized": true,
+  "failure_metrics": {
+    "control_count": 5,
+    "controls": {
+      "corrupt_graph_artifact": true,
+      "graph_store_write_failure": true,
+      "malformed_extractor_result": true,
+      "unpaired_surrogate_source": true,
+      "unsupported_inferred_candidate": true
+    },
+    "survival_rate": 1.0,
+    "surviving_count": 5
+  },
+  "finalized_at_utc": "2026-09-02T13:04:23.642098+00:00",
+  "freeze_manifest_verified": true,
+  "graph_metrics": {
+    "automatic_extraction_precision": 1.0,
+    "automatic_extraction_recall": 1.0,
+    "deterministic_replay_byte_match": true,
+    "duplicate_replay_bytes_unchanged": true,
+    "duplicate_replay_inflation_rate": 0.0,
+    "expected_edge_match": true,
+    "expected_entity_count": 10,
+    "extracted_entity_count": 10,
+    "human_review_status": "COMPLETE",
+    "human_reviewed_extraction_precision": 1.0,
+    "matched_expected_entity_count": 10,
+    "missing_expected_entity_count": 0,
+    "policy_lineage_preservation": 1.0,
+    "restart_state_match": true,
+    "source_provenance_coverage": 1.0,
+    "unsupported_entity_count": 0,
+    "unsupported_entity_rate": 0.0
+  },
+  "human_review_complete": true,
+  "human_reviewed_at_utc": "2026-09-02T13:04:07.4578169Z",
+  "human_reviewed_extraction_precision": 1.0,
+  "human_reviewer": "drosadocastro-bit (repository operator)",
+  "production_readiness": false,
+  "schema_version": 1
+}
