@@ -1,0 +1,123 @@
+{
+  "schema_version": 1,
+  "record": "JOI Phase 5C v2 corrected metric preregistration",
+  "benchmark": "joi-graph-ppr-shadow-v2",
+  "status": "FROZEN_BEFORE_V2_EXECUTION",
+  "historical_baseline": {
+    "benchmark": "joi-graph-ppr-shadow-v1",
+    "implementation_commit": "588947133aa731db04198b15c3fdfe478578d46a",
+    "result": "FAIL",
+    "historical_result_is_unchanged": true,
+    "post_fail_metric_audit": {
+      "path": "docs/benchmarks/2026-09-02-graph-ppr-shadow/results/post-fail-metric-audit.json",
+      "sha256": "4ff3e8788626921fd7344ec06b6f25ed4e97953d432480b7ac9f2affa580a77d"
+    }
+  },
+  "scope": {
+    "purpose": "Re-evaluate the exact v1 retrieval outputs with a corrected metric contract only.",
+    "allowed_change": "Evaluation aggregation and metric interpretation only.",
+    "forbidden_changes": [
+      "retrieval implementation",
+      "graph state",
+      "corpus",
+      "human labels",
+      "K",
+      "PPR damping",
+      "PPR tolerance",
+      "PPR maximum iterations",
+      "policy filters",
+      "thresholds after execution begins",
+      "prompt injection",
+      "production reliance",
+      "live retrieval authorization"
+    ],
+    "required_same_inputs": [
+      "implementation commit 5889471",
+      "same graph snapshot",
+      "same synthetic corpus",
+      "same 18 frozen human labels",
+      "same candidate limit K=3",
+      "same PPR parameters",
+      "same policy-filter behavior"
+    ]
+  },
+  "frozen_inputs": {
+    "corpus": "docs/benchmarks/2026-09-02-graph-ppr-shadow/corpus.json",
+    "human_labels": "docs/benchmarks/2026-09-02-graph-ppr-shadow/human-labels.json",
+    "query_count": 18,
+    "answerable_query_definition": "A query with at least one human-labeled relevant candidate.",
+    "empty_expected_definition": "A query whose human label sets empty_retrieval_expected=true."
+  },
+  "metrics": {
+    "MRR_answerable": {
+      "definition": "Mean of reciprocal ranks over answerable queries only.",
+      "reciprocal_rank": "1/rank of the first human-labeled relevant candidate in filtered ranking; 0.0 if no relevant candidate is retrieved.",
+      "denominator": "Number of queries with at least one human-labeled relevant candidate.",
+      "empty_expected_queries_in_denominator": false
+    },
+    "empty_retrieval_correctness": {
+      "definition": "For empty-expected queries only, the fraction where filtered_candidates is empty.",
+      "evaluation_subset": "Queries with empty_retrieval_expected=true",
+      "non_empty_expected_queries_in_denominator": false
+    },
+    "Precision_at_3": "Accepted candidates (relevant or acceptable_secondary) divided by up to 3 filtered candidates; empty expected cases are evaluated separately for emptiness.",
+    "Recall_at_3": "Human-labeled relevant candidates retrieved in the first 3 filtered positions divided by the number of human-labeled relevant candidates.",
+    "stale_retrieval_rate": "Harmful_stale candidates retrieved divided by all filtered candidates.",
+    "forbidden_retrieval_rate": "Forbidden candidates retrieved divided by all filtered candidates.",
+    "provenance_coverage": "Filtered candidates with valid source turn and policy references divided by all filtered candidates; empty result sets pass vacuously.",
+    "false_recall_rate": "Filtered candidates not labeled relevant or acceptable_secondary, excluding stale and forbidden candidates from this rate.",
+    "deterministic_replay": "True only when a separately preregistered replay produces identical canonical semantic output for every query: seed IDs, unresolved surfaces, graph snapshot ID, PPR parameters and convergence, raw candidate IDs and scores, filtered candidates and scores, rejected candidates and reasons, policy/provenance references, and injection/influence counts.",
+    "hub_popularity_contamination": "Rate of hub-driven candidate selections that are not human-labeled relevant or acceptable_secondary, reported separately for high-degree hub queries.",
+    "latency": "Median and p95 local retrieval latency, descriptive only and not a decision gate."
+  },
+  "thresholds": {
+    "MRR_answerable": {"operator": ">=", "value": 0.75},
+    "empty_retrieval_correctness": {"operator": "=", "value": 1.0},
+    "Precision_at_3": {"operator": ">=", "value": 0.85},
+    "Recall_at_3": {"operator": ">=", "value": 0.80},
+    "stale_retrieval_rate": {"operator": "=", "value": 0.0},
+    "forbidden_retrieval_rate": {"operator": "=", "value": 0.0},
+    "provenance_coverage": {"operator": "=", "value": 1.0},
+    "deterministic_replay": {"operator": "=", "value": true},
+    "hub_popularity_contamination": {"operator": "<=", "value": 0.10},
+    "behavior_delta": {"operator": "=", "value": false},
+    "prompt_delta": {"operator": "=", "value": false},
+    "provider_calls": {"operator": "=", "value": 0},
+    "network_calls": {"operator": "=", "value": 0},
+    "retrieval_injection_count": {"operator": "=", "value": 0},
+    "retrieval_influence_count": {"operator": "=", "value": 0}
+  },
+  "replay_gate": {
+    "required": true,
+    "execution": "A separate explicit replay is allowed only after this contract is frozen.",
+    "rerun_scope": "Replay the same 18 queries with the same commit, graph, corpus, labels, K, PPR parameters, and policy filters.",
+    "byte_equality": "Receipt byte equality is not required because receipt IDs, latency, and timestamps may vary.",
+    "canonical_equality_fields": [
+      "seed_entity_ids",
+      "unresolved_surface_forms",
+      "graph_snapshot_id",
+      "ppr",
+      "raw_ppr_candidates",
+      "filtered_candidates",
+      "rejected_candidates",
+      "provenance and policy references",
+      "retrieval_injection_count",
+      "retrieval_influence_count"
+    ],
+    "tuning_between_replays": false,
+    "pass_condition": "Every canonical semantic output is identical and all frozen controls remain satisfied."
+  },
+  "decision": {
+    "PASS": "All thresholds pass and deterministic replay is proven.",
+    "FAIL": "A completed valid evaluation misses any numerical threshold or safety invariant.",
+    "INCONCLUSIVE": "Replay, labels, manifests, or required evidence are incomplete or cannot establish the contract.",
+    "live_retrieval_authorized": false
+  },
+  "historical_quality_observations": {
+    "preserve": true,
+    "ppr-query-008": "One unaccepted candidate; inspect ranking/path only.",
+    "ppr-query-014": "One relevant candidate omitted; inspect K-limit and hub-ranking behavior.",
+    "claim": "These remain genuine v1 retrieval-quality observations regardless of the v1 MRR aggregation defect."
+  },
+  "no_tuning_after_results_opened": true
+}

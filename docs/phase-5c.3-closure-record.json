@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "record": "JOI Phase 5C.3 metric-contract checkpoint",
+  "phase": "5C.3",
+  "status": "V2_PREREGISTRATION_FROZEN_PENDING_EXECUTION",
+  "historical_v1": {
+    "benchmark": "joi-graph-ppr-shadow-v1",
+    "decision": "FAIL",
+    "implementation_commit": "588947133aa731db04198b15c3fdfe478578d46a",
+    "evaluation_commit": "33dd04587ce0f4c95359bbfbb093b7312d7f3c62",
+    "published_decision_path": "docs/benchmarks/2026-09-02-graph-ppr-shadow/results/decision.json",
+    "published_decision_sha256": "60af14ff960c943e31f7286c14acae5706026f7facd122a6295c8813a5f61f59",
+    "audit_path": "docs/benchmarks/2026-09-02-graph-ppr-shadow/results/post-fail-metric-audit.json",
+    "audit_sha256": "4ff3e8788626921fd7344ec06b6f25ed4e97953d432480b7ac9f2affa580a77d"
+  },
+  "root_cause": [
+    "preregistration ambiguity: MRR did not explicitly define the no-relevant-result case or exclude intentional-empty queries",
+    "aggregation defect: the published empty_retrieval_correct field was true for non-empty answerable queries as well as empty cases",
+    "threshold mathematically unattainable under the v1 overall-MRR aggregation because 10 intentional-empty queries contributed zero values; maximum was 8/18=0.4444444444444444 against 0.75"
+  ],
+  "explicit_boundaries": {
+    "retrieval_rerun": false,
+    "tuning": false,
+    "corpus_changes": false,
+    "label_changes": false,
+    "ppr_parameter_changes": false,
+    "policy_filter_changes": false,
+    "published_v1_fail_preserved": true,
+    "live_retrieval_authorized": false
+  },
+  "v2_policy": {
+    "mode": "metric-only first",
+    "same_implementation": true,
+    "same_graph": true,
+    "same_corpus": true,
+    "same_labels": true,
+    "same_k": 3,
+    "same_ppr_parameters": true,
+    "same_policy_filters": true,
+    "question": "Would the exact same retrieval output pass under the corrected metric contract?"
+  },
+  "quality_findings_preserved": [
+    {
+      "query_id": "ppr-query-008",
+      "finding": "One unaccepted candidate remains in the filtered output.",
+      "next_inspection": "Ranking/path only; no retrospective tuning in v1."
+    },
+    {
+      "query_id": "ppr-query-014",
+      "finding": "One relevant candidate is omitted from the filtered output.",
+      "next_inspection": "K-limit and hub-ranking behavior; no retrospective tuning in v1."
+    }
+  ],
+  "v2_contract": "docs/phase-5c-v2-preregistration.json",
+  "v2_execution_rule": "Freeze this contract before any v2 output is opened. Any parameter or policy change requires a new benchmark version.",
+  "bounded_claim_if_pass": "Phase 5C demonstrates deterministic, policy-filtered, provenance-linked PPR shadow retrieval under the corrected preregistered metric contract.",
+  "permanent_safety_statement": "Live memory injection remains unauthorized."
+}

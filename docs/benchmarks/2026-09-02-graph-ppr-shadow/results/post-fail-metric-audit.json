@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "audit_type": "read-only post-fail metric review",
+  "benchmark": "joi-graph-ppr-shadow-v1",
+  "retrieval_rerun": false,
+  "published_fail_preserved": true,
+  "published_decision": "FAIL",
+  "audit_conclusion": "The published FAIL remains unchanged. Under standard MRR, no-relevant-result queries contribute RR=0.0. The frozen 0.75 overall MRR threshold was unattainable with 8 answerable and 10 empty-expected queries.",
+  "definition_review": {
+    "preregistered_reference": "docs/phase-5c-preregistration.md, Metrics and Frozen Decision Thresholds",
+    "definition_found": "The preregistration requires mean reciprocal rank and sets MRR >= 0.75, but does not explicitly define the reciprocal-rank value for a query with no relevant result.",
+    "standard_convention_applied": "RR=1/rank of the first relevant result; RR=0.0 when no relevant result is retrieved.",
+    "classification": "preregistration ambiguity",
+    "intentional_zero_finding": "The frozen report's ten zero reciprocal ranks correspond exactly to the ten empty-expected labels. This is consistent with standard MRR and with treating empty cases as first-class acceptance cases, but the preregistration did not state the convention explicitly."
+  },
+  "label_distribution": {
+    "query_count": 18,
+    "answerable_query_count": 8,
+    "answerable_query_ids": [
+      "ppr-query-001",
+      "ppr-query-002",
+      "ppr-query-003",
+      "ppr-query-004",
+      "ppr-query-008",
+      "ppr-query-009",
+      "ppr-query-011",
+      "ppr-query-014"
+    ],
+    "empty_expected_query_count": 10,
+    "empty_expected_query_ids": [
+      "ppr-query-005",
+      "ppr-query-006",
+      "ppr-query-007",
+      "ppr-query-010",
+      "ppr-query-012",
+      "ppr-query-013",
+      "ppr-query-015",
+      "ppr-query-016",
+      "ppr-query-017",
+      "ppr-query-018"
+    ],
+    "answerable_rr_values": [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0],
+    "empty_expected_rr_values": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+  },
+  "mrr_recomputation_from_existing_receipts": {
+    "answerable_mrr": 1.0,
+    "answerable_mrr_formula": "8 / 8",
+    "empty_expected_contribution_to_overall_mrr": "10 * 0.0",
+    "overall_mrr": 0.4444444444444444,
+    "overall_mrr_formula": "(8 * 1.0 + 10 * 0.0) / 18 = 8 / 18",
+    "maximum_mathematically_attainable_overall_mrr_with_this_distribution": 0.4444444444444444,
+    "frozen_threshold": 0.75,
+    "threshold_attainable": false,
+    "interpretation": "The threshold is attainable only if MRR is explicitly redefined over answerable queries. That exclusion was not stated in the frozen preregistration."
+  },
+  "independent_retrieval_quality_findings": [
+    {
+      "query_id": "ppr-query-008",
+      "classification": "true retrieval-quality failure",
+      "finding": "The first relevant candidate is present, but filtered candidates include task_topic:review graph schema, which is neither relevant nor acceptable_secondary for this label.",
+      "effect": "Precision@3 is 2/3 for this query; MRR remains 1.0."
+    },
+    {
+      "query_id": "ppr-query-014",
+      "classification": "true retrieval-quality failure",
+      "finding": "The filtered candidates omit task_topic:graph benchmark, one of four frozen relevant candidates.",
+      "effect": "Recall@3 is 3/4 for this query; MRR remains 1.0."
+    }
+  ],
+  "published_artifact_issue": {
+    "classification": "aggregation defect",
+    "finding": "The published report's per-query empty_retrieval_correct field is true for non-empty answerable queries as well as empty cases. The audit therefore recomputed empty-retrieval correctness directly from frozen labels and existing receipts; it does not alter the published report.",
+    "recomputed_empty_retrieval_correctness": 1.0
+  },
+  "safety_and_scope": {
+    "existing_receipts_only": true,
+    "code_modified": false,
+    "thresholds_modified": false,
+    "corpus_modified": false,
+    "labels_modified": false,
+    "receipts_modified": false,
+    "published_decision_modified": false,
+    "live_retrieval_authorized": false
+  },
+  "evidence": {
+    "preregistration": {
+      "path": "docs/phase-5c-preregistration.md",
+      "sha256": "31144fb15c87c1814526d9e9038ebf07cd46ee8759809afb66ddf0f6232b0773"
+    },
+    "labels": {
+      "path": "docs/benchmarks/2026-09-02-graph-ppr-shadow/human-labels.json",
+      "sha256": "c8fa1e06af34c19d7f7512170ed3f9e7f3864d89c104dd0f104ec62aea7af287"
+    },
+    "published_report": {
+      "path": "docs/benchmarks/2026-09-02-graph-ppr-shadow/results/report.json",
+      "sha256_before_audit": "35dd1758125cfe040239c85f0a43b11ec26478004bd85a012c33673bf6065785"
+    },
+    "published_decision": {
+      "path": "docs/benchmarks/2026-09-02-graph-ppr-shadow/results/decision.json",
+      "sha256_before_audit": "60af14ff960c943e31f7286c14acae5706026f7facd122a6295c8813a5f61f59"
+    },
+    "receipt_directory": "docs/benchmarks/2026-09-02-graph-ppr-shadow/results/receipts/",
+    "receipt_count": 18,
+    "receipt_source": "Existing published receipts; no retrieval execution was performed during this audit."
+  }
+}
