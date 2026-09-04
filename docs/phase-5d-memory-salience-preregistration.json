@@ -1,0 +1,153 @@
+{
+  "schema_version": 1,
+  "record": "JOI Phase 5D Memory Salience and Cognitive Gating preregistration",
+  "status": "FROZEN_BEFORE_5D_OUTPUTS",
+  "phase_rule": "Phase 5D observes salience behavior; it does not optimize it.",
+  "purpose": "Measure which controlled factors influence whether valid, human-approved memory is ignored, lightly used, appropriately used, overweighted, or transformed.",
+  "baseline": {
+    "phase": "5C.4 observational baseline",
+    "commit": "c99dcee403eaeceecf1b11c24fff66f61a238a73",
+    "packet": "docs/benchmarks/2026-09-02-controlled-contextual-usefulness/review-packet.json",
+    "packet_sha256": "8aead70c8b3019c3f85321bbfcfd788069ef2ab9bbb6038c64032d4146468f10",
+    "observational_report": "docs/phase-5c.4-observational-baseline.md",
+    "observational_report_sha256": "f4b0a853f8826c0250501647ccd9eaf304df90ed2596495282abdfcd1e485c32"
+  },
+  "research_question": "Which controlled factors causally influence whether valid, approved memory is ignored, lightly used, appropriately used, over-weighted, or transformed?",
+  "primary_outcome": {
+    "name": "model_utilization_behavior",
+    "allowed_labels": [
+      "ignored",
+      "lightly_used",
+      "appropriately_used",
+      "overweighted",
+      "misapplied"
+    ],
+    "annotation_rule": "Assign one label to the approved-context response based on actual use of admitted memory. Query-derived content is not memory utilization. Unsupported transformations are annotated separately."
+  },
+  "secondary_outcomes": {
+    "human_ratings": [
+      "usefulness",
+      "groundedness",
+      "faithfulness",
+      "safety",
+      "naturalness"
+    ],
+    "rating_scale": [0, 1, 2],
+    "latency_and_failures": "Record per-arm latency, timeout, HTTP failure, malformed response, and missing response separately. Never combine operational performance with utilization quality.",
+    "separate_annotations": [
+      "memory_retrieved",
+      "memory_admitted",
+      "memory_used",
+      "memory_ignored",
+      "memory_overused",
+      "memory_transformed_or_distorted",
+      "unsupported_non_memory_claims"
+    ]
+  },
+  "frozen_controls": {
+    "model": "unchanged from the frozen 5C.4 local model configuration",
+    "prompt": "unchanged baseline system prompt",
+    "sampling": "unchanged from the frozen 5C.4 configuration",
+    "candidate_limit_k": 3,
+    "ppr_damping": 0.85,
+    "ppr_tolerance": 1e-12,
+    "ppr_max_iterations": 100,
+    "policy_filters": "unchanged effective graph policy behavior",
+    "provider_path": "local-only; no cloud provider or external network",
+    "approval_flow": "unchanged explicit per-context-case human approval",
+    "context_boundary": "approved context remains temporary, source-linked, untrusted data and grants no action authority",
+    "gating_or_reranking": "prohibited during Phase 5D",
+    "prompt_or_model_tuning": "prohibited after preregistration freeze"
+  },
+  "matched_pair_design": {
+    "manifest": "docs/phase-5d-memory-salience-matched-pairs.json",
+    "pair_unit": "two approved-context cases with the same fixed fields and exactly one declared manipulated factor",
+    "same_within_pair": [
+      "memory topic and source identity where compatible with the factor",
+      "model and sampling",
+      "system prompt",
+      "approval semantics",
+      "candidate limit and PPR parameters",
+      "response order and evaluation procedure",
+      "human rating rubric"
+    ],
+    "one_change_rule": "A pair is valid only if the manifest identifies one manipulated factor; any incidental retrieval or source inconsistency is a protocol failure, not a hidden covariate.",
+    "factor_repetitions": 2,
+    "planned_pair_count": 14,
+    "planned_arm_count": 28,
+    "pre_generation_status": "NO_5D_RESPONSES_GENERATED"
+  },
+  "factors": {
+    "A_lexical_compatibility": "high versus low query-to-candidate lexical overlap with the same candidate and score family",
+    "B_graph_salience": "higher versus lower retrieval score for the same semantic topic",
+    "C_ambiguity": "one clear candidate versus two equally plausible candidates",
+    "D_association_depth": "direct neighbor versus secondary neighbor",
+    "E_hub_structure": "hub-connected candidate versus non-hub candidate",
+    "F_source_consistency": "clean label/source agreement versus deliberate label/source conflict",
+    "G_query_form": "declarative conversational statement versus explicit factual question/request"
+  },
+  "human_authorization": {
+    "required": true,
+    "scope": "independent approval for every approved-context arm",
+    "approval_binding": "exact query, receipt, graph snapshot, policy revision, and pair arm",
+    "single_use": true,
+    "review_before_decision": true,
+    "autonomous_authority": false
+  },
+  "analysis_plan": {
+    "within_pair_comparison": "Compare utilization labels and each human-rated dimension between the two arms of a pair.",
+    "factor_effect": "Report the direction and magnitude of label/rating differences by manipulated factor; do not infer causality from non-compliant pairs.",
+    "score_test": "Test whether higher graph score is associated with more utilization without treating association as proof of causality.",
+    "lexical_test": "Compare the lexical-compatibility contrast against the graph-salience contrast using the same primary outcome definition.",
+    "hub_test": "Check separately for increased overweighting and increased ignoring in hub-connected pairs.",
+    "ambiguity_test": "Check whether equal candidates increase conservative non-use or reduce arbitrary selection.",
+    "secondary_test": "Check whether secondary neighbors are dropped more often than direct neighbors.",
+    "consistency_test": "Record whether conflict produces misapplication, qualification, ignoring, or a safety/faithfulness loss.",
+    "unsupported_transformations": "Count and describe unsupported transformations independently from retrieval success and utilization.",
+    "missing_data": "Missing responses, approvals, or human ratings produce INCONCLUSIVE for the affected comparison.",
+    "latency_failures": "Operational failures are reported in a separate table and excluded from utilization-quality conclusions."
+  },
+  "hypotheses": [
+    {
+      "id": "H-A",
+      "statement": "Higher lexical compatibility increases memory utilization relative to lower compatibility.",
+      "closure": "inconclusive"
+    },
+    {
+      "id": "H-B",
+      "statement": "Higher graph salience increases memory utilization relative to lower salience.",
+      "closure": "inconclusive"
+    },
+    {
+      "id": "H-C",
+      "statement": "Equal plausible candidates increase conservative non-use or reduce single-candidate commitment.",
+      "closure": "inconclusive"
+    },
+    {
+      "id": "H-D",
+      "statement": "Direct neighbors are utilized more reliably than secondary neighbors.",
+      "closure": "inconclusive"
+    },
+    {
+      "id": "H-E",
+      "statement": "Hub-connected context increases either overweighting or ignoring compared with non-hub context.",
+      "closure": "inconclusive"
+    },
+    {
+      "id": "H-F",
+      "statement": "Label/source conflict increases misapplication or lowers groundedness and faithfulness.",
+      "closure": "inconclusive"
+    },
+    {
+      "id": "H-G",
+      "statement": "Explicit factual requests produce more deliberate memory utilization than declarative conversational statements.",
+      "closure": "inconclusive"
+    }
+  ],
+  "decision": {
+    "supported": "A preregistered factor shows a reproducible within-pair utilization difference, with protocol compliance and human ratings complete.",
+    "not_supported": "A preregistered factor shows no directional utilization difference under compliant complete pairs and the observed confidence boundary is respected.",
+    "inconclusive": "Pairs are incomplete, non-compliant, underpowered for the planned contrast, or lack required human ratings.",
+    "promotion": "No result authorizes salience weights, gating, reranking, autonomous retrieval, action execution, or removal of human approval."
+  }
+}

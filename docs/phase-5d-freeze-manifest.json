@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "record": "JOI Phase 5D freeze manifest",
+  "status": "FROZEN_BEFORE_5D_OUTPUTS",
+  "baseline_commit": "c99dcee403eaeceecf1b11c24fff66f61a238a73",
+  "rule": "Phase 5D observes salience behavior; it does not optimize it.",
+  "files": {
+    "docs/phase-5c.4-contextual-usefulness-preregistration.json": "d92951ab6de5e73525a8e12af14dcbac4ab9e1424317771b1ece5eeb807a0574",
+    "docs/phase-5c.4-observational-baseline.md": "f4b0a853f8826c0250501647ccd9eaf304df90ed2596495282abdfcd1e485c32",
+    "docs/benchmarks/2026-09-02-controlled-contextual-usefulness/review-packet.json": "8aead70c8b3019c3f85321bbfcfd788069ef2ab9bbb6038c64032d4146468f10",
+    "docs/phase-5d-memory-salience-preregistration.json": "5434d3a343958fe51cd5c93a44e7627ac934b308be9043a2893f1b373cd15424",
+    "docs/phase-5d-memory-salience-matched-pairs.json": "5b0abc59bb655453b64ff7e3989bfb559b2e6c7d904c67f6dc99d9076d47a41a"
+  },
+  "outputs": {
+    "five_d_responses_generated": false,
+    "five_d_human_ratings_collected": false,
+    "five_d_decision": "INCONCLUSIVE_UNTIL_EXECUTION_AND_REVIEW"
+  },
+  "immutable_controls": [
+    "model",
+    "system prompt",
+    "sampling",
+    "candidate limit K",
+    "PPR damping",
+    "policy filters",
+    "human approval flow",
+    "local-only provider path",
+    "source-linked bounded context"
+  ]
+}

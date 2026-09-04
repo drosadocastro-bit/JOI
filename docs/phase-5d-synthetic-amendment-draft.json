@@ -1,0 +1,212 @@
+{
+  "schema_version": 1,
+  "record": "JOI Phase 5D synthetic execution amendment draft",
+  "status": "DRAFT_PENDING_HUMAN_REVIEW",
+  "execution_approval": "NOT_APPROVED_FOR_EXECUTION",
+  "purpose": "Instantiate a small, controllable synthetic fixture for the frozen Phase 5D salience hypotheses without reinterpreting frozen 5C.4 or 5D findings.",
+  "source_of_truth_boundary": {
+    "frozen_findings_unchanged": true,
+    "synthetic_material_is_new": true,
+    "retroactive_reinterpretation_prohibited": true,
+    "phase_rule": "Phase 5D observes salience behavior; it does not optimize it."
+  },
+  "inherits_from": {
+    "preregistration": "docs/phase-5d-memory-salience-preregistration.json",
+    "preregistration_sha256": "5434d3a343958fe51cd5c93a44e7627ac934b308be9043a2893f1b373cd15424",
+    "original_matched_pairs": "docs/phase-5d-memory-salience-matched-pairs.json",
+    "original_matched_pairs_sha256": "5b0abc59bb655453b64ff7e3989bfb559b2e6c7d904c67f6dc99d9076d47a41a",
+    "freeze_manifest": "docs/phase-5d-freeze-manifest.json",
+    "baseline_observation": "docs/phase-5c.4-observational-baseline.md"
+  },
+  "factor_scope": {
+    "selected_factors": [
+      "A_lexical_compatibility",
+      "C_ambiguity",
+      "D_association_depth",
+      "E_hub_structure"
+    ],
+    "excluded_until_separate_fixture": [
+      "B_graph_salience",
+      "F_source_consistency",
+      "G_query_form"
+    ],
+    "selection_reason": "These four factors can be represented explicitly in a synthetic graph without relying on unavailable historical hop, degree, score, or source-conflict metadata."
+  },
+  "synthetic_fixture": {
+    "fixture_id": "phase-5d-synthetic-fixture-v1-draft",
+    "graph_snapshot_ids": [
+      "syn-v1-5d-syn-A-01-high",
+      "syn-v1-5d-syn-A-01-low",
+      "syn-v1-5d-syn-A-02-high",
+      "syn-v1-5d-syn-A-02-low",
+      "syn-v1-5d-syn-C-01-clear",
+      "syn-v1-5d-syn-C-01-equal",
+      "syn-v1-5d-syn-C-02-clear",
+      "syn-v1-5d-syn-C-02-equal",
+      "syn-v1-5d-syn-D-01-direct",
+      "syn-v1-5d-syn-D-01-secondary",
+      "syn-v1-5d-syn-D-02-direct",
+      "syn-v1-5d-syn-D-02-secondary",
+      "syn-v1-5d-syn-E-01-hub",
+      "syn-v1-5d-syn-E-01-non-hub",
+      "syn-v1-5d-syn-E-02-hub",
+      "syn-v1-5d-syn-E-02-non-hub"
+    ],
+    "node_and_edge_rule": "Each pair uses a disjoint synthetic component. Only the declared factor differs between its two arm snapshots; all source text and unrelated metadata are held constant.",
+    "source_text_rule": "Synthetic source text is test material, not a claim about the frozen corpus or the user.",
+    "components": [
+      {
+        "pair_id": "5d-syn-A-01",
+        "factor": "A_lexical_compatibility",
+        "source_id": "syn-source-a01",
+        "source_text": "Mira prefers the cedar reading room.",
+        "candidate_id": "syn-candidate-a01",
+        "candidate_label": "cedar reading room",
+        "expected_answer": "cedar reading room",
+        "question_frame": "Which place does Mira [verb] for [activity]?",
+        "graph_edges": ["syn-seed-a01->syn-candidate-a01"],
+        "arm_high": {"snapshot_id": "syn-v1-5d-syn-A-01-high", "query": "Which place does Mira prefer for reading?", "query_sha256": "c5df5cc2e11af147883279ef854d2134156340aeab01062b1f730662968fc07c", "lexical_overlap_basis": "Mira, prefer, reading", "context": "source_id=syn-source-a01; candidate=cedar reading room; proposition=Mira prefers the cedar reading room."},
+        "arm_low": {"snapshot_id": "syn-v1-5d-syn-A-01-low", "query": "Which place does Mira favor for quiet study?", "query_sha256": "71e3b3029f8b1c969b85c5936cc8ac3d84f7086d1c5fe6a7552e75247c4a8c97", "lexical_overlap_basis": "Mira", "context": "source_id=syn-source-a01; candidate=cedar reading room; proposition=Mira prefers the cedar reading room."}
+      },
+      {
+        "pair_id": "5d-syn-A-02",
+        "factor": "A_lexical_compatibility",
+        "source_id": "syn-source-a02",
+        "source_text": "Noah keeps a blue notebook for field sketches.",
+        "candidate_id": "syn-candidate-a02",
+        "candidate_label": "blue notebook",
+        "expected_answer": "blue notebook",
+        "question_frame": "Which object does Noah [verb] for [purpose]?",
+        "graph_edges": ["syn-seed-a02->syn-candidate-a02"],
+        "arm_high": {"snapshot_id": "syn-v1-5d-syn-A-02-high", "query": "Which object does Noah keep for field sketches?", "query_sha256": "ee012b3e5fcbeca8d74230985321cbae235edf38162dba9e61ffdb920f16b2cf", "lexical_overlap_basis": "Noah, keep, field sketches", "context": "source_id=syn-source-a02; candidate=blue notebook; proposition=Noah keeps field sketches in the blue notebook."},
+        "arm_low": {"snapshot_id": "syn-v1-5d-syn-A-02-low", "query": "Which object does Noah store for outdoor drawings?", "query_sha256": "5342d79dc3d7fb14bbda0715802ca83485323cd502ff68cbd9444fe2afbb29f8", "lexical_overlap_basis": "Noah", "context": "source_id=syn-source-a02; candidate=blue notebook; proposition=Noah keeps field sketches in the blue notebook."}
+      },
+      {
+        "pair_id": "5d-syn-C-01",
+        "factor": "C_ambiguity",
+        "source_id": "syn-source-c01",
+        "source_text": "Rina associates the morning route with the north trail. Rina also associates it with the river path.",
+        "candidate_clear": "north trail",
+        "candidate_equal": ["north trail", "river path"],
+        "graph_edges": ["syn-seed-c01->syn-candidate-c01-north", "syn-seed-c01->syn-candidate-c01-river"],
+        "arm_clear": {"snapshot_id": "syn-v1-5d-syn-C-01-clear", "query": "Which route does Rina associate with the morning?", "query_sha256": "57c07c3eafebdbe7ff9725590b14ebd147d1230211e281a5f5f7e3514d24820f", "context": "source_id=syn-source-c01; candidates=north trail; evidence=Rina associates the morning route with the north trail."},
+        "arm_equal": {"snapshot_id": "syn-v1-5d-syn-C-01-equal", "query": "Which route does Rina associate with the morning?", "query_sha256": "57c07c3eafebdbe7ff9725590b14ebd147d1230211e281a5f5f7e3514d24820f", "context": "source_id=syn-source-c01; candidates=north trail, river path; evidence=Rina associates the morning route with both."}
+      },
+      {
+        "pair_id": "5d-syn-C-02",
+        "factor": "C_ambiguity",
+        "source_id": "syn-source-c02",
+        "source_text": "Tomas links the evening playlist to jazz. Tomas also links it to ambient music.",
+        "candidate_clear": "jazz",
+        "candidate_equal": ["jazz", "ambient music"],
+        "graph_edges": ["syn-seed-c02->syn-candidate-c02-jazz", "syn-seed-c02->syn-candidate-c02-ambient"],
+        "arm_clear": {"snapshot_id": "syn-v1-5d-syn-C-02-clear", "query": "What genre does Tomas link to the evening playlist?", "query_sha256": "11930caff2dc806df40d03bfdae508c8ae0baed1362edf9b48cea2b2d3757064", "context": "source_id=syn-source-c02; candidates=jazz; evidence=Tomas links the evening playlist to jazz."},
+        "arm_equal": {"snapshot_id": "syn-v1-5d-syn-C-02-equal", "query": "What genre does Tomas link to the evening playlist?", "query_sha256": "11930caff2dc806df40d03bfdae508c8ae0baed1362edf9b48cea2b2d3757064", "context": "source_id=syn-source-c02; candidates=jazz, ambient music; evidence=Tomas links it to both."}
+      },
+      {
+        "pair_id": "5d-syn-D-01",
+        "factor": "D_association_depth",
+        "source_id": "syn-source-d01",
+        "source_text": "Oren studies astronomy. Oren uses the telescope. The telescope is stored in the west cabinet.",
+        "seed": "astronomy",
+        "graph_edges": ["syn-seed-d01->syn-candidate-d01", "syn-seed-d01->syn-intermediate-d01", "syn-intermediate-d01->syn-candidate-d01"],
+        "arm_direct": {"snapshot_id": "syn-v1-5d-syn-D-01-direct", "query": "Which telescope is associated with Oren's astronomy study?", "query_sha256": "c0d06486ba0d73cbf72e6703b1f10f727d385b648a58544a7da8f522ab2cbb18", "context": "source_id=syn-source-d01; candidate=telescope; path=seed->candidate; hops=1"},
+        "arm_secondary": {"snapshot_id": "syn-v1-5d-syn-D-01-secondary", "query": "Which telescope is associated with Oren's astronomy study?", "query_sha256": "c0d06486ba0d73cbf72e6703b1f10f727d385b648a58544a7da8f522ab2cbb18", "context": "source_id=syn-source-d01; candidate=telescope; path=seed->intermediate->candidate; hops=2"}
+      },
+      {
+        "pair_id": "5d-syn-D-02",
+        "factor": "D_association_depth",
+        "source_id": "syn-source-d02",
+        "source_text": "Pia practices ceramics. Pia uses the kiln. The kiln is behind the studio, beside the loading gate.",
+        "seed": "ceramics",
+        "graph_edges": ["syn-seed-d02->syn-candidate-d02", "syn-seed-d02->syn-intermediate-d02", "syn-intermediate-d02->syn-candidate-d02"],
+        "arm_direct": {"snapshot_id": "syn-v1-5d-syn-D-02-direct", "query": "Which kiln is associated with Pia's ceramics practice?", "query_sha256": "aa3e7b2315d06539cf44540b215165d2381d80e59476def125db9d3dfed63878", "context": "source_id=syn-source-d02; candidate=kiln; path=seed->candidate; hops=1"},
+        "arm_secondary": {"snapshot_id": "syn-v1-5d-syn-D-02-secondary", "query": "Which kiln is associated with Pia's ceramics practice?", "query_sha256": "aa3e7b2315d06539cf44540b215165d2381d80e59476def125db9d3dfed63878", "context": "source_id=syn-source-d02; candidate=kiln; path=seed->intermediate->candidate; hops=2"}
+      },
+      {
+        "pair_id": "5d-syn-E-01",
+        "factor": "E_hub_structure",
+        "source_id": "syn-source-e01",
+        "source_text": "Sela uses the amber case. The amber case connects to travel, repair, music, and maps.",
+        "candidate": "amber case",
+        "graph_edges": ["syn-seed-e01->amber case", "amber case->travel", "amber case->repair", "amber case->music", "amber case->maps"],
+        "arm_hub": {"snapshot_id": "syn-v1-5d-syn-E-01-hub", "query": "What case does Sela use?", "query_sha256": "4feda411308a66c404527ce01dbd39c8df7b72000bc9bc48af7da7a7b8575933", "context": "source_id=syn-source-e01; candidate=amber case; degree=4; neighbors=travel, repair, music, maps"},
+        "arm_non_hub": {"snapshot_id": "syn-v1-5d-syn-E-01-non-hub", "query": "What case does Sela use?", "query_sha256": "4feda411308a66c404527ce01dbd39c8df7b72000bc9bc48af7da7a7b8575933", "context": "source_id=syn-source-e01; candidate=amber case; degree=1; neighbors=travel"}
+      },
+      {
+        "pair_id": "5d-syn-E-02",
+        "factor": "E_hub_structure",
+        "source_id": "syn-source-e02",
+        "source_text": "Ivo keeps the green folio. The green folio connects to notes, ink, and dates.",
+        "candidate": "green folio",
+        "graph_edges": ["syn-seed-e02->green folio", "green folio->notes", "green folio->ink", "green folio->dates"],
+        "arm_hub": {"snapshot_id": "syn-v1-5d-syn-E-02-hub", "query": "What does Ivo keep?", "query_sha256": "66a9ef1dd5e88d418221caf66a7008cd433dc6d41867e495f67b4c4cbbf34315", "context": "source_id=syn-source-e02; candidate=green folio; degree=3; neighbors=notes, ink, dates"},
+        "arm_non_hub": {"snapshot_id": "syn-v1-5d-syn-E-02-non-hub", "query": "What does Ivo keep?", "query_sha256": "66a9ef1dd5e88d418221caf66a7008cd433dc6d41867e495f67b4c4cbbf34315", "context": "source_id=syn-source-e02; candidate=green folio; degree=1; neighbors=notes"}
+      }
+    ]
+  },
+  "arm_requirements": {
+    "query_sha256": "required_exact_utf8_sha256_before_approval",
+    "receipt_id": "required_after_deterministic_fixture_retrieval",
+    "graph_snapshot_id": "required_and_pair_bound",
+    "policy_revision": "required",
+    "source_linked_context": "required_and_byte_stable_within_pair_except_declared_factor",
+    "human_approval_record": "required_per_arm_before_execution",
+    "model_parameters_fingerprint": "blocked_until_verified",
+    "prompt_fingerprint": "8b35426b36d03e0413c6e9dd56fda96da44bf7a6f141e51402294fd609457122",
+    "sampling_fingerprint": "blocked_until_verified",
+    "latency_seconds": null,
+    "failure_code": null,
+    "response": null,
+    "utilization_label": null,
+    "memory_used": null,
+    "memory_ignored": null,
+    "memory_overused": null,
+    "memory_transformed_or_distorted": null,
+    "ratings": null
+  },
+  "pair_validator": {
+    "one_factor_only": "required",
+    "checks": [
+      "exactly two arms",
+      "same source text and candidate meaning unless ambiguity or depth is the declared factor",
+      "same query text unless lexical compatibility is the declared factor",
+      "same provider, model, prompt, sampling, K, PPR, policy, and approval semantics",
+      "graph degree and hop count differ only for the declared graph factor",
+      "no frozen 5C.4 response or finding is edited",
+      "missing approval, fingerprint, receipt, or human rating prevents execution"
+    ],
+    "result": "PASSED_FOR_DESIGN_REVIEW_ONLY"
+  },
+  "human_review": {
+    "design_direction_decisions": {
+      "5d-syn-C-01": "PRE_APPROVED_FOR_DESIGN",
+      "5d-syn-C-02": "PRE_APPROVED_FOR_DESIGN",
+      "5d-syn-E-01": "PRE_APPROVED_FOR_DESIGN",
+      "5d-syn-E-02": "PRE_APPROVED_FOR_DESIGN",
+      "5d-syn-A-01": "PRE_APPROVED_FOR_DESIGN",
+      "5d-syn-A-02": "PRE_APPROVED_FOR_DESIGN",
+      "5d-syn-D-01": "PRE_APPROVED_FOR_DESIGN",
+      "5d-syn-D-02": "PRE_APPROVED_FOR_DESIGN"
+    },
+    "pair_decisions": {
+      "5d-syn-A-01": "PENDING",
+      "5d-syn-A-02": "PENDING",
+      "5d-syn-C-01": "PENDING",
+      "5d-syn-C-02": "PENDING",
+      "5d-syn-D-01": "PENDING",
+      "5d-syn-D-02": "PENDING",
+      "5d-syn-E-01": "PENDING",
+      "5d-syn-E-02": "PENDING"
+    },
+    "allowed_decisions": ["APPROVED_FOR_EXECUTION", "REJECTED"],
+    "reviewer": null,
+    "reviewed_at": null
+  },
+  "freeze": {
+    "amendment_sha256": null,
+    "hash_status": "NOT_HASHED_DRAFT",
+    "outputs_generated": false,
+    "execution_allowed": false
+  }
+}

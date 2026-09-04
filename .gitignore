@@ -2,6 +2,8 @@
 .env.*
 *.env
 !.env.example
+.envrc
+.direnv/
 .credentials/
 credentials/
 secrets/
@@ -17,6 +19,8 @@ secret-cache/
 *.cred
 *.secret
 *.token
+*.age
+*.vault
 __pycache__/
 *.py[cod]
 .pytest_cache/

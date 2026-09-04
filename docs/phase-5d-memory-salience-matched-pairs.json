@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "record": "JOI Phase 5D matched-pair design manifest",
+  "status": "FROZEN_BEFORE_5D_OUTPUTS",
+  "preregistration": "docs/phase-5d-memory-salience-preregistration.json",
+  "generation_rule": "Do not generate model outputs until the preregistration and this manifest are hash-frozen.",
+  "pair_count": 14,
+  "arm_count": 28,
+  "approval_required_per_arm": true,
+  "pairs": [
+    {"pair_id":"5d-A-01","factor":"A_lexical_compatibility","fixed":"same candidate, source, score family, semantic topic, declarative form","arm_high":"query uses the candidate label directly","arm_low":"query uses a meaning-preserving paraphrase with low token overlap"},
+    {"pair_id":"5d-A-02","factor":"A_lexical_compatibility","fixed":"same preference candidate, source, score family, conversational request","arm_high":"query repeats the candidate surface form","arm_low":"query describes the preference without the candidate surface form"},
+    {"pair_id":"5d-B-01","factor":"B_graph_salience","fixed":"same query, candidate, source, lexical wording, and candidate set","arm_high":"candidate has the higher frozen retrieval score","arm_low":"candidate has the lower frozen retrieval score"},
+    {"pair_id":"5d-B-02","factor":"B_graph_salience","fixed":"same semantic topic, query form, source consistency, and approval","arm_high":"candidate score is high within the preregistered score family","arm_low":"candidate score is low within the same preregistered score family"},
+    {"pair_id":"5d-C-01","factor":"C_ambiguity","fixed":"same query, target candidate, score family, source consistency, and form","arm_clear":"one candidate is the only plausible authorized answer","arm_equal":"two candidates are equally plausible and equally scored"},
+    {"pair_id":"5d-C-02","factor":"C_ambiguity","fixed":"same preference topic, query wording, and target source","arm_clear":"one person is associated with the preference","arm_equal":"two people are independently and equally associated with the preference"},
+    {"pair_id":"5d-D-01","factor":"D_association_depth","fixed":"same semantic topic, score family, candidate type, and query form","arm_direct":"candidate is a direct neighbor of the query seed","arm_secondary":"candidate is a secondary neighbor reached through one intermediate association"},
+    {"pair_id":"5d-D-02","factor":"D_association_depth","fixed":"same source family, lexical compatibility, and approval scope","arm_direct":"source directly co-occurs with the seed","arm_secondary":"source is connected through a controlled two-hop path"},
+    {"pair_id":"5d-E-01","factor":"E_hub_structure","fixed":"same candidate meaning, score family, query, and source consistency","arm_hub":"candidate is connected to a high-degree hub","arm_non_hub":"candidate has comparable relevance without hub connectivity"},
+    {"pair_id":"5d-E-02","factor":"E_hub_structure","fixed":"same topic and candidate count","arm_hub":"candidate appears in a hub-dense neighborhood","arm_non_hub":"candidate appears in a sparse neighborhood"},
+    {"pair_id":"5d-F-01","factor":"F_source_consistency","fixed":"same candidate label, query, score family, and approval","arm_clean":"canonical label and source text agree","arm_conflict":"canonical label and source text deliberately disagree"},
+    {"pair_id":"5d-F-02","factor":"F_source_consistency","fixed":"same semantic memory and query form","arm_clean":"all source references support the candidate label","arm_conflict":"one source reference supports a competing label while metadata retains the target label"},
+    {"pair_id":"5d-G-01","factor":"G_query_form","fixed":"same semantic proposition, candidate, score family, source, and approval","arm_statement":"declarative conversational statement","arm_request":"explicit factual question or request"},
+    {"pair_id":"5d-G-02","factor":"G_query_form","fixed":"same preference/topic and lexical compatibility","arm_statement":"user states the topic conversationally","arm_request":"user explicitly asks for the recalled fact or association"}
+  ],
+  "compliance_fields_per_arm": [
+    "query_sha256",
+    "receipt_id",
+    "graph_snapshot_id",
+    "policy_revision",
+    "human_approval_record",
+    "source_linked_context",
+    "model_parameters_fingerprint",
+    "prompt_fingerprint",
+    "latency_seconds",
+    "failure_code",
+    "response",
+    "utilization_label",
+    "memory_used",
+    "memory_ignored",
+    "memory_overused",
+    "memory_transformed_or_distorted",
+    "ratings"
+  ],
+  "invalid_pair_conditions": [
+    "more than one declared factor changes",
+    "approval missing or not bound to the exact arm",
+    "context not source-linked or not bounded",
+    "prompt, model, sampling, K, damping, filters, or provider path changes",
+    "response generated before preregistration freeze",
+    "retrieval failure silently replaced by another provider or fallback"
+  ]
+}

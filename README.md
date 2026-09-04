@@ -21,17 +21,23 @@ itself. JOI is a modular architecture, not a single chatbot.
 
 ## Current Status
 
-**Phase 5B: Write-only graph evaluation closed with human-reviewed PASS**
+**Phase 5C: corrective shadow-retrieval evaluation and controlled contextual-usefulness preparation**
 
 JOI now has a stable local text and voice core, append-only episodic memory,
 inspectable correction and forgetting, and provider-independent Compact Memory
 evaluation. Phase 5A passed its frozen provider-contract and retention-quality
 gates. Model-backed Compact Memory remains shadow-only: publication, retrieval,
 live prompt injection, and production reliance are not authorized.
-Phase 5B adds a provider-free, default-off associative graph writer and explicit
-source-linked inspection. Its frozen automatic gates and independent review of
-all 10 extracted entities passed at 100% precision. This closes only the bounded
-write-only construction and inspection scope.
+Phase 5B's provider-free, default-off graph writer and source-linked
+inspection are closed with frozen automatic gates and independent review of all
+10 extracted entities passing at 100% precision. Phase 5C's first PPR shadow
+retrieval evaluation is preserved as a FAIL because its frozen metric contract
+made the threshold unattainable; a corrected v2 contract is frozen but has not
+been executed. Controlled contextual retrieval is implemented as a narrow,
+disabled-by-default, one-use human-approved path. Its usefulness evaluation is
+frozen before responses and ratings; it has not authorized autonomous retrieval
+or action. Phase 5D design work is blocked pending executable fixtures,
+deterministic receipts, runtime fingerprints, and per-arm human approvals.
 
 Implemented:
 
@@ -71,8 +77,11 @@ Implemented:
 	behavior, prompt, retrieval, provider, or network delta
 - Phase 5B human-reviewed extraction precision PASS at 100% across 10 entities
 - 239 passing tests at the Phase 5B write-only closure checkpoint
-- Phase 5C v2 controlled contextual retrieval with explicit, one-use human
-	approval, effective-source filtering, and no action authorization
+- Phase 5C PPR shadow retrieval v1 FAIL preserved, with a corrected v2 metric
+	contract frozen before execution
+- controlled contextual retrieval with explicit, one-use human approval,
+	effective-source filtering, and no action authorization
+- 282 passing tests in the current workspace on 2026-09-04
 
 Still not implemented:
 
@@ -87,11 +96,14 @@ Still not implemented:
 ## Quick Start
 
 JOI currently targets Python 3.13 on Windows with LM Studio running locally.
-Run these commands from the repository root:
+The Git repository is `JOI_2_0\JOI_2_0`; the checked-in project expects shared
+runtime assets such as virtual environments and model files two levels above it
+in the workspace. See [the workspace layout guide](docs/workspace-layout.md)
+before changing those paths. Run these commands from the repository root:
 
 ```powershell
-py -3.13 -m venv .venv
-.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+$workspaceRoot = (Resolve-Path ..\..).Path
+& "$workspaceRoot\.venv\Scripts\python.exe" -m pip install -r requirements.txt
 Copy-Item .env.example .env
 ```
 
@@ -99,7 +111,7 @@ Load the configured model in LM Studio and start JOI:
 
 ```powershell
 lms load nvidia/nemotron-3-nano --identifier nvidia/nemotron-3-nano -y
-.\.venv\Scripts\python.exe app.py
+& "$workspaceRoot\.venv\Scripts\python.exe" app.py
 ```
 
 The default LM Studio endpoint is `http://127.0.0.1:1234/v1`. Change
@@ -124,13 +136,12 @@ Kokoro runs in a separate environment so its ONNX dependencies do not alter
 JOI's main runtime:
 
 ```powershell
-py -3.13 -m venv .venv-kokoro
-.\.venv-kokoro\Scripts\python.exe -m pip install kokoro-onnx==0.6.1 soundfile psutil
+& "$workspaceRoot\.venv\Scripts\python.exe" -m venv "$workspaceRoot\.venv-kokoro"
+& "$workspaceRoot\.venv-kokoro\Scripts\python.exe" -m pip install kokoro-onnx==0.6.1 soundfile psutil
 ```
 
 Download the official full-precision `kokoro-v1.0.onnx` and
-`voices-v1.0.bin` release assets into `models\kokoro` under the repository
-root, then set:
+`voices-v1.0.bin` release assets into `$workspaceRoot\models\kokoro`, then set:
 
 ```dotenv
 VOICE_ENABLED=true
@@ -196,7 +207,7 @@ Spanish voice also passed a live human listening test.
 Manage a credential only through hidden prompts:
 
 ```powershell
-.\.venv\Scripts\python.exe credential_admin.py
+& "$workspaceRoot\.venv\Scripts\python.exe" credential_admin.py
 ```
 
 Never pass a key as an argument, environment variable, shell command, global
@@ -282,13 +293,13 @@ Paired baseline/candidate reports are written to
 Deterministic drift regression runs at 25, 50, 100, and 200 updates:
 
 ```powershell
-.\.venv\Scripts\python.exe -m pytest tests\test_compact_memory_drift.py -q
+& "$workspaceRoot\.venv\Scripts\python.exe" -m pytest tests\test_compact_memory_drift.py -q
 ```
 
 The reproducible real-model benchmark runner uses the same cumulative corpus:
 
 ```powershell
-.\.venv\Scripts\python.exe compact_memory_benchmark.py
+& "$workspaceRoot\.venv\Scripts\python.exe" compact_memory_benchmark.py
 ```
 
 The 2026-08-31 Nemotron run completed all four required checkpoint snapshots
@@ -333,9 +344,15 @@ across provider switches. Publication and live prompt injection remain disabled.
 See the [Phase 5A closure audit](docs/phase-5a-closure-audit.md),
 [technical debt register](docs/technical-debt-register.json), and
 [final retention-quality report](docs/benchmarks/2026-09-01-retention-quality/luna/retention-quality-final.md).
-Phase 5B shadow retrieval is preregistered but has not started; `TD-JOI-009`
-is resolved. Write-only graph construction and inspection passed their separate
-frozen automatic and human-review gates, but retrieval remains prohibited.
+Phase 5B write-only graph construction and inspection passed their separate
+frozen automatic and human-review gates. Phase 5C's original shadow-retrieval
+result remains a preserved FAIL; the corrected v2 metric contract is frozen
+before execution. The implemented contextual path remains explicitly
+human-gated and disabled by default. Live or autonomous memory retrieval,
+prompt injection outside that approved path, and production reliance remain
+unauthorized. See the [Phase 5C checkpoint](docs/phase-5c.3-closure-record.json),
+[controlled contextual retrieval contract](docs/controlled-contextual-retrieval.md),
+and [Phase 5D readiness review](docs/phase-5d-execution-readiness-review.json).
 
 Graph writes additionally require persistent mode and explicit opt-in:
 
@@ -362,15 +379,15 @@ truth, identity, or authority.
 Run the complete test suite:
 
 ```powershell
-.\.venv\Scripts\python.exe -m pytest --tb=short -q
+& "$workspaceRoot\.venv\Scripts\python.exe" -m pytest --tb=short -q
 ```
 
 Run the Phase 1 conversation soak and restart recovery checks with LM Studio
 available:
 
 ```powershell
-.\.venv\Scripts\python.exe phase1_acceptance.py
-.\.venv\Scripts\python.exe phase1_recovery.py
+& "$workspaceRoot\.venv\Scripts\python.exe" phase1_acceptance.py
+& "$workspaceRoot\.venv\Scripts\python.exe" phase1_recovery.py
 ```
 
 The controlled local-brain comparison and current model decision are recorded
@@ -379,8 +396,8 @@ in [docs/local-brain-model-selection.md](docs/local-brain-model-selection.md).
 Speech benchmarks use their isolated environments:
 
 ```powershell
-.\.venv-tts\Scripts\python.exe qwen_tts_acceptance.py
-.\.venv-kokoro\Scripts\python.exe kokoro_tts_benchmark.py
+& "$workspaceRoot\.venv-tts\Scripts\python.exe" qwen_tts_acceptance.py
+& "$workspaceRoot\.venv-kokoro\Scripts\python.exe" kokoro_tts_benchmark.py
 ```
 
 Kokoro passed the technical interactive gate on the current CPU-only host:

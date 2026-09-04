@@ -1,14 +1,14 @@
 {
   "schema_version": 1,
   "register": "JOI Technical Debt Register",
-  "updated_at_utc": "2026-09-02T11:59:34.9904858Z",
+  "updated_at_utc": "2026-09-04T00:00:00Z",
   "classification_values": [
     "BLOCKING",
     "ACCEPTED_NON_BLOCKING",
     "DEFERRED",
     "RESOLVED"
   ],
-  "next_phase_scope": "Phase 5B provider-free, schema-frozen, write-only graph construction and inspection; no retrieval, prompt injection, or production reliance.",
+  "next_phase_scope": "Phase 5C corrective shadow-retrieval evaluation and controlled contextual-usefulness review. The original PPR result remains a preserved FAIL; v2 may execute only under its frozen metric contract. Contextual retrieval remains disabled by default, explicitly human-gated, and without action authority. Phase 5D execution remains blocked pending executable fixtures, deterministic receipts, runtime fingerprints, and per-arm approvals.",
   "items": [
     {
       "id": "TD-JOI-001",

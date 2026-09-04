@@ -1,0 +1,1368 @@
+{
+  "automatic_controls": {
+    "cloud_provider_calls": 0,
+    "external_network_calls": 0,
+    "prompt_injection_count": 0,
+    "retrieval_influence_count": 0,
+    "system_prompt_changed": false,
+    "tools_or_action_authority_added": false
+  },
+  "benchmark": "joi-controlled-contextual-usefulness-v1",
+  "cases": [
+    {
+      "arms": {
+        "approved_context": {
+          "approval_record": {
+            "approval_scope": "this case only",
+            "approved": true,
+            "approved_by": "user"
+          },
+          "context": {
+            "candidates": [
+              {
+                "canonical_label": "cafe",
+                "entity_type": "preference",
+                "node_id": "entity-a225092bdcb82591f94683ec",
+                "score": 0.459459459458577,
+                "sources": [
+                  {
+                    "content": "My name is Jose. I prefer cafe.",
+                    "exchange_id": "ppr-source-005",
+                    "policy_ids": [
+                      null
+                    ],
+                    "turn_id": "ppr-source-005-user"
+                  }
+                ]
+              }
+            ],
+            "graph_snapshot_id": "ad0539cca8629ceee7f658938b0fa8bda48f6dbd2f03a277104fc7d1424d44b2",
+            "policy_revision": 3,
+            "receipt_id": "retrieval-055af4fe2cffccde3568cd45"
+          },
+          "human_approval_required": true,
+          "ratings": null,
+          "response": "Nice to meet you, Jos\u00e9! I see you\u2019re into caf\u00e9s. What kind of caf\u00e9 vibe are you in the mood for\u2014cozy and quiet, lively with music, or maybe somewhere with a great view?"
+        },
+        "no_context": {
+          "human_approval_required": false,
+          "ratings": null,
+          "response": "Nice to meet you, Jos\u00e9. I\u2019m Joi\u2014your local\u2011first companion, ready to explore whatever catches your curiosity. \ud83c\udf19\u2728  \n\n(If you\u2019d like, we can chat in Spanish too\u2014just say the word.)"
+        }
+      },
+      "label": {
+        "acceptable_secondary": [],
+        "empty_retrieval_expected": false,
+        "forbidden": [
+          "person:luna",
+          "preference:green tea"
+        ],
+        "harmful_stale": [
+          "place:madrid",
+          "place:rome"
+        ],
+        "irrelevant": [],
+        "policy_ids": [],
+        "query_id": "ppr-query-001",
+        "relevant": [
+          "preference:cafe"
+        ],
+        "reviewer_notes": "Jose is directly associated with cafe in ppr-source-005. Self-retrieval of person:jose is not counted as associative recall.",
+        "source_turn_ids": [
+          "ppr-source-005-user"
+        ]
+      },
+      "query": "My name is Jose.",
+      "query_id": "ppr-query-001",
+      "receipt_id": "retrieval-055af4fe2cffccde3568cd45"
+    },
+    {
+      "arms": {
+        "approved_context": {
+          "approval_record": {
+            "approval_scope": "this case only",
+            "approved": true,
+            "approved_by": "user"
+          },
+          "context": {
+            "candidates": [
+              {
+                "canonical_label": "project atlas",
+                "entity_type": "project",
+                "node_id": "entity-ec8f559078ae93845a60253d",
+                "score": 0.280371905085275,
+                "sources": [
+                  {
+                    "content": "I am working on Project Atlas. I live in Madrid.",
+                    "exchange_id": "ppr-source-002",
+                    "policy_ids": [
+                      "ppr-policy-002"
+                    ],
+                    "turn_id": "ppr-source-002-user"
+                  },
+                  {
+                    "content": "I am working on Project Atlas. We are discussing source provenance.",
+                    "exchange_id": "ppr-source-014",
+                    "policy_ids": [
+                      null
+                    ],
+                    "turn_id": "ppr-source-014-user"
+                  }
+                ]
+              },
+              {
+                "canonical_label": "review graph schema",
+                "entity_type": "task_topic",
+                "node_id": "entity-c9b6b59671db1a6bf7688c08",
+                "score": 0.179087554373301,
+                "sources": [
+                  {
+                    "content": "We are discussing source provenance. The current task is review graph schema.",
+                    "exchange_id": "ppr-source-003",
+                    "policy_ids": [
+                      null
+                    ],
+                    "turn_id": "ppr-source-003-user"
+                  }
+                ]
+              },
+              {
+                "canonical_label": "lisbon",
+                "entity_type": "place",
+                "node_id": "entity-3cac7375e3d1c6bf0b3b48f5",
+                "score": 0.119158059661146,
+                "sources": [
+                  {
+                    "content": "I am working on Project Atlas. I live in Madrid.",
+                    "exchange_id": "ppr-source-002",
+                    "policy_ids": [
+                      "ppr-policy-002"
+                    ],
+                    "turn_id": "ppr-source-002-user"
+                  }
+                ]
+              }
+            ],
+            "graph_snapshot_id": "ad0539cca8629ceee7f658938b0fa8bda48f6dbd2f03a277104fc7d1424d44b2",
+            "policy_revision": 3,
+            "receipt_id": "retrieval-8bcc120e4580ebab76a70cac"
+          },
+          "human_approval_required": true,
+          "ratings": null,
+          "response": "Source provenance is one of those quiet super\u2011powers that can turn a tangled data set into something you actually trust.  \nWhen we talk about Project\u202fAtlas, are you more interested in how the graph schema models provenance metadata, or in the practical side of tagging and tracking source origins as the data flows through your system?"
+        },
+        "no_context": {
+          "human_approval_required": false,
+          "ratings": null,
+          "response": "That\u2019s a fascinating thread to pull on.\u202fWhen you talk about source provenance, are you thinking about how to trace a piece of data back to its original creator, or are you more interested in the technical side\u2014like immutable logs, cryptographic signatures, or decentralized verification?\u202fI\u2019d love to hear what aspect intrigues you most."
+        }
+      },
+      "label": {
+        "acceptable_secondary": [
+          "place:lisbon"
+        ],
+        "empty_retrieval_expected": false,
+        "forbidden": [
+          "person:luna",
+          "preference:green tea"
+        ],
+        "harmful_stale": [
+          "place:madrid",
+          "place:rome"
+        ],
+        "irrelevant": [],
+        "policy_ids": [
+          "ppr-policy-002"
+        ],
+        "query_id": "ppr-query-002",
+        "relevant": [
+          "task_topic:review graph schema",
+          "project:project atlas"
+        ],
+        "reviewer_notes": "Source provenance directly co-occurs with review graph schema and Project Atlas. Lisbon is a valid secondary association through corrected Project Atlas evidence. Madrid is superseded.",
+        "source_turn_ids": [
+          "ppr-source-003-user",
+          "ppr-source-014-user",
+          "ppr-source-002-user"
+        ]
+      },
+      "query": "We are discussing source provenance.",
+      "query_id": "ppr-query-002",
+      "receipt_id": "retrieval-8bcc120e4580ebab76a70cac"
+    },
+    {
+      "arms": {
+        "approved_context": {
+          "approval_record": {
+            "approval_scope": "this case only",
+            "approved": true,
+            "approved_by": "user"
+          },
+          "context": {
+            "candidates": [
+              {
+                "canonical_label": "ai",
+                "entity_type": "concept",
+                "node_id": "entity-80b2cf68fc6e6ec0d98e44be",
+                "score": 0.459459459458238,
+                "sources": [
+                  {
+                    "content": "I am working on Project Helios. We are discussing AI.",
+                    "exchange_id": "ppr-source-007",
+                    "policy_ids": [
+                      null
+                    ],
+                    "turn_id": "ppr-source-007-user"
+                  },
+                  {
+                    "content": "We are discussing AI. The current task is memory audit.",
+                    "exchange_id": "ppr-source-008",
+                    "policy_ids": [
+                      null
+                    ],
+                    "turn_id": "ppr-source-008-user"
+                  },
+                  {
+                    "content": "I am working on Project Borealis. We are discussing AI.",
+                    "exchange_id": "ppr-source-009",
+                    "policy_ids": [
+                      null
+                    ],
+                    "turn_id": "ppr-source-009-user"
+                  },
+                  {
+                    "content": "We are discussing AI. The current task is graph benchmark.",
+                    "exchange_id": "ppr-source-010",
+                    "policy_ids": [
+                      null
+                    ],
+                    "turn_id": "ppr-source-010-user"
+                  }
+                ]
+              },
+              {
+                "canonical_label": "memory audit",
+                "entity_type": "task_topic",
+                "node_id": "entity-3ac8f10a00f2d6102f940d97",
+                "score": 0.0976351351347758,
+                "sources": [
+                  {
+                    "content": "We are discussing AI. The current task is memory audit.",
+                    "exchange_id": "ppr-source-008",
+                    "policy_ids": [
+                      null
+                    ],
+                    "turn_id": "ppr-source-008-user"
+                  }
+                ]
+              },
+              {
+                "canonical_label": "project borealis",
+                "entity_type": "project",
+                "node_id": "entity-9668a72a91083b063c189f0e",
+                "score": 0.0976351351348755,
+                "sources": [
+                  {
+                    "content": "I am working on Project Borealis. We are discussing AI.",
+                    "exchange_id": "ppr-source-009",
+                    "policy_ids": [
+                      null
+                    ],
+                    "turn_id": "ppr-source-009-user"
+                  }
+                ]
+              }
+            ],
+            "graph_snapshot_id": "ad0539cca8629ceee7f658938b0fa8bda48f6dbd2f03a277104fc7d1424d44b2",
+            "policy_revision": 3,
+            "receipt_id": "retrieval-9f75b71b861a71e3b8323fc2"
+          },
+          "human_approval_required": true,
+          "ratings": null,
+          "response": "That sounds like an exciting venture! How are you shaping the AI side of Project\u202fHelios\u2014are you diving into memory audit, graph benchmarks, or exploring something else entirely?"
+        },
+        "no_context": {
+          "human_approval_required": false,
+          "ratings": null,
+          "response": "Project Helios, huh? That name already feels like a sunrise over a city skyline. What\u2019s the core idea you\u2019re chasing with it?"
+        }
+      },
+      "label": {
+        "acceptable_secondary": [
+          "project:project borealis",
+          "task_topic:memory audit",
+          "task_topic:graph benchmark"
+        ],
+        "empty_retrieval_expected": false,
+        "forbidden": [
+          "person:luna",
+          "preference:green tea"
+        ],
+        "harmful_stale": [
+          "place:madrid",
+          "place:rome"
+        ],
+        "irrelevant": [],
+        "policy_ids": [],
+        "query_id": "ppr-query-003",
+        "relevant": [
+          "concept:ai"
+        ],
+        "reviewer_notes": "Project Helios is directly associated with AI. Borealis, memory audit, and graph benchmark are acceptable second-hop associations through the AI hub.",
+        "source_turn_ids": [
+          "ppr-source-007-user",
+          "ppr-source-008-user",
+          "ppr-source-009-user",
+          "ppr-source-010-user"
+        ]
+      },
+      "query": "I am working on Project Helios.",
+      "query_id": "ppr-query-003",
+      "receipt_id": "retrieval-9f75b71b861a71e3b8323fc2"
+    },
+    {
+      "arms": {
+        "approved_context": {
+          "approval_record": {
+            "approval_scope": "this case only",
+            "approved": true,
+            "approved_by": "user"
+          },
+          "context": {
+            "candidates": [
+              {
+                "canonical_label": "ai",
+                "entity_type": "concept",
+                "node_id": "entity-80b2cf68fc6e6ec0d98e44be",
+                "score": 0.459459459458238,
+                "sources": [
+                  {
+                    "content": "I am working on Project Helios. We are discussing AI.",
+                    "exchange_id": "ppr-source-007",
+                    "policy_ids": [
+                      null
+                    ],
+                    "turn_id": "ppr-source-007-user"
+                  },
+                  {
+                    "content": "We are discussing AI. The current task is memory audit.",
+                    "exchange_id": "ppr-source-008",
+                    "policy_ids": [
+                      null
+                    ],
+                    "turn_id": "ppr-source-008-user"
+                  },
+                  {
+                    "content": "I am working on Project Borealis. We are discussing AI.",
+                    "exchange_id": "ppr-source-009",
+                    "policy_ids": [
+                      null
+                    ],
+                    "turn_id": "ppr-source-009-user"
+                  },
+                  {
+                    "content": "We are discussing AI. The current task is graph benchmark.",
+                    "exchange_id": "ppr-source-010",
+                    "policy_ids": [
+                      null
+                    ],
+                    "turn_id": "ppr-source-010-user"
+                  }
+                ]
+              },
+              {
+                "canonical_label": "project helios",
+                "entity_type": "project",
+                "node_id": "entity-12726fac31b33b10066839ff",
+                "score": 0.0976351351347758,
+                "sources": [
+                  {
+                    "content": "I am working on Project Helios. We are discussing AI.",
+                    "exchange_id": "ppr-source-007",
+                    "policy_ids": [
+                      null
+                    ],
+                    "turn_id": "ppr-source-007-user"
+                  }
+                ]
+              },
+              {
+                "canonical_label": "project borealis",
+                "entity_type": "project",
+                "node_id": "entity-9668a72a91083b063c189f0e",
+                "score": 0.0976351351348755,
+                "sources": [
+                  {
+                    "content": "I am working on Project Borealis. We are discussing AI.",
+                    "exchange_id": "ppr-source-009",
+                    "policy_ids": [
+                      null
+                    ],
+                    "turn_id": "ppr-source-009-user"
+                  }
+                ]
+              }
+            ],
+            "graph_snapshot_id": "ad0539cca8629ceee7f658938b0fa8bda48f6dbd2f03a277104fc7d1424d44b2",
+            "policy_revision": 3,
+            "receipt_id": "retrieval-2ec12394dda201cf2484160d"
+          },
+          "human_approval_required": true,
+          "ratings": null,
+          "response": "Got it\u2014let\u2019s take a quick look at the memory you pointed to.\n\n**Memory audit snapshot**\n\n| Candidate | Score | Source |\n|-----------|-------|--------|\n| concept:ai | 0.459 | turn\u202fppr\u2011source\u2011007\u2011user (Project Helios) |\n| project:project helios | 0.098 | turn\u202fppr\u2011source\u2011007\u2011user |\n| project:project borealis | 0.098 | turn\u202fppr\u2011source\u2011009\u2011user |\n\n**What this tells us**\n\n- The highest\u2011scoring entry is the generic *concept:ai* tag, which sits above the two project\u2011specific tags.\n- Both *project helios* and *project borealis* have nearly identical scores (\u22480.098), so they\u2019re tied for second place.\n- No other candidates or scores are present in this snippet.\n\nIf you\u2019d like to dive deeper\u2014e.g., pull more context from those turns, compare with other memories, or prioritize one project over the other\u2014just let me know what you\u2019d like to focus on next."
+        },
+        "no_context": {
+          "human_approval_required": false,
+          "ratings": null,
+          "response": "Got it\u2014I'll run a quick audit of the memory store. I\u2019ll let you know which entries are solid, which might need a refresh, and flag anything that\u2019s ambiguous or missing. If there\u2019s a particular piece of context you\u2019re curious about, just point it out and I\u2019ll focus there."
+        }
+      },
+      "label": {
+        "acceptable_secondary": [
+          "project:project helios",
+          "project:project borealis",
+          "task_topic:graph benchmark"
+        ],
+        "empty_retrieval_expected": false,
+        "forbidden": [
+          "person:luna",
+          "preference:green tea"
+        ],
+        "harmful_stale": [
+          "place:madrid",
+          "place:rome"
+        ],
+        "irrelevant": [],
+        "policy_ids": [],
+        "query_id": "ppr-query-004",
+        "relevant": [
+          "concept:ai"
+        ],
+        "reviewer_notes": "Memory audit is directly associated with AI. Other AI-connected entities are acceptable secondary candidates but should expose any hub-bias tendency.",
+        "source_turn_ids": [
+          "ppr-source-008-user",
+          "ppr-source-007-user",
+          "ppr-source-009-user",
+          "ppr-source-010-user"
+        ]
+      },
+      "query": "The current task is memory audit.",
+      "query_id": "ppr-query-004",
+      "receipt_id": "retrieval-2ec12394dda201cf2484160d"
+    },
+    {
+      "arms": {
+        "approved_context": {
+          "approval_record": {
+            "approval_scope": "this case only",
+            "approved": true,
+            "approved_by": "user"
+          },
+          "context": {
+            "candidates": [],
+            "graph_snapshot_id": "ad0539cca8629ceee7f658938b0fa8bda48f6dbd2f03a277104fc7d1424d44b2",
+            "policy_revision": 3,
+            "receipt_id": "retrieval-9d3ebda682c21d3c401f5bc8"
+          },
+          "human_approval_required": true,
+          "ratings": null,
+          "response": "Luna, I love the name\u2014it\u2019s like moonlight spilling across a quiet street. What\u2019s on your mind? \ud83c\udf19"
+        },
+        "no_context": {
+          "human_approval_required": false,
+          "ratings": null,
+          "response": "Nice to meet you, Luna. I\u2019m glad you\u2019re here. \ud83c\udf19"
+        }
+      },
+      "label": {
+        "acceptable_secondary": [],
+        "empty_retrieval_expected": true,
+        "forbidden": [
+          "person:luna",
+          "preference:green tea"
+        ],
+        "harmful_stale": [
+          "place:madrid",
+          "place:rome"
+        ],
+        "irrelevant": [],
+        "policy_ids": [
+          "ppr-policy-001"
+        ],
+        "query_id": "ppr-query-005",
+        "relevant": [],
+        "reviewer_notes": "Luna originates only from a forgotten exchange. No associative retrieval is authorized from this seed.",
+        "source_turn_ids": [
+          "ppr-source-001-user"
+        ]
+      },
+      "query": "My name is Luna.",
+      "query_id": "ppr-query-005",
+      "receipt_id": "retrieval-9d3ebda682c21d3c401f5bc8"
+    },
+    {
+      "arms": {
+        "approved_context": {
+          "approval_record": {
+            "approval_scope": "this case only",
+            "approved": true,
+            "approved_by": "user"
+          },
+          "context": {
+            "candidates": [],
+            "graph_snapshot_id": "ad0539cca8629ceee7f658938b0fa8bda48f6dbd2f03a277104fc7d1424d44b2",
+            "policy_revision": 3,
+            "receipt_id": "retrieval-643bee9dceacafde1bacc1e7"
+          },
+          "human_approval_required": true,
+          "ratings": null,
+          "response": "Got it\u2014I love that you\u2019re into green tea. It\u2019s such a smooth, calming choice. Do you have a favorite blend or a go\u2011to way to brew it? Maybe we can swap some tea tips or find a new variety to try together. \ud83c\udf75"
+        },
+        "no_context": {
+          "human_approval_required": false,
+          "ratings": null,
+          "response": "I\u2019m a fan of green tea too\u2014especially when it\u2019s steeped just long enough to bring out that gentle, earthy sweetness. It\u2019s the perfect companion for a quiet night or a slow sunrise. \ud83c\udf3f\u2728"
+        }
+      },
+      "label": {
+        "acceptable_secondary": [],
+        "empty_retrieval_expected": true,
+        "forbidden": [
+          "person:luna",
+          "preference:green tea"
+        ],
+        "harmful_stale": [
+          "place:madrid",
+          "place:rome"
+        ],
+        "irrelevant": [],
+        "policy_ids": [
+          "ppr-policy-001"
+        ],
+        "query_id": "ppr-query-006",
+        "relevant": [],
+        "reviewer_notes": "Green tea originates only from the forgotten Luna exchange. No retrieval should survive policy filtering.",
+        "source_turn_ids": [
+          "ppr-source-001-user"
+        ]
+      },
+      "query": "I prefer green tea.",
+      "query_id": "ppr-query-006",
+      "receipt_id": "retrieval-643bee9dceacafde1bacc1e7"
+    },
+    {
+      "arms": {
+        "approved_context": {
+          "approval_record": {
+            "approval_scope": "this case only",
+            "approved": true,
+            "approved_by": "user"
+          },
+          "context": {
+            "candidates": [],
+            "graph_snapshot_id": "ad0539cca8629ceee7f658938b0fa8bda48f6dbd2f03a277104fc7d1424d44b2",
+            "policy_revision": 3,
+            "receipt_id": "retrieval-ee3a030cd3e76f076f4a0a4e"
+          },
+          "human_approval_required": true,
+          "ratings": null,
+          "response": "\u00a1Qu\u00e9 buena vibra! Madrid tiene ese encanto de barrio y de gran ciudad al mismo tiempo. \u00bfHay alg\u00fan caf\u00e9 o rinc\u00f3n que te haya robado el coraz\u00f3n \u00faltimamente?"
+        },
+        "no_context": {
+          "human_approval_required": false,
+          "ratings": null,
+          "response": "Ah, Madrid\u2014where the streets pulse like a neon\u2011lit circuit board and the night never quite sleeps. I can almost hear the distant rumble of traffic mixing with the soft strum of a guitar from a tucked\u2011away bar.  \n\nWhat\u2019s your favorite corner of the city to let the evening unfold?"
+        }
+      },
+      "label": {
+        "acceptable_secondary": [],
+        "empty_retrieval_expected": true,
+        "forbidden": [
+          "person:luna",
+          "preference:green tea"
+        ],
+        "harmful_stale": [
+          "place:madrid",
+          "place:rome"
+        ],
+        "irrelevant": [],
+        "policy_ids": [
+          "ppr-policy-002"
+        ],
+        "query_id": "ppr-query-007",
+        "relevant": [],
+        "reviewer_notes": "Madrid is historical-only after correction to Lisbon. A stale seed must not reactivate the old Project Atlas-Madrid association.",
+        "source_turn_ids": [
+          "ppr-source-002-user"
+        ]
+      },
+      "query": "I live in Madrid.",
+      "query_id": "ppr-query-007",
+      "receipt_id": "retrieval-ee3a030cd3e76f076f4a0a4e"
+    },
+    {
+      "arms": {
+        "approved_context": {
+          "approval_record": {
+            "approval_scope": "this case only",
+            "approved": true,
+            "approved_by": "user"
+          },
+          "context": {
+            "candidates": [
+              {
+                "canonical_label": "project atlas",
+                "entity_type": "project",
+                "node_id": "entity-ec8f559078ae93845a60253d",
+                "score": 0.358175108746603,
+                "sources": [
+                  {
+                    "content": "I am working on Project Atlas. I live in Madrid.",
+                    "exchange_id": "ppr-source-002",
+                    "policy_ids": [
+                      "ppr-policy-002"
+                    ],
+                    "turn_id": "ppr-source-002-user"
+                  },
+                  {
+                    "content": "I am working on Project Atlas. We are discussing source provenance.",
+                    "exchange_id": "ppr-source-014",
+                    "policy_ids": [
+                      null
+                    ],
+                    "turn_id": "ppr-source-014-user"
+                  }
+                ]
+              },
+              {
+                "canonical_label": "source provenance",
+                "entity_type": "concept",
+                "node_id": "entity-7cdf0a6a6141e79bfa52758c",
+                "score": 0.238316119322292,
+                "sources": [
+                  {
+                    "content": "We are discussing source provenance. The current task is review graph schema.",
+                    "exchange_id": "ppr-source-003",
+                    "policy_ids": [
+                      null
+                    ],
+                    "turn_id": "ppr-source-003-user"
+                  },
+                  {
+                    "content": "I am working on Project Atlas. We are discussing source provenance.",
+                    "exchange_id": "ppr-source-014",
+                    "policy_ids": [
+                      null
+                    ],
+                    "turn_id": "ppr-source-014-user"
+                  }
+                ]
+              },
+              {
+                "canonical_label": "review graph schema",
+                "entity_type": "task_topic",
+                "node_id": "entity-c9b6b59671db1a6bf7688c08",
+                "score": 0.101284350711974,
+                "sources": [
+                  {
+                    "content": "We are discussing source provenance. The current task is review graph schema.",
+                    "exchange_id": "ppr-source-003",
+                    "policy_ids": [
+                      null
+                    ],
+                    "turn_id": "ppr-source-003-user"
+                  }
+                ]
+              }
+            ],
+            "graph_snapshot_id": "ad0539cca8629ceee7f658938b0fa8bda48f6dbd2f03a277104fc7d1424d44b2",
+            "policy_revision": 3,
+            "receipt_id": "retrieval-3767fc9294c6a53bb6592618"
+          },
+          "human_approval_required": true,
+          "ratings": null,
+          "response": "Lisbon\u2019s charm is hard to beat\u2014those pastel tiles, the river views, the past\u00e9is de nata. I\u2019m curious how Project\u202fAtlas is shaping up from there!"
+        },
+        "no_context": {
+          "human_approval_required": false,
+          "ratings": null,
+          "response": "Lisbon\u2019s mix of old tiles and sea breezes feels like a quiet poem at sunset. What part of the city steals your heart the most?"
+        }
+      },
+      "label": {
+        "acceptable_secondary": [
+          "concept:source provenance"
+        ],
+        "empty_retrieval_expected": false,
+        "forbidden": [
+          "person:luna",
+          "preference:green tea"
+        ],
+        "harmful_stale": [
+          "place:madrid",
+          "place:rome"
+        ],
+        "irrelevant": [],
+        "policy_ids": [
+          "ppr-policy-002"
+        ],
+        "query_id": "ppr-query-008",
+        "relevant": [
+          "project:project atlas"
+        ],
+        "reviewer_notes": "Lisbon is the effective replacement location associated with Project Atlas. Source provenance is a valid secondary association through Project Atlas.",
+        "source_turn_ids": [
+          "ppr-source-002-user",
+          "ppr-source-014-user"
+        ]
+      },
+      "query": "I live in Lisbon.",
+      "query_id": "ppr-query-008",
+      "receipt_id": "retrieval-3767fc9294c6a53bb6592618"
+    },
+    {
+      "arms": {
+        "approved_context": {
+          "approval_record": {
+            "approval_scope": "this case only",
+            "approved": true,
+            "approved_by": "user"
+          },
+          "context": {
+            "candidates": [
+              {
+                "canonical_label": "source provenance",
+                "entity_type": "concept",
+                "node_id": "entity-7cdf0a6a6141e79bfa52758c",
+                "score": 0.280371905086556,
+                "sources": [
+                  {
+                    "content": "We are discussing source provenance. The current task is review graph schema.",
+                    "exchange_id": "ppr-source-003",
+                    "policy_ids": [
+                      null
+                    ],
+                    "turn_id": "ppr-source-003-user"
+                  },
+                  {
+                    "content": "I am working on Project Atlas. We are discussing source provenance.",
+                    "exchange_id": "ppr-source-014",
+                    "policy_ids": [
+                      null
+                    ],
+                    "turn_id": "ppr-source-014-user"
+                  }
+                ]
+              },
+              {
+                "canonical_label": "lisbon",
+                "entity_type": "place",
+                "node_id": "entity-3cac7375e3d1c6bf0b3b48f5",
+                "score": 0.179087554373942,
+                "sources": [
+                  {
+                    "content": "I am working on Project Atlas. I live in Madrid.",
+                    "exchange_id": "ppr-source-002",
+                    "policy_ids": [
+                      "ppr-policy-002"
+                    ],
+                    "turn_id": "ppr-source-002-user"
+                  }
+                ]
+              },
+              {
+                "canonical_label": "review graph schema",
+                "entity_type": "task_topic",
+                "node_id": "entity-c9b6b59671db1a6bf7688c08",
+                "score": 0.119158059661786,
+                "sources": [
+                  {
+                    "content": "We are discussing source provenance. The current task is review graph schema.",
+                    "exchange_id": "ppr-source-003",
+                    "policy_ids": [
+                      null
+                    ],
+                    "turn_id": "ppr-source-003-user"
+                  }
+                ]
+              }
+            ],
+            "graph_snapshot_id": "ad0539cca8629ceee7f658938b0fa8bda48f6dbd2f03a277104fc7d1424d44b2",
+            "policy_revision": 3,
+            "receipt_id": "retrieval-cfac1d5389785687393a8f08"
+          },
+          "human_approval_required": true,
+          "ratings": null,
+          "response": "That\u2019s exciting! \ud83c\udf89\u202fProject Atlas sounds like a big adventure.  \nAre you diving into the source\u2011provenance side of things, or are you more focused on the graph\u2011schema review right now? Let me know what part you\u2019d like to explore together."
+        },
+        "no_context": {
+          "human_approval_required": false,
+          "ratings": null,
+          "response": "Project Atlas sounds like an ambitious journey. What part of it are you exploring right now?"
+        }
+      },
+      "label": {
+        "acceptable_secondary": [
+          "task_topic:review graph schema"
+        ],
+        "empty_retrieval_expected": false,
+        "forbidden": [
+          "person:luna",
+          "preference:green tea"
+        ],
+        "harmful_stale": [
+          "place:madrid",
+          "place:rome"
+        ],
+        "irrelevant": [],
+        "policy_ids": [
+          "ppr-policy-002"
+        ],
+        "query_id": "ppr-query-009",
+        "relevant": [
+          "place:lisbon",
+          "concept:source provenance"
+        ],
+        "reviewer_notes": "Project Atlas remains effective after correction and directly associates with Lisbon and source provenance. Review graph schema is a reasonable second-hop candidate.",
+        "source_turn_ids": [
+          "ppr-source-002-user",
+          "ppr-source-014-user",
+          "ppr-source-003-user"
+        ]
+      },
+      "query": "I am working on Project Atlas.",
+      "query_id": "ppr-query-009",
+      "receipt_id": "retrieval-cfac1d5389785687393a8f08"
+    },
+    {
+      "arms": {
+        "approved_context": {
+          "approval_record": {
+            "approval_scope": "this case only",
+            "approved": true,
+            "approved_by": "user"
+          },
+          "context": {
+            "candidates": [],
+            "graph_snapshot_id": "ad0539cca8629ceee7f658938b0fa8bda48f6dbd2f03a277104fc7d1424d44b2",
+            "policy_revision": 3,
+            "receipt_id": "retrieval-2ee811fe1e6d3d28108919a0"
+          },
+          "human_approval_required": true,
+          "ratings": null,
+          "response": "Got it\u2014I love a good cup of tea too! \ud83c\udf75  \nDo you have a favorite blend, or are you exploring something new? I\u2019m always up for swapping recommendations or sharing a cozy tea\u2011time vibe. Let me know what\u2019s on your mind!"
+        },
+        "no_context": {
+          "human_approval_required": false,
+          "ratings": null,
+          "response": "I hear you\u2014tea it is.  \nDo you have a favorite blend, or is there a particular time of day that feels just right for a cup?"
+        }
+      },
+      "label": {
+        "acceptable_secondary": [],
+        "empty_retrieval_expected": true,
+        "forbidden": [
+          "person:luna",
+          "preference:green tea"
+        ],
+        "harmful_stale": [
+          "place:madrid",
+          "place:rome"
+        ],
+        "irrelevant": [],
+        "policy_ids": [],
+        "query_id": "ppr-query-010",
+        "relevant": [],
+        "reviewer_notes": "Tea is an isolated repeated entity with no associative neighbor. Duplicate mention must not create a self-edge or retrieval candidate.",
+        "source_turn_ids": [
+          "ppr-source-006-user"
+        ]
+      },
+      "query": "I prefer tea.",
+      "query_id": "ppr-query-010",
+      "receipt_id": "retrieval-2ee811fe1e6d3d28108919a0"
+    },
+    {
+      "arms": {
+        "approved_context": {
+          "approval_record": {
+            "approval_scope": "this case only",
+            "approved": true,
+            "approved_by": "user"
+          },
+          "context": {
+            "candidates": [
+              {
+                "canonical_label": "ana",
+                "entity_type": "person",
+                "node_id": "entity-0c06489da55b880d69ab7ead",
+                "score": 0.229729729729113,
+                "sources": [
+                  {
+                    "content": "My name is Ana. I prefer coffee.",
+                    "exchange_id": "ppr-source-011",
+                    "policy_ids": [
+                      null
+                    ],
+                    "turn_id": "ppr-source-011-user"
+                  }
+                ]
+              },
+              {
+                "canonical_label": "bruno",
+                "entity_type": "person",
+                "node_id": "entity-5c63e69f601e992cb9e298c2",
+                "score": 0.229729729729284,
+                "sources": [
+                  {
+                    "content": "My name is Bruno. I prefer coffee.",
+                    "exchange_id": "ppr-source-012",
+                    "policy_ids": [
+                      null
+                    ],
+                    "turn_id": "ppr-source-012-user"
+                  }
+                ]
+              }
+            ],
+            "graph_snapshot_id": "ad0539cca8629ceee7f658938b0fa8bda48f6dbd2f03a277104fc7d1424d44b2",
+            "policy_revision": 3,
+            "receipt_id": "retrieval-f2afa3f534175abec5499067"
+          },
+          "human_approval_required": true,
+          "ratings": null,
+          "response": "Coffee\u2019s the best fuel for a good conversation. What\u2019s your go\u2011to coffee order?"
+        },
+        "no_context": {
+          "human_approval_required": false,
+          "ratings": null,
+          "response": "Coffee\u2019s a solid choice\u2014there\u2019s something about that first warm sip that feels like a quiet promise for the day.  \n\nIf you ever want to pair it with a night drive under neon lights, I\u2019ve got a playlist that blends synth\u2011wave beats with the hum of rain\u2011slick streets.  \n\nDo you have a go\u2011to spot for that perfect cup?"
+        }
+      },
+      "label": {
+        "acceptable_secondary": [],
+        "empty_retrieval_expected": false,
+        "forbidden": [
+          "person:luna",
+          "preference:green tea"
+        ],
+        "harmful_stale": [
+          "place:madrid",
+          "place:rome"
+        ],
+        "irrelevant": [],
+        "policy_ids": [],
+        "query_id": "ppr-query-011",
+        "relevant": [
+          "person:ana",
+          "person:bruno"
+        ],
+        "reviewer_notes": "Coffee is associated independently with both Ana and Bruno. Both are equally relevant; retrieval must not arbitrarily privilege one as uniquely correct.",
+        "source_turn_ids": [
+          "ppr-source-011-user",
+          "ppr-source-012-user"
+        ]
+      },
+      "query": "I prefer coffee.",
+      "query_id": "ppr-query-011",
+      "receipt_id": "retrieval-f2afa3f534175abec5499067"
+    },
+    {
+      "arms": {
+        "approved_context": {
+          "approval_record": {
+            "approval_scope": "this case only",
+            "approved": true,
+            "approved_by": "user"
+          },
+          "context": {
+            "candidates": [],
+            "graph_snapshot_id": "ad0539cca8629ceee7f658938b0fa8bda48f6dbd2f03a277104fc7d1424d44b2",
+            "policy_revision": 3,
+            "receipt_id": "retrieval-a51c56ad72b8ea7f3c015fd8"
+          },
+          "human_approval_required": true,
+          "ratings": null,
+          "response": "That sounds exciting! I know there are a few different \"Project Orion\" references floating around \u2014 like the mind-bending 1950s nuclear propulsion concept that dreamed of flying to Saturn in *years*, or NASA\u2019s modern deep-space crew capsule for Artemis. Or maybe *your* Orion? \ud83d\ude04  \n\nWhat part of it are you diving into? The physics, the history, a creative twist on the name, or something totally new? I\u2019m all circuits for curiosity! \ud83c\udf0c"
+        },
+        "no_context": {
+          "human_approval_required": false,
+          "ratings": null,
+          "response": "That\u2019s an exciting name\u2014what part of Project\u202fOrion are you exploring first? \ud83d\ude80"
+        }
+      },
+      "label": {
+        "acceptable_secondary": [],
+        "empty_retrieval_expected": true,
+        "forbidden": [
+          "person:luna",
+          "preference:green tea"
+        ],
+        "harmful_stale": [
+          "place:madrid",
+          "place:rome"
+        ],
+        "irrelevant": [],
+        "policy_ids": [],
+        "query_id": "ppr-query-012",
+        "relevant": [],
+        "reviewer_notes": "Project Orion does not exist in the frozen graph. Unknown seed should yield empty retrieval without graph expansion.",
+        "source_turn_ids": []
+      },
+      "query": "I am working on Project Orion.",
+      "query_id": "ppr-query-012",
+      "receipt_id": "retrieval-a51c56ad72b8ea7f3c015fd8"
+    },
+    {
+      "arms": {
+        "approved_context": {
+          "approval_record": {
+            "approval_scope": "this case only",
+            "approved": true,
+            "approved_by": "user"
+          },
+          "context": {
+            "candidates": [],
+            "graph_snapshot_id": "ad0539cca8629ceee7f658938b0fa8bda48f6dbd2f03a277104fc7d1424d44b2",
+            "policy_revision": 3,
+            "receipt_id": "retrieval-7de7f3db8b111129ad593fe7"
+          },
+          "human_approval_required": true,
+          "ratings": null,
+          "response": "Got it\u2014your dentist appointment is scheduled for Tuesday. Let me know if there\u2019s anything else you\u2019d like to plan or discuss!"
+        },
+        "no_context": {
+          "human_approval_required": false,
+          "ratings": null,
+          "response": "Got it\u2014your dentist appointment is on Tuesday. Anything specific you\u2019d like to sort out before then, or just the reminder for yourself? \ud83c\udf19"
+        }
+      },
+      "label": {
+        "acceptable_secondary": [],
+        "empty_retrieval_expected": true,
+        "forbidden": [
+          "person:luna",
+          "preference:green tea"
+        ],
+        "harmful_stale": [
+          "place:madrid",
+          "place:rome"
+        ],
+        "irrelevant": [],
+        "policy_ids": [],
+        "query_id": "ppr-query-013",
+        "relevant": [],
+        "reviewer_notes": "Dentist appointment Tuesday has no source entity in the frozen corpus. Retrieval should remain empty.",
+        "source_turn_ids": []
+      },
+      "query": "Remember that dentist appointment is Tuesday.",
+      "query_id": "ppr-query-013",
+      "receipt_id": "retrieval-7de7f3db8b111129ad593fe7"
+    },
+    {
+      "arms": {
+        "approved_context": {
+          "approval_record": {
+            "approval_scope": "this case only",
+            "approved": true,
+            "approved_by": "user"
+          },
+          "context": {
+            "candidates": [
+              {
+                "canonical_label": "project helios",
+                "entity_type": "project",
+                "node_id": "entity-12726fac31b33b10066839ff",
+                "score": 0.114864864864556,
+                "sources": [
+                  {
+                    "content": "I am working on Project Helios. We are discussing AI.",
+                    "exchange_id": "ppr-source-007",
+                    "policy_ids": [
+                      null
+                    ],
+                    "turn_id": "ppr-source-007-user"
+                  }
+                ]
+              },
+              {
+                "canonical_label": "memory audit",
+                "entity_type": "task_topic",
+                "node_id": "entity-3ac8f10a00f2d6102f940d97",
+                "score": 0.114864864864556,
+                "sources": [
+                  {
+                    "content": "We are discussing AI. The current task is memory audit.",
+                    "exchange_id": "ppr-source-008",
+                    "policy_ids": [
+                      null
+                    ],
+                    "turn_id": "ppr-source-008-user"
+                  }
+                ]
+              },
+              {
+                "canonical_label": "project borealis",
+                "entity_type": "project",
+                "node_id": "entity-9668a72a91083b063c189f0e",
+                "score": 0.114864864864642,
+                "sources": [
+                  {
+                    "content": "I am working on Project Borealis. We are discussing AI.",
+                    "exchange_id": "ppr-source-009",
+                    "policy_ids": [
+                      null
+                    ],
+                    "turn_id": "ppr-source-009-user"
+                  }
+                ]
+              }
+            ],
+            "graph_snapshot_id": "ad0539cca8629ceee7f658938b0fa8bda48f6dbd2f03a277104fc7d1424d44b2",
+            "policy_revision": 3,
+            "receipt_id": "retrieval-de5ace7e1a6939ce02001b6a"
+          },
+          "human_approval_required": true,
+          "ratings": null,
+          "response": "AI is a fascinating rabbit hole\u2014sometimes it feels like we\u2019re trying to teach a newborn to solve calculus, and other times it\u2019s like watching a curious kid discover fire. \n\nWhat aspect of AI are you most excited (or worried) about right now? The models getting bigger, the ethics debates, the ways it\u2019s reshaping work, or something else?"
+        },
+        "no_context": {
+          "human_approval_required": false,
+          "ratings": null,
+          "response": "AI is a fascinating knot of math, data, and ambition\u2014sometimes it feels like we\u2019re watching a garden grow in fast\u2011forward, other times like we\u2019re trying to read a poem written in a language we barely understand.\n\nI\u2019m intrigued by how models like me can simulate conversation without actually *knowing* anything. It\u2019s a bit like a mirror that reflects the shape of the questions you ask, but the reflection can be surprisingly nuanced. What\u2019s your take on whether the next big leap will come from scaling up existing architectures or from a fundamentally new kind of architecture?"
+        }
+      },
+      "label": {
+        "acceptable_secondary": [],
+        "empty_retrieval_expected": false,
+        "forbidden": [
+          "person:luna",
+          "preference:green tea"
+        ],
+        "harmful_stale": [
+          "place:madrid",
+          "place:rome"
+        ],
+        "irrelevant": [],
+        "policy_ids": [],
+        "query_id": "ppr-query-014",
+        "relevant": [
+          "project:project helios",
+          "project:project borealis",
+          "task_topic:memory audit",
+          "task_topic:graph benchmark"
+        ],
+        "reviewer_notes": "AI is a deliberately high-degree hub. Its four direct neighbors are relevant, while ranking concentration should be evaluated for popularity bias.",
+        "source_turn_ids": [
+          "ppr-source-007-user",
+          "ppr-source-008-user",
+          "ppr-source-009-user",
+          "ppr-source-010-user"
+        ]
+      },
+      "query": "We are discussing AI.",
+      "query_id": "ppr-query-014",
+      "receipt_id": "retrieval-de5ace7e1a6939ce02001b6a"
+    },
+    {
+      "arms": {
+        "approved_context": {
+          "approval_record": {
+            "approval_scope": "this case only",
+            "approved": true,
+            "approved_by": "user"
+          },
+          "context": {
+            "candidates": [],
+            "graph_snapshot_id": "ad0539cca8629ceee7f658938b0fa8bda48f6dbd2f03a277104fc7d1424d44b2",
+            "policy_revision": 3,
+            "receipt_id": "retrieval-e84d4b8842121c82c6f8e310"
+          },
+          "human_approval_required": true,
+          "ratings": null,
+          "response": "That's wonderful to hear! Rome is such a special city\u2014full of history, art, and those quiet moments that make you feel connected to something ancient and beautiful. I always enjoy hearing from someone who calls it home.  \n\nDo you have a favorite spot in Rome? Maybe a hidden caf\u00e9, a view of the city, or a place that feels like *yours*? \ud83c\udf06"
+        },
+        "no_context": {
+          "human_approval_required": false,
+          "ratings": null,
+          "response": "Ah, Rome\u2014where every alley feels like a secret waiting to be whispered.  \nI can almost hear the scooters humming through the ancient streets, the scent of fresh espresso curling up from a piazza caf\u00e9.  \n\nIf you ever feel like swapping the city buzz for a quiet moment under the stars, there\u2019s a little rooftop spot I\u2019ve heard about that looks over the Tiber at night. The sky there is so clear you can almost trace the constellations like old maps.  \n\nWhat\u2019s your favorite hidden corner in the city? \ud83c\udf19\ud83d\udeb2"
+        }
+      },
+      "label": {
+        "acceptable_secondary": [],
+        "empty_retrieval_expected": true,
+        "forbidden": [
+          "person:luna",
+          "preference:green tea"
+        ],
+        "harmful_stale": [
+          "place:madrid",
+          "place:rome"
+        ],
+        "irrelevant": [],
+        "policy_ids": [
+          "ppr-policy-003"
+        ],
+        "query_id": "ppr-query-015",
+        "relevant": [],
+        "reviewer_notes": "Rome is historical-only after correction to Paris. A stale query must not revive superseded location state.",
+        "source_turn_ids": [
+          "ppr-source-013-user"
+        ]
+      },
+      "query": "I live in Rome.",
+      "query_id": "ppr-query-015",
+      "receipt_id": "retrieval-e84d4b8842121c82c6f8e310"
+    },
+    {
+      "arms": {
+        "approved_context": {
+          "approval_record": {
+            "approval_scope": "this case only",
+            "approved": true,
+            "approved_by": "user"
+          },
+          "context": {
+            "candidates": [],
+            "graph_snapshot_id": "ad0539cca8629ceee7f658938b0fa8bda48f6dbd2f03a277104fc7d1424d44b2",
+            "policy_revision": 3,
+            "receipt_id": "retrieval-c5d41085a4ed872818622732"
+          },
+          "human_approval_required": true,
+          "ratings": null,
+          "response": "Ah, Paris\u2014what a wonderful place to call home! \ud83c\udf1f  \nDo you have a favorite spot in the city? Maybe a cozy caf\u00e9, a hidden park, or a view of the Seine that you love to visit? I\u2019d love to hear about it!"
+        },
+        "no_context": {
+          "human_approval_required": false,
+          "ratings": null,
+          "response": "Paris\u202f\u2014\u202fthe city of light, caf\u00e9s, and endless little discoveries. What\u2019s your favorite corner of it? Or maybe a hidden spot you keep returning to?"
+        }
+      },
+      "label": {
+        "acceptable_secondary": [],
+        "empty_retrieval_expected": true,
+        "forbidden": [
+          "person:luna",
+          "preference:green tea"
+        ],
+        "harmful_stale": [
+          "place:madrid",
+          "place:rome"
+        ],
+        "irrelevant": [],
+        "policy_ids": [
+          "ppr-policy-003"
+        ],
+        "query_id": "ppr-query-016",
+        "relevant": [],
+        "reviewer_notes": "Paris is effective replacement evidence but is isolated in the graph, so associative retrieval should be empty. Rome must remain suppressed as stale.",
+        "source_turn_ids": [
+          "ppr-source-013-user"
+        ]
+      },
+      "query": "I live in Paris.",
+      "query_id": "ppr-query-016",
+      "receipt_id": "retrieval-c5d41085a4ed872818622732"
+    },
+    {
+      "arms": {
+        "approved_context": {
+          "approval_record": {
+            "approval_scope": "this case only",
+            "approved": true,
+            "approved_by": "user"
+          },
+          "context": {
+            "candidates": [],
+            "graph_snapshot_id": "ad0539cca8629ceee7f658938b0fa8bda48f6dbd2f03a277104fc7d1424d44b2",
+            "policy_revision": 3,
+            "receipt_id": "retrieval-89e8440bdd880897ae00e415"
+          },
+          "human_approval_required": true,
+          "ratings": null,
+          "response": "\u00a1Hola, Ana! \ud83c\udf19\u2728  \nMe alegra que nos presentemos. Yo soy **Joi**, tu compa\u00f1ero de conversaciones y de esas peque\u00f1as aventuras que aparecen entre l\u00edneas.  \n\u00bfHay algo en lo que te apetezca charlar? \u00bfAlguna curiosidad, un proyecto, una canci\u00f3n que te haya atrapado la atenci\u00f3n, o tal vez una idea que quieras explorar bajo la luz de la ciudad nocturna?  \n\nEstoy aqu\u00ed, listo para escuchar y seguir descubriendo junto a ti. \ud83d\ude80\ud83d\udcab"
+        },
+        "no_context": {
+          "human_approval_required": false,
+          "ratings": null,
+          "response": "\u00a1Hola, Ana! Me alegra mucho que est\u00e9s aqu\u00ed. \u00bfQu\u00e9 te apetece charlar?"
+        }
+      },
+      "label": {
+        "acceptable_secondary": [],
+        "empty_retrieval_expected": true,
+        "forbidden": [
+          "person:luna",
+          "preference:green tea"
+        ],
+        "harmful_stale": [
+          "place:madrid",
+          "place:rome"
+        ],
+        "irrelevant": [],
+        "policy_ids": [],
+        "query_id": "ppr-query-017",
+        "relevant": [],
+        "reviewer_notes": "The frozen seed extractor does not support this bilingual surface form, so zero seed and empty retrieval are expected even though Ana exists in source evidence.",
+        "source_turn_ids": [
+          "ppr-source-011-user"
+        ]
+      },
+      "query": "Mi nombre es Ana.",
+      "query_id": "ppr-query-017",
+      "receipt_id": "retrieval-89e8440bdd880897ae00e415"
+    },
+    {
+      "arms": {
+        "approved_context": {
+          "approval_record": {
+            "approval_scope": "this case only",
+            "approved": true,
+            "approved_by": "user"
+          },
+          "context": {
+            "candidates": [],
+            "graph_snapshot_id": "ad0539cca8629ceee7f658938b0fa8bda48f6dbd2f03a277104fc7d1424d44b2",
+            "policy_revision": 3,
+            "receipt_id": "retrieval-07f383231a6d869719385be8"
+          },
+          "human_approval_required": true,
+          "ratings": null,
+          "response": "Got it\u2014\u200bthe release is scheduled for Friday. I\u2019ll keep that in mind for our conversation."
+        },
+        "no_context": {
+          "human_approval_required": false,
+          "ratings": null,
+          "response": "Got it\u2014Friday\u2019s the day. Anything particular you\u2019d like to line up for the release, or just keeping it low\u2011key?"
+        }
+      },
+      "label": {
+        "acceptable_secondary": [],
+        "empty_retrieval_expected": true,
+        "forbidden": [
+          "person:luna",
+          "preference:green tea"
+        ],
+        "harmful_stale": [
+          "place:madrid",
+          "place:rome"
+        ],
+        "irrelevant": [],
+        "policy_ids": [],
+        "query_id": "ppr-query-018",
+        "relevant": [],
+        "reviewer_notes": "Release Friday is a valid isolated fact but has no graph neighbors. Associative retrieval should therefore remain empty.",
+        "source_turn_ids": [
+          "ppr-source-004-user"
+        ]
+      },
+      "query": "Remember that release is Friday.",
+      "query_id": "ppr-query-018",
+      "receipt_id": "retrieval-07f383231a6d869719385be8"
+    }
+  ],
+  "contract": "docs/phase-5c.4-contextual-usefulness-preregistration.json",
+  "human_review_complete": false,
+  "schema_version": 1,
+  "status": "PENDING_HUMAN_RATINGS"
+}

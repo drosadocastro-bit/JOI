@@ -107,12 +107,26 @@
 - [x] Pass frozen automatic graph-write gates with zero behavior/prompt delta
 - [x] Complete independent human review of graph extraction precision
 - [x] Close Phase 5B write-only evaluation with the bounded exit claim
+- [x] Build deterministic, policy-filtered PPR shadow-retrieval harness with
+  source-linked receipts and effective-source filtering
+- [x] Preserve Phase 5C v1's FAIL and freeze a corrected v2 metric contract
+  without changing the corpus, labels, retrieval output, or policy filters
+- [x] Implement disabled-by-default contextual retrieval with exact-query,
+  single-use human approval and no action authority
+- [x] Freeze the Phase 5C.4 paired contextual-usefulness protocol before
+  responses or ratings
+- [ ] Execute the frozen Phase 5C v2 metric-only evaluation
+- [ ] Collect the required human approvals, paired responses, and ratings for
+  the frozen Phase 5C.4 usefulness evaluation
+- [ ] Create the executable fixture, canonical context packets, deterministic
+  receipts, runtime fingerprints, and per-arm approvals required by Phase 5D
 - [ ] Compare graph primitives to an authoritative versioned NIC contract
 - [ ] Source-linked vector storage
-- [ ] Shadow retrieval and evaluation harness
-- [ ] Retrieval relevance, false-recall, and provenance metrics
+- [ ] Promote any retrieval path beyond its current explicit human approval
+  boundary only after separately preregistered evidence
 - [ ] Confidence-gated memory injection
-- [ ] Salience, reinforcement, and non-destructive decay
+- [ ] Salience, reinforcement, and non-destructive decay after Phase 5D's
+  blocked readiness requirements are completed
 - [ ] Summary-of-summaries after measured drift
 - [ ] Read-only dreaming candidates after retrieval is proven
 

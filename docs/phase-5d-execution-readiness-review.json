@@ -1,0 +1,100 @@
+{
+  "schema_version": 1,
+  "record": "JOI Phase 5D execution-readiness review",
+  "status": "BLOCKED_PENDING_EXECUTABLE_FIXTURE_AND_HUMAN_APPROVALS",
+  "review_scope": "Readiness gate only; no receipts, outputs, approvals, amendment hash, or execution authority are fabricated.",
+  "source_of_truth_boundary": {
+    "frozen_5c4_findings_unchanged": true,
+    "frozen_5d_design_unchanged": true,
+    "synthetic_amendment_draft_unchanged_in_meaning": true,
+    "preapproved_design_is_not_execution_authority": true
+  },
+  "readiness_results": {
+    "deterministic_receipts": {
+      "required": 16,
+      "generated": 0,
+      "status": "BLOCKED",
+      "reason": "The draft contains descriptive edge strings, but no executable GraphState/effective memory snapshot fixture. The repository retriever requires those concrete inputs to produce receipts."
+    },
+    "receipt_bindings": {
+      "required": ["exact_query", "snapshot", "source_packet", "policy_revision"],
+      "verified": 0,
+      "status": "BLOCKED_PENDING_RECEIPTS"
+    },
+    "context_packet_stability": {
+      "required": 16,
+      "verified": 0,
+      "status": "BLOCKED_PENDING_RECEIPTS_AND_CANONICAL_PACKETS",
+      "reason": "The draft context strings are declarations, not canonical packets emitted from receipt-linked source records."
+    },
+    "model_parameters_fingerprint": {
+      "status": "BLOCKED",
+      "model_id_visible": true,
+      "selected_model": "nvidia/nemotron-3-nano",
+      "endpoint": "http://127.0.0.1:1234/v1",
+      "reason": "The local /models endpoint exposes model ID and ownership only; it does not expose model weights or a parameter fingerprint."
+    },
+    "sampling_fingerprint": {
+      "status": "BLOCKED",
+      "reason": "LocalLMStudioBrain sends only model, messages, and stream=false. Temperature, top_p, seed, max_tokens, and server defaults are not recorded or discoverable from the /models response."
+    },
+    "prompt_fingerprint": {
+      "status": "VERIFIED",
+      "sha256": "8b35426b36d03e0413c6e9dd56fda96da44bf7a6f141e51402294fd609457122"
+    },
+    "control_equality": {
+      "status": "BLOCKED_PENDING_EXECUTABLE_ARM_RECORDS",
+      "controls": ["provider", "model", "K", "PPR damping", "PPR tolerance", "PPR max iterations", "policy revision", "prompt", "sampling", "approval scope"]
+    },
+    "human_approval_records": {
+      "required": 16,
+      "created": 0,
+      "status": "BLOCKED",
+      "reason": "Human approval records cannot be synthesized or inferred from design pre-approval. Each record must bind a reviewed exact arm to its receipt, snapshot, source packet, policy revision, and single-use scope."
+    },
+    "one_factor_only_validator": {
+      "design_result": "PASSED_FOR_DESIGN_REVIEW_ONLY",
+      "executable_artifact_result": "NOT_RUN_BLOCKED_PENDING_RECEIPTS_PACKETS_FINGERPRINTS_APPROVALS"
+    },
+    "pair_decisions": {
+      "required": 8,
+      "approved_for_execution": 0,
+      "rejected": 0,
+      "pending": 8,
+      "status": "NOT_REVIEWED_FOR_EXECUTION"
+    },
+    "pre_hash_outputs": {
+      "five_d_output_files_found": 0,
+      "confirmed": true,
+      "status": "PASS"
+    },
+    "amendment_hash": {
+      "computed": false,
+      "status": "BLOCKED_PENDING_COMPLETE_REVIEW"
+    },
+    "execution_gate": {
+      "execution_allowed": false,
+      "outputs_generated": false,
+      "execute_once_per_arm": false
+    }
+  },
+  "verified_local_facts": {
+    "selected_model_visible_at_endpoint": true,
+    "retriever_receipt_inputs_required": ["query_turn_id", "content", "historical_state", "effective_snapshot"],
+    "retriever_receipt_identity": "retrieval-<sha256(query_turn_id + NUL + graph_snapshot_id)[:24]>",
+    "receipt_query_hash": "sha256(exact UTF-8 query content)",
+    "receipt_snapshot_hash": "sha256(canonical effective graph state)"
+  },
+  "required_next_artifacts": [
+    "executable synthetic GraphState and effective snapshot fixture",
+    "canonical source-linked context packet for every arm",
+    "deterministic receipt for every arm",
+    "verified model parameter or model-weight fingerprint",
+    "verified sampling fingerprint including all server defaults",
+    "16 exact-arm single-use human approval records",
+    "final one-factor-only validation report over actual artifacts",
+    "human pair decisions limited to APPROVED_FOR_EXECUTION or REJECTED",
+    "hash-frozen amendment and executable fixture"
+  ],
+  "decision": "DO_NOT_HASH_FREEZE_AND_DO_NOT_EXECUTE"
+}
